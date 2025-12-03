@@ -169,7 +169,7 @@
             </div>
             
             <!-- Sidebar Nav -->
-            <!-- Fix: Remove overflow-hidden from base class, add md:overflow-y-auto for desktop scrolling -->
+            <!-- Added md:overflow-y-auto to ensure full sidebar content is scrollable on desktop -->
             <nav id="sidebar-nav" class="flex flex-col flex-1 py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none transition-all duration-500 ease-in-out z-40 origin-top max-h-0 opacity-0 overflow-hidden md:max-h-full md:opacity-100 md:overflow-y-auto">
                 <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
                 <button onclick="switchMode('weekday_preview')" id="btn-weekday_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🗓️</span> 平日賽事預告</button>
@@ -275,6 +275,18 @@
                 nav.classList.remove('opacity-100', 'overflow-y-auto');
             }
         }
+        
+        // --- Resize Listener to Fix Desktop Nav Issue ---
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                const nav = document.getElementById('sidebar-nav');
+                // Clear inline styles so CSS classes take over
+                nav.style.maxHeight = '';
+                // Reset classes to closed state for mobile logic, but desktop media queries will override to show it
+                nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
+                nav.classList.remove('opacity-100', 'overflow-y-auto');
+            }
+        });
 
         // --- Data & Config ---
         const TEAMS = {
@@ -655,7 +667,7 @@
                                     <div class="col-span-4">
                                         <select id="eff${i}_team" class="w-full p-1 border rounded text-sm bg-white">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                                     </div>
-                                    <div class="col-span-2"><input id="eff${i}_num" type="text" placeholder="#24" class="w-full p-1 border rounded text-sm"></div>
+                                    <div class="col-span-2"><input id="eff${i}_num" type="text" placeholder="24" class="w-full p-1 border rounded text-sm"></div>
                                     <div class="col-span-3"><input id="eff${i}_name" type="text" placeholder="姓名" class="w-full p-1 border rounded text-sm"></div>
                                     <div class="col-span-2"><input id="eff${i}_val" type="text" placeholder="EFF" class="w-full p-1 border rounded text-sm"></div>
                                 </div>
@@ -780,7 +792,7 @@
                 const home = getValue('next_home');
                 const away = getValue('next_away');
                 const arena = TEAMS[home].arena;
-                return `📌下場比賽，一起迎風而上。\n▌ ${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
+                return `📌下場比賽，一起迎風而上。\n▌${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
             };
             
             const getNextGameTextShort = () => {
@@ -791,7 +803,7 @@
                 const home = getValue('next_home');
                 const away = getValue('next_away');
                 const num = getValue('next_game_num');
-                return `📺 NEXT GAME\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full} （客） vs. ${TEAMS[home].full} （主）`;
+                return `📺NEXT GAME\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
             }
             
             // Custom Helper for Local Player Highlight Next Game
@@ -805,7 +817,7 @@
                 const away = getValue('next_away');
                 const arena = TEAMS[home].arena;
                 const player = getValue('lp_next_player_name');
-                return `📌 下場${player}：\n▌ ${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
+                return `📌下場${player}：\n▌${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
             };
 
 
@@ -817,10 +829,10 @@
                 const home = TEAMS[homeKey];
                 const away = TEAMS[awayKey];
                 
-                const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（ ${toMathBoldSerif(getDayName(date))} ）`; 
+                const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
                 
                 output = `#${toMathBoldSerif('GAMEDAY')}& #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
-                output += `例行賽 ${toMathBoldSerif('GAME')} ${getValue('game_num')} ✦ ${time} ${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
+                output += `例行賽${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))}✦${time}${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
                 output += `${getValue('highlight_text')}\n\n—\n\n`;
                 output += `👉🏻賽事地點📍${home.arena}\n${BROADCAST_INFO}\n`;
                 output += `👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
@@ -835,10 +847,10 @@
                 const dayChi = getDayChi(date); // 三
                 const title = getValue('promo_title');
                 
-                output = `🏀 ${toMathBoldSerif(title)}\n\n`;
+                output = `🏀${toMathBoldSerif(title)}\n\n`;
                 output += `${getValue('promo_text')}\n\n-\n\n`;
-                output += `📌 小週末就看籃球：\n`;
-                output += `▌ ${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}\n\n-\n\n`;
+                output += `📌小週末就看籃球：\n`;
+                output += `▌${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}\n\n-\n\n`;
                 if(getValue('promo_link')) output += `${getValue('promo_link')}\n\n`;
                 output += COMMON_TAGS;
 
@@ -848,7 +860,7 @@
                  const homePlayer = getValue('mu_home_player');
                  const awayPlayer = getValue('mu_away_player');
                  
-                 output = `⚔️ ${toMathBoldSerif('MATCH UP')}｜${homePlayer} ${home.emoji} vs. ${awayPlayer} ${away.emoji}\n\n`;
+                 output = `⚔️${toMathBoldSerif('MATCH UP')}｜${homePlayer}${home.emoji} vs. ${awayPlayer}${away.emoji}\n\n`;
                  output += `${getValue('matchup_content')}\n\n-\n\n`;
                  
                  const date = getValue('next_date');
@@ -860,12 +872,12 @@
                      const a = TEAMS[getValue('next_away')];
                      const num = getValue('next_game_num');
                      output += `📌今天晚上看頂尖對決：\n`;
-                     output += `▌ ${mmdd}（${day}）｜${time}｜${a.full} （客） vs. ${h.full} （主）｜${h.arena}\n\n`;
+                     output += `▌${mmdd}（${day}）｜${time}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n\n`;
                  }
                  output += `${COMMON_TAGS}`;
 
             } else if (currentMode === 'final_score') {
-                output = `🔙 ${toMathBoldSerif('GAME')} ${getValue('game_num')} FINAL｜${getValue('match_title')}\n\n`;
+                output = `🔙${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n`;
                 output += `${getValue('match_recap')}\n\n`;
                 
                 const date = getValue('next_date');
@@ -879,11 +891,11 @@
 
             } else if (currentMode === 'game_highlight') {
                 output = `${getValue('hl_title')}\n\n`;
-                output += `📺 緯來體育台｜博斯運動二台｜TPBL官方YOUTUBE\n👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
+                output += `📺緯來體育台｜博斯運動二台｜TPBL官方YOUTUBE\n👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
                 output += `${COMMON_TAGS} #TPBL例行賽`;
 
             } else if (currentMode === 'press_conf') {
-                output = `🗣️ ${toMathBoldSerif(getValue('pc_title'))}\n\n`;
+                output = `🗣️${toMathBoldSerif(getValue('pc_title'))}\n\n`;
                 output += `💬「${getValue('pc_quote')}」\n\n`;
                 output += `${getValue('pc_content')}\n\n`;
                 output += getNextGameText();
@@ -892,8 +904,8 @@
             } else if (currentMode === 'potg') {
                 const home = TEAMS[getValue('potg_home')];
                 const away = TEAMS[getValue('potg_away')];
-                output = `❤️ ${toMathBoldSerif('NOTHING BUT HIM')}\n\n`;
-                output += `${away.emoji} / ${home.emoji} #${toMathBoldSerif('單場最佳球員')}\n\n`;
+                output = `❤️${toMathBoldSerif('NOTHING BUT HIM')}\n\n`;
+                output += `${away.emoji}/${home.emoji} #${toMathBoldSerif('單場最佳球員')}\n\n`;
                 output += getNextGameTextShort();
                 output += `\n\n-\n\n${getValue('promo_text')}\n\n${COMMON_TAGS} #TPBL例行賽`;
 
@@ -912,7 +924,7 @@
 
             } else if (currentMode === 'weekly_schedule') {
                 output = `⏰｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程\n\n`;
-                output += `${getValue('week_intro')}\n\n-\n\n📌 本週賽事預告：\n`;
+                output += `${getValue('week_intro')}\n\n-\n\n📌本週賽事預告：\n`;
                 
                 const listContainer = document.getElementById('schedule_list_container');
                 Array.from(listContainer.children).forEach(div => {
@@ -924,20 +936,20 @@
                     if(d) {
                          const mmdd = formatMMDD(d);
                          const day = getDayChi(d);
-                         output += `▌ ${mmdd}（${day}）｜${t}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n`;
+                         output += `▌${mmdd}（${day}）｜${t}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n`;
                     }
                 });
                 output += `\n${COMMON_TAGS}`;
 
             } else if (currentMode === 'weekly_standings') {
-                output = `📊｜${toMathBoldSerif('WEEK')}${getValue('week_num')} #球隊戰績排行\n\n`;
+                output = `📊｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} #球隊戰績排行\n\n`;
                 output += `${getValue('standings_content')}\n\n`;
                 
                 const listContainer = document.getElementById('standings_schedule_list_container');
                 const hasChildren = listContainer && listContainer.children.length > 0;
                 
                 if (hasChildren) {
-                    output += `📌 本週賽事預告：\n`;
+                    output += `📌本週賽事預告：\n`;
                     Array.from(listContainer.children).forEach(div => {
                         const inputs = div.querySelectorAll('input, select');
                         const d = inputs[0].value;
@@ -949,7 +961,7 @@
                              const day = getDayChi(d);
                              const aTeam = TEAMS[a];
                              const hTeam = TEAMS[h];
-                             output += `▌ ${mmdd}（${day}）｜${t}｜${aTeam.full}（客） vs. ${hTeam.full}（主）｜${hTeam.arena}\n`;
+                             output += `▌${mmdd}（${day}）｜${t}｜${aTeam.full}（客） vs. ${hTeam.full}（主）｜${hTeam.arena}\n`;
                         }
                     });
                      output += `\n${COMMON_TAGS}`;
@@ -958,7 +970,7 @@
                 }
 
             } else if (currentMode === 'top5') {
-                output = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')}${getValue('week_num')} 📢\n\n`;
+                output = `💣｜${toMathBoldSerif('TOP')}𝟓✦${toMathBoldSerif('Week')}${toMathBoldSerif(getValue('week_num'))}📢\n\n`;
                 output += `${getValue('top5_intro')}\n\n`;
                 
                 for (let i = 5; i >= 1; i--) {
@@ -969,7 +981,7 @@
                     if (name) { 
                         const team = TEAMS[teamKey];
                         const circledNum = ['①', '②', '③', '④', '⑤'][i-1];
-                        output += `${circledNum} ${team.emoji}${team.full} | #${num} ${name}\n`;
+                        output += `${circledNum}${team.emoji}${team.full} | #${num} ${name}\n`;
                     }
                 }
 
@@ -977,8 +989,8 @@
 
             } else if (currentMode === 'potw') {
                 const team = TEAMS[getValue('player_team')];
-                output = `🥇 ${toMathBoldSerif('PLAYER OF THE WEEK')}｜#單週表現最佳球員\n\n`;
-                output += `🫶🏻 ${toMathBoldSerif('NOTHING BUT')} ${team.emoji} ${getValue('player_name')}\n\n`;
+                output = `🥇${toMathBoldSerif('PLAYER OF THE WEEK')}｜#單週表現最佳球員\n\n`;
+                output += `🫶🏻${toMathBoldSerif('NOTHING BUT')} ${team.emoji}${getValue('player_name')}\n\n`;
                 
                 const statContainer = document.getElementById('stats_list_container');
                 let statsArr = [];
@@ -1009,15 +1021,15 @@
                     const nameOnly = getValue('player_name').split(' ')[0] || "";
                     
                     output += `📌休息一下回來看${nameOnly}發威👀\n`;
-                    output += `▌ ${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}`;
+                    output += `▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}`;
                 }
                 output += `\n\n${COMMON_TAGS}`;
                 
             } else if (currentMode === 'weekly_local_eff') {
-                output = `🔥${toMathBoldSerif('POWERFUL LOCALS')}｜${toMathBoldSerif('WEEK')}${getValue('week_num')} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行 ✨\n\n`;
+                output = `🔥${toMathBoldSerif('POWERFUL LOCALS')}｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行✨\n\n`;
                 output += `${getValue('eff_intro')}\n\n`;
                 
-                for (let i = 1; i <= 5; i++) { // Rankings usually 1 to 5 here based on screenshot logic order? No screenshot order 5 to 1? Actually screenshot image_01589d.png shows 24, 9, 2, 28, 5. Wait, no it's mostly single players. The screenshot order is random? No, looks like ranked but specific players highlighted. Let's stick to 1-5 input order.
+                for (let i = 1; i <= 5; i++) { 
                     const teamKey = document.getElementById(`eff${i}_team`)?.value;
                     const num = document.getElementById(`eff${i}_num`)?.value;
                     const name = document.getElementById(`eff${i}_name`)?.value;
@@ -1026,8 +1038,7 @@
                     
                     if(name) {
                         const team = TEAMS[teamKey];
-                        // Emoji mapping based on screenshot: Team emoji first
-                        output += `${team.emoji} ${num} ${name} | ${toMathBoldSerif('EFF')} ${val}\n`;
+                        output += `${team.emoji} #${num} ${name} | EFF ${val}\n`;
                         if(desc) output += `${desc}\n\n`;
                         else output += `\n`;
                     }
@@ -1036,14 +1047,14 @@
                 output += `${COMMON_TAGS}`;
 
             } else if (currentMode === 'monthly_kicks') {
-                output = `👟 ${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(getValue('kicks_month'))}\n\n`;
+                output = `👟${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(getValue('kicks_month'))}\n\n`;
                 output += `${getValue('kicks_intro')}\n\n`;
-                output += `${getValue('kicks_month').replace('.','')}月精選實戰球鞋一次看 👀👟\n\n`;
+                output += `${getValue('kicks_month').replace('.','')}月精選實戰球鞋一次看👀👟\n\n`;
                 output += `Presented by @momentum.tw\n\n`;
                 output += `${COMMON_TAGS} #momentum`;
 
             } else if (currentMode === 'season_stats') {
-                output = `📊 ${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n`;
+                output = `📊${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n`;
                 output += `${getValue('stats_content')}\n\n`;
                 output += `${getValue('stats_date_note')}\n\n-\n\n`;
                 output += `${getValue('vote_title')}\n`;
