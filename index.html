@@ -57,6 +57,7 @@
             padding-bottom: 0.5rem;
             font-family: 'Noto Sans TC', sans-serif;
             display: block;
+            text-align: center; /* Added: Center align date text */
         }
         /* Mobile-only min-height for touch targets */
         @media (max-width: 768px) {
@@ -64,7 +65,8 @@
                 min-height: 2.75rem;
             }
         }
-        input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+        /* Fix for iOS date alignment */
+        input[type="date"]::-webkit-date-and-time-value { text-align: center; }
 
         /* Animations */
         .fade-out {
@@ -856,10 +858,11 @@
             div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
-            
+            const today = new Date().toISOString().split('T')[0]; // Get today
+
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
-                    <input type="date" id="sch_date_${idx}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white">
+                    <input type="date" id="sch_date_${idx}" value="${today}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-center">
                     <select id="sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
                 </div>
                 <div class="flex gap-2 items-center">
@@ -881,10 +884,11 @@
             div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
-            
+            const today = new Date().toISOString().split('T')[0]; // Get today
+
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
-                    <input type="date" id="std_sch_date_${idx}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white">
+                    <input type="date" id="std_sch_date_${idx}" value="${today}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-center">
                     <select id="std_sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
                 </div>
                 <div class="flex gap-2 items-center">
