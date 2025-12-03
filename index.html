@@ -94,12 +94,14 @@
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden">
 
     <!-- LANDING PAGE -->
-    <div id="landing-page" class="fixed inset-0 z-50 bg-brand-dark flex flex-col relative overflow-y-auto">
+    <!-- Fixed Layout: Flex Column on Mobile, Flex Row on Desktop -->
+    <div id="landing-page" class="fixed inset-0 z-50 bg-brand-dark flex flex-col md:flex-row overflow-hidden">
         
-        <!-- Main Content Wrapper (Vertically Centered, Left Aligned) -->
-        <div class="flex-1 flex flex-col justify-center px-8 md:px-24 py-10 md:py-0">
-            <div class="w-full max-w-3xl">
-                
+        <!-- Left Side: Content -->
+        <!-- w-full on mobile, w-1/2 on desktop. Use overflow-y-auto for small height screens -->
+        <div class="w-full md:w-1/2 h-full flex flex-col justify-center px-8 md:px-24 relative z-10 bg-brand-dark overflow-y-auto">
+            
+            <div class="flex-1 flex flex-col justify-center min-h-[400px]">
                 <!-- Logo (Left aligned) -->
                 <div class="mb-6 flex justify-start">
                     <svg class="h-10 md:h-12 w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
@@ -126,8 +128,8 @@
                 </div>
             </div>
 
-            <!-- Footer (Absolute Bottom Centered) -->
-            <div class="absolute bottom-6 left-0 w-full flex flex-col items-center justify-center text-gray-600 text-xs md:text-sm pointer-events-none">
+            <!-- Footer (Centered Bottom) -->
+            <div class="py-6 w-full flex flex-col items-center justify-center text-gray-600 text-xs md:text-sm flex-shrink-0">
                 <p>powered by Alvin LIU</p>
                 <p class="mt-1">© TPBL 2025 All rights reserved.</p>
             </div>
@@ -135,20 +137,20 @@
 
         <!-- Right Side: Image (Hidden on Mobile) -->
         <div class="hidden md:block w-1/2 h-full relative">
-            <img 
+             <img 
                 src="https://assets.tpbl.basketball/production/banners/kl3My9saHVdhrTmoezJC3Am9KyBrMzgES3lVQYm2.jpg?20250930145249" 
                 alt="TPBL Season Visual" 
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover opacity-90"
             >
-            <!-- Overlay for better integration -->
+            <!-- Dark Overlay -->
             <div class="absolute inset-0 bg-black/10"></div>
         </div>
     </div>
 
     <!-- MAIN APP -->
+    <!-- Note: h-full on mobile, h-screen on desktop to handle different scrolling behaviors -->
     <div id="app-container" class="hidden w-full h-full flex flex-col md:flex-row overflow-hidden fixed inset-0 z-0">
         <!-- Sidebar -->
-        <!-- Fixed: Removed sticky and added fixed positioning for mobile header behavior -->
         <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-50 relative shadow-lg md:shadow-none">
             <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative">
                 <div class="flex items-center gap-3">
@@ -225,7 +227,7 @@
                     <span id="copy-text">一鍵複製</span>
                 </button>
 
-                <!-- Footer in Main App -->
+                <!-- Footer in Main App (Moved Here & Updated Text) -->
                 <div class="mt-6 text-center text-gray-400 text-xs">
                     <p>powered by Alvin LIU</p>
                     <p class="mt-1">© TPBL 2025 All rights reserved.</p>
@@ -241,13 +243,11 @@
         function enterApp() {
             const landing = document.getElementById('landing-page');
             const app = document.getElementById('app-container');
-            
             landing.classList.add('fade-out');
             setTimeout(() => {
                 landing.style.display = 'none';
                 app.classList.remove('hidden');
                 app.classList.add('fade-in');
-                // Ensure we scroll to top and handle viewport correctly
                 window.scrollTo(0, 0);
             }, 500);
         }
