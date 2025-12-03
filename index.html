@@ -890,7 +890,7 @@
                     <select id="sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     <span class="text-gray-400 text-xs font-bold">VS</span>
                     <select id="sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded">🗑️</button>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 font-bold px-2 text-xl">&times;</button>
                 </div>
             `;
             container.appendChild(div);
@@ -916,7 +916,7 @@
                     <select id="std_sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     <span class="text-center shrink-0 text-xs font-bold">VS</span>
                     <select id="std_sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded">🗑️</button>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 font-bold px-2 text-xl">&times;</button>
                 </div>
             `;
             container.appendChild(div);
@@ -1295,27 +1295,11 @@
                 output += `${COMMON_TAGS} #momentum`;
 
             } else if (currentMode === 'season_stats') {
-                // MODIFIED: Season Stats generation logic
                 output = `📊${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n`;
                 output += `${getValue('stats_content')}\n\n`;
-                
-                // Generate Date Note
-                const cutoff = getValue('stats_cutoff_date');
-                const s2425 = document.getElementById('season_2425').checked;
-                const s2526 = document.getElementById('season_2526').checked;
-                let seasons = [];
-                if(s2425) seasons.push('24-25');
-                if(s2526) seasons.push('25-26');
-                
-                if(cutoff) {
-                   output += `*數據統計至${formatDateFull(cutoff)}，包含${seasons.join('、')}賽季\n\n-\n\n`;
-                }
-                
-                // Generate Vote Info
-                const month = getValue('stats_vote_month');
-                output += `📌 ${month}月MVP投票進行中 :\n`;
-                output += `🔗投票連結｜${FIXED_VOTE_LINK}\n\n`;
-                
+                output += `${getValue('stats_date_note')}\n\n-\n\n`;
+                output += `${getValue('vote_title')}\n`;
+                output += `🔗投票連結｜${getValue('vote_link')}\n\n`;
                 output += `${COMMON_TAGS}`;
             }
 
