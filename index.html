@@ -2,12 +2,12 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Updated Title -->
     <title>TPBL | 社群文案生成工具</title>
     <meta name="description" content="TPBL 職籃聯盟社群文案自動生成與管理工具">
     
-    <!-- Updated Favicon: Linking directly to the official TPBL website favicon -->
+    <!-- Updated Favicon -->
     <link rel="icon" href="https://tpbl.basketball/favicon.png">
     
     <!-- Tailwind CSS for styling -->
@@ -15,20 +15,17 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; }
-        /* Active Sidebar Item: Gold background, Dark text */
-        .sidebar-item.active { background-color: #D8BF98; color: #19191A; font-weight: 700; }
+        body { font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* FIX: Ensure text turns white on hover for better contrast against dark background */
+        /* Active Sidebar Item */
+        .sidebar-item.active { background-color: #D8BF98; color: #19191A; font-weight: 700; }
         .sidebar-item:hover { color: #ffffff !important; }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        /* --- Scrollbar Hiding --- */
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Custom Utility Classes for Brand Colors */
+        /* Custom Utility Classes */
         .text-brand-gold { color: #D8BF98; }
         .bg-brand-dark { background-color: #19191A; }
         .bg-brand-gold { background-color: #D8BF98; }
@@ -44,8 +41,21 @@
             background-position: right 0.5rem center;
             background-repeat: no-repeat;
             background-size: 1.5em 1.5em;
-            padding-right: 2.5rem !important; /* Make space for the arrow */
+            padding-right: 2.5rem !important;
         }
+
+        /* --- iOS Date Input Fixes --- */
+        input[type="date"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: white;
+            min-height: 2.75rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            font-family: 'Noto Sans TC', sans-serif;
+            display: block;
+        }
+        input[type="date"]::-webkit-date-and-time-value { text-align: left; }
     </style>
     <script>
         tailwind.config = {
@@ -65,13 +75,12 @@
 <body class="bg-gray-50 text-gray-800 md:h-screen flex flex-col md:flex-row md:overflow-hidden min-h-screen">
 
     <!-- Sidebar Navigation -->
-    <!-- Modified for RWD: w-full on mobile, sticky top, with toggle -->
     <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-30 sticky top-0 md:relative shadow-lg md:shadow-none">
         <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark">
             <div class="flex items-center gap-3">
-                <!-- Official SVG Logo Integration -->
+                <!-- Logo Container: Size adjusted to be smaller (h-6 mobile / h-7 desktop) -->
                 <div id="logo-container">
-                    <svg class="h-10 w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
+                    <svg class="h-6 md:h-7 w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
                         <path d="M61.2654 17.7247C61.9017 15.9066 63.5198 9.80155 64.2979 6.71082C64.5686 5.56151 64.4628 4.35565 63.9961 3.27102C63.7265 2.70741 63.3569 2.19736 62.9053 1.76566C61.8884 0.803594 60.5381 0.273137 59.1383 0.285742H32.4381C34.2561 1.20205 34.9834 2.23836 35.4415 3.24557C35.736 3.91462 35.9833 5.22 35.5288 7.06716C35.2306 8.28527 29.9982 27.6332 29.9982 27.6332C29.9982 27.6332 47.9353 25.477 52.1059 24.6116C54.9494 24.0298 59.8764 21.6735 61.2654 17.7247ZM51.0624 16.9429C50.3057 18.953 49.0007 20.7108 47.2956 22.0168C45.5905 23.3227 43.5535 24.1247 41.4157 24.3316L45.15 10.4306L40.8303 7.6344H53.5568C53.5568 7.6344 52.3205 13.5104 51.0624 16.9429Z" fill="white"></path>
                         <path d="M67.4359 6.33628C66.865 8.4707 62.9525 23.0226 62.9525 23.0226C62.9525 23.0226 73.1665 21.7899 79.2279 20.7463C87.0311 19.4009 93.2489 15.2703 95.107 9.98335C96.2414 6.75809 96.1687 4.79457 95.9033 3.8019C95.728 3.21289 95.432 2.66678 95.0342 2.19835C94.5313 1.59242 93.8995 1.10632 93.185 0.775453C92.4704 0.444584 91.691 0.277274 90.9036 0.285737H64.5488C66.7232 1.37294 68.1595 3.61281 67.4359 6.33628ZM85.3003 7.64531C85.0217 9.06412 84.6127 10.4542 84.0785 11.7978C82.3805 16.2048 78.6498 18.481 74.4828 19.0264L76.7953 10.4088L72.5083 7.63439L85.3003 7.64531Z" fill="white"></path>
                         <path d="M32.4708 3.751C32.2927 3.27496 32.0317 2.83422 31.6999 2.44926C31.1204 1.76101 30.3964 1.20877 29.5795 0.831724C28.7626 0.454676 27.8726 0.262062 26.9729 0.267571H0C3.43616 1.95111 4.70153 3.94734 3.42888 7.62712H12.8574L3.06891 43.8868H13.5119L23.2277 7.6344H32.318C32.9216 5.87814 32.7617 4.62368 32.4708 3.751Z" fill="white"></path>
@@ -84,15 +93,15 @@
                 </div>
             </div>
             
-            <!-- Mobile Menu Button -->
-            <button onclick="toggleSidebar()" class="md:hidden text-white p-2 focus:outline-none border border-gray-700 rounded hover:bg-gray-800">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- Mobile Menu Button: Updated to Circular Style -->
+            <button onclick="toggleSidebar()" class="md:hidden bg-white text-gray-900 rounded-full w-8 h-8 flex items-center justify-center focus:outline-none hover:bg-gray-100 transition shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
         </div>
         
-        <!-- Nav Container (Hidden on mobile by default) -->
+        <!-- Nav Container -->
         <nav id="sidebar-nav" class="hidden md:flex flex-col flex-1 overflow-y-auto py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none max-h-[80vh] md:max-h-full">
             
             <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
@@ -134,17 +143,15 @@
     </aside>
 
     <!-- Main Content -->
-    <!-- Modified for RWD: Vertical stack on mobile, horizontal on desktop -->
     <main class="flex-1 flex flex-col md:flex-row md:h-full md:overflow-hidden relative">
         
-        <!-- Input Area (Scrollable) -->
+        <!-- Input Area -->
         <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-white md:h-full" id="input-container">
             <div class="max-w-2xl mx-auto pb-10 md:pb-0">
                 <h2 id="current-title" class="text-xl md:text-2xl font-bold mb-6 text-gray-800 border-l-4 border-brand-gold pl-4">請選擇功能</h2>
                 
                 <!-- Dynamic Form Container -->
                 <div id="dynamic-form" class="space-y-5">
-                    <!-- Forms will be injected here by JS -->
                     <p class="text-gray-500">請從左側選單選擇您要生成的貼文類型。</p>
                 </div>
 
@@ -156,7 +163,7 @@
             </div>
         </div>
 
-        <!-- Output Area (Fixed on Desktop, Stacked on Mobile) -->
+        <!-- Output Area -->
         <div class="w-full md:w-1/3 bg-gray-100 p-6 flex flex-col border-t md:border-t-0 md:border-l border-gray-200">
             <h3 class="text-lg font-bold mb-4 text-gray-700 flex items-center gap-2">
                 預覽結果
@@ -197,7 +204,6 @@
         const TEAM_KEYS = Object.keys(TEAMS);
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
         
-        // Data type mapping for POTW
         const STAT_TYPES = [
             { label: "得分", val: "pts" },
             { label: "籃板", val: "reb" },
@@ -216,7 +222,7 @@
 
         let currentMode = '';
 
-        // --- Font Converter ---
+        // --- Utils ---
         const toMathBoldSerif = (text) => {
             const map = {
                 '0': '𝟎', '1': '𝟏', '2': '𝟐', '3': '𝟑', '4': '𝟒', '5': '𝟓', '6': '𝟔', '7': '𝟕', '8': '𝟖', '9': '𝟗',
@@ -230,7 +236,6 @@
             return String(text).split('').map(char => map[char] || char).join('');
         };
 
-        // --- Date Helpers (Safe Parsing) ---
         const parseDateLocal = (dateStr) => {
             if (!dateStr) return new Date();
             const parts = dateStr.split('-');
@@ -240,7 +245,7 @@
         const getDayName = (dateStr) => {
             const date = parseDateLocal(dateStr);
             const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-            return days[date.getDay()]; // 0-6
+            return days[date.getDay()]; 
         };
         
         const getDayChi = (dateStr) => {
@@ -260,7 +265,7 @@
              return `${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')}`;
         };
 
-        // --- UI Component Builders ---
+        // --- UI Builders ---
         const createInput = (id, label, type="text", placeholder="", value="") => `
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">${label}</label>
@@ -301,7 +306,6 @@
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`btn-${mode}`).classList.add('active');
             
-            // Auto-close sidebar on mobile after selection
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar-nav').classList.add('hidden');
                 document.getElementById('sidebar-nav').classList.remove('flex');
@@ -327,14 +331,14 @@
             const container = document.getElementById('dynamic-form');
             let html = '';
 
-            // Common next game block for many templates
+            // Common Next Game Block (Updated Title)
             const nextGameBlock = `
                 <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
                     <p class="text-xs font-bold text-gray-500 mb-2 uppercase">下場賽事資訊 (Next Game)</p>
                     <div class="grid grid-cols-2 gap-4">
                         ${createInput('next_date', '日期', 'date')}
                         ${createInput('next_game_num', '場次 (Game)', 'number')}
-                        ${createTimeSelect('next_time', '時間 (HH:mm)', '19:00')}
+                        ${createTimeSelect('next_time', '時間', '19:00')}
                         <div></div>
                         ${createTeamSelect('next_away', '客隊 (Away)')}
                         ${createTeamSelect('next_home', '主隊 (Home)')}
@@ -458,45 +462,53 @@
             container.innerHTML = html;
         }
 
-        // --- Helper for Weekly Schedule ---
+        // --- Helper for Weekly Schedule (Optimized for Mobile) ---
         function addScheduleItem() {
             const container = document.getElementById('schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
-            // Changed from grid to flex to prevent wrapping
-            div.className = "flex gap-2 text-sm items-center";
+            
+            // Mobile: Vertical Stack with X centered to the right
+            // Desktop: Horizontal Row
+            div.className = "flex gap-2 text-sm items-center border-b pb-4 mb-2 md:border-0 md:pb-0 md:mb-0";
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
             
             div.innerHTML = `
-                <input type="date" id="sch_date_${idx}" class="w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
-                <select id="sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
-                <select id="sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                <span class="text-center shrink-0">vs</span>
-                <select id="sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0">&times;</button>
+                <div class="flex-1 flex flex-col md:flex-row gap-2">
+                    <input type="date" id="sch_date_${idx}" class="w-full md:w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
+                    <div class="flex gap-2 items-center w-full md:w-auto">
+                        <select id="sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
+                        <select id="sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                        <span class="text-center shrink-0">vs</span>
+                        <select id="sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0 self-center md:self-auto text-xl md:text-base">&times;</button>
             `;
             container.appendChild(div);
         }
 
-        // --- Helper for Standings Schedule ---
+        // --- Helper for Standings Schedule (Optimized for Mobile) ---
         function addStandingsGameItem() {
             const container = document.getElementById('standings_schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
-            // Changed from grid to flex to prevent wrapping
-            div.className = "flex gap-2 text-sm items-center";
+            div.className = "flex gap-2 text-sm items-center border-b pb-4 mb-2 md:border-0 md:pb-0 md:mb-0";
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
             
-            // Format similar to weekly schedule inputs
             div.innerHTML = `
-                <input type="date" id="std_sch_date_${idx}" class="w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
-                <select id="std_sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
-                <select id="std_sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                <span class="text-center shrink-0">vs</span>
-                <select id="std_sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0">&times;</button>
+                <div class="flex-1 flex flex-col md:flex-row gap-2">
+                    <input type="date" id="std_sch_date_${idx}" class="w-full md:w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
+                    <div class="flex gap-2 items-center w-full md:w-auto">
+                        <select id="std_sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
+                        <select id="std_sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                        <span class="text-center shrink-0">vs</span>
+                        <select id="std_sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0 self-center md:self-auto text-xl md:text-base">&times;</button>
             `;
             container.appendChild(div);
         }
@@ -651,7 +663,6 @@
                 output = `📊｜${toMathBoldSerif('WEEK')} ${getValue('week_num')} #球隊戰績排行\n\n`;
                 output += `${getValue('standings_content')}\n\n`;
                 
-                // New logic for schedule list in standings
                 const listContainer = document.getElementById('standings_schedule_list_container');
                 const hasChildren = listContainer && listContainer.children.length > 0;
                 
@@ -661,17 +672,18 @@
                         const inputs = div.querySelectorAll('input, select');
                         const d = inputs[0].value;
                         const t = inputs[1].value;
-                        const a = TEAMS[inputs[2].value];
-                        const h = TEAMS[inputs[3].value];
+                        const a = inputs[2].value;
+                        const h = inputs[3].value;
                         if(d) {
                              const mmdd = formatMMDD(d);
                              const day = getDayChi(d);
-                             output += `▌ ${mmdd}（${day}）｜${t}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n`;
+                             const aTeam = TEAMS[a];
+                             const hTeam = TEAMS[h];
+                             output += `▌ ${mmdd}（${day}）｜${t}｜${aTeam.full}（客） vs. ${hTeam.full}（主）｜${hTeam.arena}\n`;
                         }
                     });
                      output += `\n${COMMON_TAGS}`;
                 } else {
-                    // Fallback if no games added (maybe season pause)
                     output += `\n${COMMON_TAGS}`;
                 }
 
