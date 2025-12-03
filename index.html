@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Updated Title -->
+    <!-- Title -->
     <title>TPBL | 社群文案生成工具</title>
     <meta name="description" content="TPBL 職籃聯盟社群文案自動生成與管理工具">
     
-    <!-- Updated Favicon -->
+    <!-- Favicon -->
     <link rel="icon" href="https://tpbl.basketball/favicon.png">
     
-    <!-- Tailwind CSS for styling -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* Active Sidebar Item */
+        /* Sidebar Styles */
         .sidebar-item.active { background-color: #D8BF98; color: #19191A; font-weight: 700; }
         .sidebar-item:hover { color: #ffffff !important; }
 
-        /* --- Scrollbar Hiding --- */
+        /* Scrollbar Hiding */
         ::-webkit-scrollbar { display: none; }
         * { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Custom Utility Classes */
+        /* Custom Colors */
         .text-brand-gold { color: #D8BF98; }
         .bg-brand-dark { background-color: #19191A; }
         .bg-brand-gold { background-color: #D8BF98; }
         .border-brand-gold { border-color: #D8BF98; }
         .focus-ring-gold:focus { --tw-ring-color: #D8BF98; }
 
-        /* Custom Select Arrow */
+        /* Custom Select */
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -44,20 +44,25 @@
             padding-right: 2.5rem !important;
         }
 
-        /* --- iOS Date Input Fixes --- */
+        /* Date Input Fixes */
         input[type="date"] {
             -webkit-appearance: none;
             appearance: none;
             background-color: white;
-            min-height: 2.75rem;
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
             font-family: 'Noto Sans TC', sans-serif;
             display: block;
         }
+        /* Mobile-only min-height for touch targets */
+        @media (max-width: 768px) {
+            input[type="date"] {
+                min-height: 2.75rem;
+            }
+        }
         input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 
-        /* Animation for Landing Page Transition */
+        /* Animations */
         .fade-out {
             opacity: 0;
             transition: opacity 0.5s ease-out;
@@ -89,60 +94,59 @@
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden">
 
     <!-- LANDING PAGE -->
-    <div id="landing-page" class="fixed inset-0 z-50 bg-brand-dark flex flex-col items-center justify-center px-6 text-center">
-        
-        <!-- Main Visual Container -->
-        <div class="w-full max-w-4xl mb-8 md:mb-12 rounded-2xl overflow-hidden shadow-2xl border border-gray-800 relative group">
-            <!-- Updated Image URL -->
-            <img 
-                src="https://assets.tpbl.basketball/production/banners/0cdJLsEGb3Bbab0ED7uFkZmOQYwdslXw7yz99tQ1.jpg?20250930145326" 
-                alt="TPBL Season Visual" 
-                class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition duration-700"
-                onerror="this.style.display='none'; document.getElementById('fallback-visual').classList.remove('hidden');"
-            >
-            <!-- Fallback Visual -->
-            <div id="fallback-visual" class="hidden w-full h-64 md:h-96 bg-gray-900 flex items-center justify-center">
-                <span class="text-gray-600 text-sm">主視覺圖片載入失敗 (請確認網址)</span>
+    <div id="landing-page" class="fixed inset-0 z-50 bg-brand-dark overflow-y-auto">
+        <div class="min-h-screen flex flex-col items-center justify-center px-6 py-12 text-center">
+            
+            <!-- Main Visual Container -->
+            <div class="w-full max-w-3xl mb-8 rounded-2xl overflow-hidden shadow-2xl border border-gray-800 relative group flex-shrink-0">
+                <img 
+                    src="https://assets.tpbl.basketball/production/banners/0cdJLsEGb3Bbab0ED7uFkZmOQYwdslXw7yz99tQ1.jpg?20250930145326" 
+                    alt="TPBL Season Visual" 
+                    class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition duration-700"
+                    onerror="this.style.display='none'; document.getElementById('fallback-visual').classList.remove('hidden');"
+                >
+                <div id="fallback-visual" class="hidden w-full h-64 bg-gray-900 flex items-center justify-center">
+                    <span class="text-gray-600 text-sm">主視覺圖片載入失敗</span>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
             </div>
-            
-            <!-- Overlay Gradient -->
-            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
-        </div>
 
-        <!-- Content -->
-        <div class="relative z-10 max-w-2xl">
-            <!-- Logo -->
-            <div class="mb-6 flex justify-center">
-                <svg class="h-10 md:h-12 w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
-                    <path d="M61.2654 17.7247C61.9017 15.9066 63.5198 9.80155 64.2979 6.71082C64.5686 5.56151 64.4628 4.35565 63.9961 3.27102C63.7265 2.70741 63.3569 2.19736 62.9053 1.76566C61.8884 0.803594 60.5381 0.273137 59.1383 0.285742H32.4381C34.2561 1.20205 34.9834 2.23836 35.4415 3.24557C35.736 3.91462 35.9833 5.22 35.5288 7.06716C35.2306 8.28527 29.9982 27.6332 29.9982 27.6332C29.9982 27.6332 47.9353 25.477 52.1059 24.6116C54.9494 24.0298 59.8764 21.6735 61.2654 17.7247ZM51.0624 16.9429C50.3057 18.953 49.0007 20.7108 47.2956 22.0168C45.5905 23.3227 43.5535 24.1247 41.4157 24.3316L45.15 10.4306L40.8303 7.6344H53.5568C53.5568 7.6344 52.3205 13.5104 51.0624 16.9429Z" fill="white"></path>
-                    <path d="M67.4359 6.33628C66.865 8.4707 62.9525 23.0226 62.9525 23.0226C62.9525 23.0226 73.1665 21.7899 79.2279 20.7463C87.0311 19.4009 93.2489 15.2703 95.107 9.98335C96.2414 6.75809 96.1687 4.79457 95.9033 3.8019C95.728 3.21289 95.432 2.66678 95.0342 2.19835C94.5313 1.59242 93.8995 1.10632 93.185 0.775453C92.4704 0.444584 91.691 0.277274 90.9036 0.285737H64.5488C66.7232 1.37294 68.1595 3.61281 67.4359 6.33628ZM85.3003 7.64531C85.0217 9.06412 84.6127 10.4542 84.0785 11.7978C82.3805 16.2048 78.6498 18.481 74.4828 19.0264L76.7953 10.4088L72.5083 7.63439L85.3003 7.64531Z" fill="white"></path>
-                    <path d="M32.4708 3.751C32.2927 3.27496 32.0317 2.83422 31.6999 2.44926C31.1204 1.76101 30.3964 1.20877 29.5795 0.831724C28.7626 0.454676 27.8726 0.262062 26.9729 0.267571H0C3.43616 1.95111 4.70153 3.94734 3.42888 7.62712H12.8574L3.06891 43.8868H13.5119L23.2277 7.6344H32.318C32.9216 5.87814 32.7617 4.62368 32.4708 3.751Z" fill="white"></path>
-                    <path d="M28.5074 33.1856L25.6312 43.9049H36.1614L40.1903 28.8913L24.3076 30.8184L28.5074 33.1856Z" fill="white"></path>
-                    <path d="M90.1327 27.6623C89.6818 24.317 86.1621 22.808 80.886 24.0698L77.5444 36.5199H69.7812L72.9228 24.8261L62.1162 26.1388L57.3456 43.9049H80.7624C84.144 41.9996 86.7111 38.698 88.1438 35.9418C89.3255 33.6728 90.5036 30.4185 90.1327 27.6623Z" fill="white"></path>
-                    <path d="M83.1223 21.5972C89.0637 21.1754 91.849 22.728 92.0926 26.4624C93.8561 22.3753 97.9104 19.9537 102.274 19.4082C98.0777 18.8592 96.0415 15.7176 96.0197 12.5287C94.2125 16.3612 89.4491 20.6227 83.1223 21.5972Z" fill="#D4C09D"></path>
-                    <path d="M99.0413 2.90741C99.4449 3.91826 99.2776 5.75814 99.0667 6.60172L98.3395 9.79791C96.9396 15.0303 100.256 18.2919 106.426 18.2919C106.426 18.2919 109.502 7.11444 109.804 6.09632C110.702 3.02741 107.986 0.278488 104.132 0.278488H96.0706C96.7348 0.458149 97.3486 0.788905 97.8639 1.24494C98.3792 1.70097 98.7822 2.26993 99.0413 2.90741Z" fill="white"></path>
-                    <path d="M101.55 36.6363L105.855 20.7463C100.096 20.4373 94.0343 25.0443 92.6671 30.8548L89.1655 43.9049H113.739L119.993 36.5199L101.55 36.6363Z" fill="white"></path>
-                </svg>
+            <!-- Content -->
+            <div class="relative z-10 max-w-2xl flex-shrink-0">
+                <!-- Logo -->
+                <div class="mb-6 flex justify-center">
+                    <svg class="h-10 md:h-12 w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
+                        <path d="M61.2654 17.7247C61.9017 15.9066 63.5198 9.80155 64.2979 6.71082C64.5686 5.56151 64.4628 4.35565 63.9961 3.27102C63.7265 2.70741 63.3569 2.19736 62.9053 1.76566C61.8884 0.803594 60.5381 0.273137 59.1383 0.285742H32.4381C34.2561 1.20205 34.9834 2.23836 35.4415 3.24557C35.736 3.91462 35.9833 5.22 35.5288 7.06716C35.2306 8.28527 29.9982 27.6332 29.9982 27.6332C29.9982 27.6332 47.9353 25.477 52.1059 24.6116C54.9494 24.0298 59.8764 21.6735 61.2654 17.7247ZM51.0624 16.9429C50.3057 18.953 49.0007 20.7108 47.2956 22.0168C45.5905 23.3227 43.5535 24.1247 41.4157 24.3316L45.15 10.4306L40.8303 7.6344H53.5568C53.5568 7.6344 52.3205 13.5104 51.0624 16.9429Z" fill="white"></path>
+                        <path d="M67.4359 6.33628C66.865 8.4707 62.9525 23.0226 62.9525 23.0226C62.9525 23.0226 73.1665 21.7899 79.2279 20.7463C87.0311 19.4009 93.2489 15.2703 95.107 9.98335C96.2414 6.75809 96.1687 4.79457 95.9033 3.8019C95.728 3.21289 95.432 2.66678 95.0342 2.19835C94.5313 1.59242 93.8995 1.10632 93.185 0.775453C92.4704 0.444584 91.691 0.277274 90.9036 0.285737H64.5488C66.7232 1.37294 68.1595 3.61281 67.4359 6.33628ZM85.3003 7.64531C85.0217 9.06412 84.6127 10.4542 84.0785 11.7978C82.3805 16.2048 78.6498 18.481 74.4828 19.0264L76.7953 10.4088L72.5083 7.63439L85.3003 7.64531Z" fill="white"></path>
+                        <path d="M32.4708 3.751C32.2927 3.27496 32.0317 2.83422 31.6999 2.44926C31.1204 1.76101 30.3964 1.20877 29.5795 0.831724C28.7626 0.454676 27.8726 0.262062 26.9729 0.267571H0C3.43616 1.95111 4.70153 3.94734 3.42888 7.62712H12.8574L3.06891 43.8868H13.5119L23.2277 7.6344H32.318C32.9216 5.87814 32.7617 4.62368 32.4708 3.751Z" fill="white"></path>
+                        <path d="M28.5074 33.1856L25.6312 43.9049H36.1614L40.1903 28.8913L24.3076 30.8184L28.5074 33.1856Z" fill="white"></path>
+                        <path d="M90.1327 27.6623C89.6818 24.317 86.1621 22.808 80.886 24.0698L77.5444 36.5199H69.7812L72.9228 24.8261L62.1162 26.1388L57.3456 43.9049H80.7624C84.144 41.9996 86.7111 38.698 88.1438 35.9418C89.3255 33.6728 90.5036 30.4185 90.1327 27.6623Z" fill="white"></path>
+                        <path d="M83.1223 21.5972C89.0637 21.1754 91.849 22.728 92.0926 26.4624C93.8561 22.3753 97.9104 19.9537 102.274 19.4082C98.0777 18.8592 96.0415 15.7176 96.0197 12.5287C94.2125 16.3612 89.4491 20.6227 83.1223 21.5972Z" fill="#D4C09D"></path>
+                        <path d="M99.0413 2.90741C99.4449 3.91826 99.2776 5.75814 99.0667 6.60172L98.3395 9.79791C96.9396 15.0303 100.256 18.2919 106.426 18.2919C106.426 18.2919 109.502 7.11444 109.804 6.09632C110.702 3.02741 107.986 0.278488 104.132 0.278488H96.0706C96.7348 0.458149 97.3486 0.788905 97.8639 1.24494C98.3792 1.70097 98.7822 2.26993 99.0413 2.90741Z" fill="white"></path>
+                        <path d="M101.55 36.6363L105.855 20.7463C100.096 20.4373 94.0343 25.0443 92.6671 30.8548L89.1655 43.9049H113.739L119.993 36.5199L101.55 36.6363Z" fill="white"></path>
+                    </svg>
+                </div>
+                
+                <!-- Title -->
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 tracking-wide">社群文案生成工具</h1>
+                <p class="text-gray-400 text-lg md:text-xl mb-10 font-light">一個簡單實用的工具，幫助團隊產出社群貼文素材。</p>
+                
+                <button onclick="enterApp()" class="bg-brand-gold text-brand-dark text-lg font-bold py-3 px-12 rounded-full hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-2 mx-auto">
+                    開始使用 <span>→</span>
+                </button>
             </div>
-            
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 tracking-wide">TPBL 社群文案生成工具</h1>
-            <p class="text-gray-400 text-lg md:text-xl mb-10 font-light">一個簡單實用的工具，幫助團隊產出社群貼文素材。</p>
-            
-            <button onclick="enterApp()" class="bg-brand-gold text-brand-dark text-lg font-bold py-3 px-12 rounded-full hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-2 mx-auto">
-                開始使用 <span>→</span>
-            </button>
-        </div>
 
-        <!-- Landing Page Footer -->
-        <div class="absolute bottom-6 text-gray-600 text-xs md:text-sm">
-            <p>powered by Alvin LIU</p>
-            <p>© TPBL LEAGUE 2025 All rights reserved.</p>
+            <!-- Footer -->
+            <div class="mt-auto pt-10 pb-6 text-gray-600 text-xs md:text-sm flex-shrink-0">
+                <p>powered by Alvin LIU</p>
+                <p>© TPBL LEAGUE 2025 All rights reserved.</p>
+            </div>
         </div>
     </div>
 
-    <!-- MAIN APP (Hidden initially) -->
+    <!-- MAIN APP -->
     <div id="app-container" class="hidden h-screen w-full flex flex-col md:flex-row md:overflow-hidden">
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar -->
         <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-30 sticky top-0 md:relative shadow-lg md:shadow-none">
             <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-40 relative">
                 <div class="flex items-center gap-3">
@@ -160,52 +164,31 @@
                     </div>
                 </div>
                 
-                <!-- Mobile Menu Button: Circular Style with Animation Support -->
+                <!-- Mobile Menu Button: Updated to Double Bar Style -->
                 <button onclick="toggleSidebar()" class="md:hidden bg-white text-black rounded-full w-8 h-8 flex items-center justify-center focus:outline-none hover:bg-gray-100 transition shadow-sm z-50">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 9h16M4 15h16" />
                     </svg>
                 </button>
             </div>
             
-            <!-- Nav Container with Slide Down Animation -->
+            <!-- Sidebar Nav -->
             <nav id="sidebar-nav" class="flex flex-col flex-1 overflow-y-auto py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none transition-all duration-500 ease-in-out max-h-0 opacity-0 md:max-h-full md:opacity-100 overflow-hidden z-30 origin-top">
-                
                 <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
-                <button onclick="switchMode('weekday_preview')" id="btn-weekday_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>🗓️</span> 平日賽事預告
-                </button>
-                <button onclick="switchMode('game_preview')" id="btn-game_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>🔥</span> 單場賽程預告
-                </button>
-                <button onclick="switchMode('weekly_schedule')" id="btn-weekly_schedule" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>📅</span> 每週賽程表
-                </button>
+                <button onclick="switchMode('weekday_preview')" id="btn-weekday_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🗓️</span> 平日賽事預告</button>
+                <button onclick="switchMode('game_preview')" id="btn-game_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🔥</span> 單場賽程預告</button>
+                <button onclick="switchMode('weekly_schedule')" id="btn-weekly_schedule" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>📅</span> 每週賽程表</button>
 
                 <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">賽事進行 / 賽後</div>
-                <button onclick="switchMode('final_score')" id="btn-final_score" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>🏁</span> 終場比分
-                </button>
-                <button onclick="switchMode('game_highlight')" id="btn-game_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>🎥</span> 本場賽事精華
-                </button>
-                <button onclick="switchMode('press_conf')" id="btn-press_conf" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>🗣️</span> 賽後記者會
-                </button>
-                <button onclick="switchMode('potg')" id="btn-potg" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>⚡</span> 單場最佳球員
-                </button>
+                <button onclick="switchMode('final_score')" id="btn-final_score" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🏁</span> 終場比分</button>
+                <button onclick="switchMode('game_highlight')" id="btn-game_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🎥</span> 本場賽事精華</button>
+                <button onclick="switchMode('press_conf')" id="btn-press_conf" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🗣️</span> 賽後記者會</button>
+                <button onclick="switchMode('potg')" id="btn-potg" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>⚡</span> 單場最佳球員</button>
 
                 <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">每週總結</div>
-                <button onclick="switchMode('weekly_standings')" id="btn-weekly_standings" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>📊</span> 每週戰績排行
-                </button>
-                <button onclick="switchMode('top5')" id="btn-top5" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>💣</span> 本週五大好球
-                </button>
-                <button onclick="switchMode('potw')" id="btn-potw" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
-                    <span>🥇</span> 單週最佳球員
-                </button>
+                <button onclick="switchMode('weekly_standings')" id="btn-weekly_standings" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>📊</span> 每週戰績排行</button>
+                <button onclick="switchMode('top5')" id="btn-top5" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>💣</span> 本週五大好球</button>
+                <button onclick="switchMode('potw')" id="btn-potw" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🥇</span> 單週最佳球員</button>
             </nav>
         </aside>
 
@@ -217,7 +200,6 @@
                 <div class="max-w-2xl mx-auto pb-10 md:pb-0">
                     <h2 id="current-title" class="text-xl md:text-2xl font-bold mb-6 text-gray-800 border-l-4 border-brand-gold pl-4">請選擇功能</h2>
                     
-                    <!-- Dynamic Form Container -->
                     <div id="dynamic-form" class="space-y-5">
                         <p class="text-gray-500">請從左側選單選擇您要生成的貼文類型。</p>
                     </div>
@@ -227,12 +209,6 @@
                             <span>生成文案</span>
                         </button>
                     </div>
-
-                    <!-- App Footer -->
-                    <footer class="mt-12 mb-6 text-center text-gray-400 text-xs">
-                        <p>powered by Alvin LIU</p>
-                        <p class="mt-1">© TPBL LEAGUE 2025 All rights reserved.</p>
-                    </footer>
                 </div>
             </div>
 
@@ -246,6 +222,12 @@
                 <button onclick="copyToClipboard()" class="mt-4 w-full bg-white border-2 border-gray-200 hover:border-brand-dark text-gray-800 font-bold py-3 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2">
                     <span id="copy-text">一鍵複製</span>
                 </button>
+
+                <!-- Footer in Main App -->
+                <div class="mt-6 text-center text-gray-400 text-xs">
+                    <p>powered by Alvin LIU</p>
+                    <p class="mt-1">© TPBL LEAGUE 2025 All rights reserved.</p>
+                </div>
             </div>
 
         </main>
@@ -257,24 +239,20 @@
         function enterApp() {
             const landing = document.getElementById('landing-page');
             const app = document.getElementById('app-container');
-            
-            // Add fade-out class
             landing.classList.add('fade-out');
-            
             setTimeout(() => {
                 landing.style.display = 'none';
                 app.classList.remove('hidden');
                 app.classList.add('fade-in');
-            }, 500); // Match CSS transition time
+            }, 500);
         }
 
         // --- Mobile Sidebar Toggle with Animation Logic ---
         function toggleSidebar() {
             const nav = document.getElementById('sidebar-nav');
-            // Toggle between open and closed state classes
             if (nav.classList.contains('max-h-0')) {
                 nav.classList.remove('max-h-0', 'opacity-0');
-                nav.classList.add('max-h-screen', 'opacity-100'); // Use max-h-screen to ensure full visibility
+                nav.classList.add('max-h-screen', 'opacity-100');
             } else {
                 nav.classList.add('max-h-0', 'opacity-0');
                 nav.classList.remove('max-h-screen', 'opacity-100');
@@ -566,14 +544,15 @@
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
             
+            // Added h-9 to input and selects to ensure equal height on desktop
             div.innerHTML = `
                 <div class="flex-1 flex flex-col md:flex-row gap-2">
-                    <input type="date" id="sch_date_${idx}" class="w-full md:w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
+                    <input type="date" id="sch_date_${idx}" class="w-full md:w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold md:h-9">
                     <div class="flex gap-2 items-center w-full md:w-auto">
-                        <select id="sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
-                        <select id="sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                        <select id="sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${timeOptions}</select>
+                        <select id="sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                         <span class="text-center shrink-0">vs</span>
-                        <select id="sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                        <select id="sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     </div>
                 </div>
                 <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0 self-center md:self-auto text-xl md:text-base">&times;</button>
@@ -590,14 +569,15 @@
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
             
+            // Added h-9 to input and selects
             div.innerHTML = `
                 <div class="flex-1 flex flex-col md:flex-row gap-2">
-                    <input type="date" id="std_sch_date_${idx}" class="w-full md:w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
+                    <input type="date" id="std_sch_date_${idx}" class="w-full md:w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold md:h-9">
                     <div class="flex gap-2 items-center w-full md:w-auto">
-                        <select id="std_sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
-                        <select id="std_sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                        <select id="std_sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${timeOptions}</select>
+                        <select id="std_sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                         <span class="text-center shrink-0">vs</span>
-                        <select id="std_sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                        <select id="std_sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     </div>
                 </div>
                 <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0 self-center md:self-auto text-xl md:text-base">&times;</button>
@@ -741,8 +721,8 @@
                     const inputs = div.querySelectorAll('input, select');
                     const d = inputs[0].value;
                     const t = inputs[1].value;
-                    const a = TEAMS[inputs[2].value];
-                    const h = TEAMS[inputs[3].value];
+                    const a = inputs[2].value;
+                    const h = inputs[3].value;
                     if(d) {
                          const mmdd = formatMMDD(d);
                          const day = getDayChi(d);
