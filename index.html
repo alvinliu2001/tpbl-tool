@@ -420,17 +420,18 @@
             const container = document.getElementById('schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
-            div.className = "grid grid-cols-12 gap-2 text-sm items-center";
+            // Changed from grid to flex to prevent wrapping
+            div.className = "flex gap-2 text-sm items-center";
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
             
             div.innerHTML = `
-                <input type="date" id="sch_date_${idx}" class="col-span-3 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
-                <select id="sch_time_${idx}" class="col-span-2 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
-                <select id="sch_away_${idx}" class="col-span-3 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                <span class="col-span-1 text-center">vs</span>
-                <select id="sch_home_${idx}" class="col-span-3 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                <button onclick="this.parentElement.remove()" class="col-span-1 text-red-500 font-bold px-1">&times;</button>
+                <input type="date" id="sch_date_${idx}" class="w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
+                <select id="sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
+                <select id="sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                <span class="text-center shrink-0">vs</span>
+                <select id="sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0">&times;</button>
             `;
             container.appendChild(div);
         }
@@ -440,18 +441,19 @@
             const container = document.getElementById('standings_schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
-            div.className = "grid grid-cols-12 gap-2 text-sm items-center";
+            // Changed from grid to flex to prevent wrapping
+            div.className = "flex gap-2 text-sm items-center";
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
             
             // Format similar to weekly schedule inputs
             div.innerHTML = `
-                <input type="date" id="std_sch_date_${idx}" class="col-span-3 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
-                <select id="std_sch_time_${idx}" class="col-span-2 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
-                <select id="std_sch_away_${idx}" class="col-span-3 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                <span class="col-span-1 text-center">vs</span>
-                <select id="std_sch_home_${idx}" class="col-span-3 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                <button onclick="this.parentElement.remove()" class="col-span-1 text-red-500 font-bold px-1">&times;</button>
+                <input type="date" id="std_sch_date_${idx}" class="w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold">
+                <select id="std_sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
+                <select id="std_sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                <span class="text-center shrink-0">vs</span>
+                <select id="std_sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0">&times;</button>
             `;
             container.appendChild(div);
         }
