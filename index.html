@@ -57,7 +57,7 @@
             padding-bottom: 0.5rem;
             font-family: 'Noto Sans TC', sans-serif;
             display: block;
-            text-align: left; /* Left aligned as requested */
+            text-align: left;
         }
         /* Mobile-only min-height for touch targets */
         @media (max-width: 768px) {
@@ -106,7 +106,7 @@
         <div class="w-full md:w-1/2 h-full flex flex-col justify-center px-8 md:px-24 relative z-10 bg-brand-dark overflow-y-auto">
             
             <div class="flex-1 flex flex-col justify-center min-h-[400px]">
-                <!-- Logo (Content injected via JS to prevent breakage) -->
+                <!-- Logo (Content injected via JS) -->
                 <div class="mb-6 flex justify-start">
                     <svg class="h-10 md:h-12 w-auto tpbl-logo-target" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
                         <!-- Paths injected by JS -->
@@ -275,7 +275,7 @@
             }
         });
 
-        // --- LOGO DATA (Stored as constant to avoid corruption) ---
+        // --- LOGO DATA ---
         const LOGO_SVG_CONTENT = `
             <path d="M61.2654 17.7247C61.9017 15.9066 63.5198 9.80155 64.2979 6.71082C64.5686 5.56151 64.4628 4.35565 63.9961 3.27102C63.7265 2.70741 63.3569 2.19736 62.9053 1.76566C61.8884 0.803594 60.5381 0.273137 59.1383 0.285742H32.4381C34.2561 1.20205 34.9834 2.23836 35.4415 3.24557C35.736 3.91462 35.9833 5.22 35.5288 7.06716C35.2306 8.28527 29.9982 27.6332 29.9982 27.6332C29.9982 27.6332 47.9353 25.477 52.1059 24.6116C54.9494 24.0298 59.8764 21.6735 61.2654 17.7247ZM51.0624 16.9429C50.3057 18.953 49.0007 20.7108 47.2956 22.0168C45.5905 23.3227 43.5535 24.1247 41.4157 24.3316L45.15 10.4306L40.8303 7.6344H53.5568C53.5568 7.6344 52.3205 13.5104 51.0624 16.9429Z" fill="white"></path>
             <path d="M67.4359 6.33628C66.865 8.4707 62.9525 23.0226 62.9525 23.0226C62.9525 23.0226 73.1665 21.7899 79.2279 20.7463C87.0311 19.4009 93.2489 15.2703 95.107 9.98335C96.2414 6.75809 96.1687 4.79457 95.9033 3.8019C95.728 3.21289 95.432 2.66678 95.0342 2.19835C94.5313 1.59242 93.8995 1.10632 93.185 0.775453C92.4704 0.444584 91.691 0.277274 90.9036 0.285737H64.5488C66.7232 1.37294 68.1595 3.61281 67.4359 6.33628ZM85.3003 7.64531C85.0217 9.06412 84.6127 10.4542 84.0785 11.7978C82.3805 16.2048 78.6498 18.481 74.4828 19.0264L76.7953 10.4088L72.5083 7.63439L85.3003 7.64531Z" fill="white"></path>
@@ -297,7 +297,6 @@
             "海神": { full: "高雄全家海神", emoji: "🔱", arena: "高雄巨蛋" },
             "雲豹": { full: "台啤永豐雲豹", emoji: "🐆", arena: "桃園巨蛋" }
         };
-
         const TEAM_KEYS = Object.keys(TEAMS);
         
         // Roster Data (2024-25 Season)
@@ -353,6 +352,7 @@
 
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
         const MONTHS = ["JAN.", "FEB.", "MAR.", "APR.", "MAY", "JUN.", "JUL.", "AUG.", "SEP.", "OCT.", "NOV.", "DEC."];
+        const FIXED_VOTE_LINK = "https://tpbl.basketball/awards/vote";
         
         const STAT_TYPES = [
             { label: "得分", val: "pts" },
@@ -433,6 +433,11 @@
              const date = parseDateLocal(dateStr);
              return `${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')}`;
         };
+        
+        const formatDateFull = (dateStr) => {
+             const date = parseDateLocal(dateStr);
+             return `${date.getFullYear()}/${String(date.getMonth()+1).padStart(2,'0')}/${String(date.getDate()).padStart(2,'0')}`;
+        }
 
         // --- UI Builders ---
         const createInput = (id, label, type="text", placeholder="", value="") => `
@@ -553,12 +558,13 @@
         function renderForm(mode) {
             const container = document.getElementById('dynamic-form');
             let html = '';
+            const today = new Date().toISOString().split('T')[0];
 
             if (mode === 'game_preview') {
                 html += `
                     <div class="grid grid-cols-2 gap-4">
                         ${createInput('game_num', '場次 (GAME)', 'number', '32', '32')}
-                        ${createInput('match_date', '比賽日期', 'date')}
+                        ${createInput('match_date', '比賽日期', 'date', '', today)}
                         ${createTimeSelect('match_time', '比賽時間', '19:00')}
                         <div></div>
                         ${createTeamSelect('away_team', '客隊 (Away)')}
@@ -570,7 +576,7 @@
             } else if (mode === 'weekday_preview') {
                 html += `
                      <div class="grid grid-cols-2 gap-4">
-                        ${createInput('match_date', '比賽日期', 'date')}
+                        ${createInput('match_date', '比賽日期', 'date', '', today)}
                         ${createTimeSelect('match_time', '比賽時間', '19:00')}
                         ${createTeamSelect('away_team', '客隊 (Away)')}
                         ${createTeamSelect('home_team', '主隊 (Home)')}
@@ -580,7 +586,6 @@
                     ${createTextarea('promo_link', '贊助商版位 (可換行)', '📍SPORTS NATIONS店點資訊...', 3)}
                 `;
             } else if (mode === 'matchup_highlight') {
-                // MODIFIED: Use Team/Player selects
                 html += `
                     <div class="p-3 border rounded-md bg-gray-50 mb-3">
                         <p class="text-sm font-bold text-gray-700 mb-2">對戰組合 (先選球隊 -> 再選球員)</p>
@@ -613,7 +618,7 @@
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
                         <p class="text-xs font-bold text-gray-500 mb-2 uppercase">下場賽事資訊 (Next Game)</p>
                         <div class="grid grid-cols-2 gap-4">
-                            ${createInput('next_date', '日期', 'date')}
+                            ${createInput('next_date', '日期', 'date', '', today)}
                             ${createTimeSelect('next_time', '時間', '19:00')}
                             ${createTeamSelect('next_away', '客隊 (Away)')}
                             ${createTeamSelect('next_home', '主隊 (Home)')}
@@ -633,7 +638,6 @@
                     ${createNextGameBlock("下場賽事資訊 (Next Game)")}
                 `;
             } else if (mode === 'potg') {
-                // MODIFIED: Use Team/Player selects
                 html += `
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         ${createTeamSelect('potg_away', '客隊 (Away)')}
@@ -643,7 +647,6 @@
                     ${createInput('promo_text', '底部活動文案', 'text', '🀄拚競技，超帶勁...')}
                 `;
             } else if (mode === 'local_player_highlight') {
-                 // MODIFIED: Use Team/Player selects with autofill
                  html += `
                     <div class="mb-4 p-3 bg-gray-50 border rounded-md">
                          <p class="text-sm font-bold text-gray-700 mb-2">選擇球員 (自動帶入背號)</p>
@@ -664,7 +667,7 @@
                              ${createInput('lp_next_player_name', '下場球員名稱 (例如：曾柏喻)', 'text')}
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            ${createInput('next_date', '日期', 'date')}
+                            ${createInput('next_date', '日期', 'date', '', today)}
                             ${createInput('next_game_num', '場次 (Game)', 'number')}
                             ${createTimeSelect('next_time', '時間', '19:00')}
                             <div></div>
@@ -681,7 +684,6 @@
                     ${createTextarea('ms_content', '內容描述', '', 5)}
                 `;
             } else if (mode === 'weekly_schedule') {
-                // MODIFIED: Updated 2-row layout
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '8')}
                     ${createTextarea('week_intro', '本週賽程引言', '', 4)}
@@ -693,7 +695,6 @@
                 `;
                 setTimeout(() => { addScheduleItem(); addScheduleItem(); }, 100);
             } else if (mode === 'weekly_standings') {
-                // MODIFIED: Updated 2-row layout
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('standings_content', '戰績分析文案', '', 8)}
@@ -705,7 +706,6 @@
                 `;
                  setTimeout(() => { addStandingsGameItem(); }, 100);
             } else if (mode === 'top5') {
-                 // MODIFIED: Use Team/Player selects with autofill
                  html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('top5_intro', '引言文案', '', 3)}
@@ -725,7 +725,6 @@
                     ${createInput('vote_link', '投票連結', 'text')}
                 `;
             } else if (mode === 'potw') {
-                // MODIFIED: Use Team/Player selects
                 html += `
                     <div class="grid grid-cols-2 gap-4">
                         ${createTeamSelect('player_team', '所屬隊伍')}
@@ -750,7 +749,6 @@
                 `;
                 setTimeout(() => { addStatItem(); addStatItem(); addStatItem(); }, 100);
             } else if (mode === 'weekly_local_eff') {
-                // MODIFIED: Use Team/Player selects with autofill
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('eff_intro', '引言文案', '', 3)}
@@ -782,13 +780,32 @@
                     ${createTextarea('kicks_intro', '引言文案', '', 4)}
                 `;
             } else if (mode === 'season_stats') {
+                // MODIFIED: Season Stats simplified
                 html += `
-                    ${createInput('stats_title_suffix', '標題後綴 (TEAM / PLAYER)', 'text', 'TEAM')}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">標題後綴</label>
+                        <select id="stats_title_suffix" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold">
+                            <option value="TEAM">TEAM</option>
+                            <option value="PLAYER">PLAYER</option>
+                        </select>
+                    </div>
                     ${createTextarea('stats_content', '數據分析文案', '', 8)}
-                    ${createInput('stats_date_note', '數據統計備註', 'text', '*數據統計至2025/11/23，包含24-25、25-26賽季')}
-                    <div class="mt-4">
-                        ${createInput('vote_title', '投票活動標題 (含Emoji)', 'text', '📌 10-11月MVP投票進行中 :')}
-                        ${createInput('vote_link', '投票連結', 'text')}
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">統計區間</p>
+                        <div class="mb-3">
+                             ${createInput('stats_cutoff_date', '統計截止日', 'date', '', today)}
+                        </div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">包含賽季</label>
+                        <div class="flex gap-4 items-center">
+                            <label class="flex items-center gap-2"><input type="checkbox" id="season_2425" checked class="w-4 h-4 text-brand-gold focus:ring-brand-gold border-gray-300 rounded"> 24-25賽季</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" id="season_2526" class="w-4 h-4 text-brand-gold focus:ring-brand-gold border-gray-300 rounded"> 25-26賽季</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">投票資訊</p>
+                        ${createInput('stats_vote_month', '投票月份/區間 (例如：10-11)', 'text', '10-11')}
                     </div>
                 `;
             }
@@ -1108,7 +1125,6 @@
                 output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
 
             } else if (currentMode === 'game_highlight') {
-                // UPDATED: Auto prefix + No YT link
                 output = `❤️‍🔥👉🏻 ｜ ${getValue('hl_title')}\n\n`;
                 output += `📺 緯來電視網｜博斯運動二台｜TPBL官方 YOUTUBE\n\n`;
                 output += `${COMMON_TAGS} #TPBL例行賽`;
@@ -1275,11 +1291,27 @@
                 output += `${COMMON_TAGS} #momentum`;
 
             } else if (currentMode === 'season_stats') {
+                // MODIFIED: Season Stats generation logic
                 output = `📊${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n`;
                 output += `${getValue('stats_content')}\n\n`;
-                output += `${getValue('stats_date_note')}\n\n-\n\n`;
-                output += `${getValue('vote_title')}\n`;
-                output += `🔗投票連結｜${getValue('vote_link')}\n\n`;
+                
+                // Generate Date Note
+                const cutoff = getValue('stats_cutoff_date');
+                const s2425 = document.getElementById('season_2425').checked;
+                const s2526 = document.getElementById('season_2526').checked;
+                let seasons = [];
+                if(s2425) seasons.push('24-25');
+                if(s2526) seasons.push('25-26');
+                
+                if(cutoff) {
+                   output += `*數據統計至${formatDateFull(cutoff)}，包含${seasons.join('、')}賽季\n\n-\n\n`;
+                }
+                
+                // Generate Vote Info
+                const month = getValue('stats_vote_month');
+                output += `📌 ${month}月MVP投票進行中 :\n`;
+                output += `🔗投票連結｜${FIXED_VOTE_LINK}\n\n`;
+                
                 output += `${COMMON_TAGS}`;
             }
 
