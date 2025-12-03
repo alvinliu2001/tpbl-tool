@@ -57,7 +57,7 @@
             padding-bottom: 0.5rem;
             font-family: 'Noto Sans TC', sans-serif;
             display: block;
-            text-align: left;
+            text-align: left; /* Left aligned as requested */
         }
         /* Mobile-only min-height for touch targets */
         @media (max-width: 768px) {
@@ -106,7 +106,7 @@
         <div class="w-full md:w-1/2 h-full flex flex-col justify-center px-8 md:px-24 relative z-10 bg-brand-dark overflow-y-auto">
             
             <div class="flex-1 flex flex-col justify-center min-h-[400px]">
-                <!-- Logo (Optimized: Content injected via JS) -->
+                <!-- Logo (Content injected via JS to prevent breakage) -->
                 <div class="mb-6 flex justify-start">
                     <svg class="h-10 md:h-12 w-auto tpbl-logo-target" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
                         <!-- Paths injected by JS -->
@@ -146,7 +146,7 @@
             <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative">
                 <div class="flex items-center gap-3">
                     <div id="logo-container" onclick="location.reload()" class="cursor-pointer" title="返回首頁">
-                        <!-- Small Logo (Optimized: Content injected via JS) -->
+                        <!-- Small Logo (Content injected via JS) -->
                         <svg class="h-6 md:h-7 w-auto tpbl-logo-target" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
                              <!-- Paths injected by JS -->
                         </svg>
@@ -275,7 +275,7 @@
             }
         });
 
-        // --- LOGO DATA (Refactored to avoid corruption) ---
+        // --- LOGO DATA (Stored as constant to avoid corruption) ---
         const LOGO_SVG_CONTENT = `
             <path d="M61.2654 17.7247C61.9017 15.9066 63.5198 9.80155 64.2979 6.71082C64.5686 5.56151 64.4628 4.35565 63.9961 3.27102C63.7265 2.70741 63.3569 2.19736 62.9053 1.76566C61.8884 0.803594 60.5381 0.273137 59.1383 0.285742H32.4381C34.2561 1.20205 34.9834 2.23836 35.4415 3.24557C35.736 3.91462 35.9833 5.22 35.5288 7.06716C35.2306 8.28527 29.9982 27.6332 29.9982 27.6332C29.9982 27.6332 47.9353 25.477 52.1059 24.6116C54.9494 24.0298 59.8764 21.6735 61.2654 17.7247ZM51.0624 16.9429C50.3057 18.953 49.0007 20.7108 47.2956 22.0168C45.5905 23.3227 43.5535 24.1247 41.4157 24.3316L45.15 10.4306L40.8303 7.6344H53.5568C53.5568 7.6344 52.3205 13.5104 51.0624 16.9429Z" fill="white"></path>
             <path d="M67.4359 6.33628C66.865 8.4707 62.9525 23.0226 62.9525 23.0226C62.9525 23.0226 73.1665 21.7899 79.2279 20.7463C87.0311 19.4009 93.2489 15.2703 95.107 9.98335C96.2414 6.75809 96.1687 4.79457 95.9033 3.8019C95.728 3.21289 95.432 2.66678 95.0342 2.19835C94.5313 1.59242 93.8995 1.10632 93.185 0.775453C92.4704 0.444584 91.691 0.277274 90.9036 0.285737H64.5488C66.7232 1.37294 68.1595 3.61281 67.4359 6.33628ZM85.3003 7.64531C85.0217 9.06412 84.6127 10.4542 84.0785 11.7978C82.3805 16.2048 78.6498 18.481 74.4828 19.0264L76.7953 10.4088L72.5083 7.63439L85.3003 7.64531Z" fill="white"></path>
@@ -546,7 +546,8 @@
             }
 
             renderForm(mode);
-            attachFormListeners();
+            // Re-bind listeners for dynamic dropdowns
+            bindDynamicEvents();
         }
 
         function renderForm(mode) {
@@ -620,9 +621,9 @@
                     </div>
                 `;
             } else if (mode === 'game_highlight') {
+                // UPDATED: Auto prefix + No YT link
                 html += `
-                    ${createInput('hl_title', '精華標題 (含Emoji)', 'text', '❤️👉 ｜亞喵首節2記外線...')}
-                    ${createInput('yt_link', 'YouTube 連結', 'text')}
+                    ${createInput('hl_title', '精華標題 (不需輸入開頭符號)', 'text', '戰神陪你提前過聖誕！Merry ChristMARS 🎄')}
                 `;
             } else if (mode === 'press_conf') {
                 html += `
@@ -862,7 +863,7 @@
 
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
-                    <input type="date" id="sch_date_${idx}" value="${today}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-center">
+                    <input type="date" id="sch_date_${idx}" value="${today}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
                     <select id="sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
                 </div>
                 <div class="flex gap-2 items-center">
@@ -888,7 +889,7 @@
 
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
-                    <input type="date" id="std_sch_date_${idx}" value="${today}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-center">
+                    <input type="date" id="std_sch_date_${idx}" value="${today}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
                     <select id="std_sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
                 </div>
                 <div class="flex gap-2 items-center">
@@ -929,6 +930,62 @@
             } else {
                 customInput.classList.add('hidden');
             }
+        }
+
+        // --- Robust Event Binding (NEW LOGIC) ---
+        function bindDynamicEvents() {
+            const container = document.getElementById('dynamic-form');
+            if(!container) return;
+
+            const teamSelects = container.querySelectorAll('.team-select');
+            teamSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const teamName = this.value;
+                    const playerSelects = container.querySelectorAll(`.player-select[data-team-select="${this.id}"]`);
+                    
+                    playerSelects.forEach(pSelect => {
+                        // Reset
+                        pSelect.innerHTML = '<option value="">請選擇球員</option>';
+                        pSelect.disabled = true;
+                        pSelect.classList.add('disabled-input');
+                        pSelect.value = "";
+                        
+                        const numInputId = pSelect.dataset.numInput;
+                        if(numInputId) {
+                            const numInput = document.getElementById(numInputId);
+                            if(numInput) numInput.value = "";
+                        }
+
+                        // Populate
+                        if (teamName && ROSTERS[teamName]) {
+                            pSelect.disabled = false;
+                            pSelect.classList.remove('disabled-input');
+                            ROSTERS[teamName].forEach(player => {
+                                const option = document.createElement('option');
+                                option.value = player.name;
+                                option.text = player.name; 
+                                option.dataset.num = player.num;
+                                pSelect.appendChild(option);
+                            });
+                        }
+                    });
+                });
+            });
+
+            // Player select change listener (Auto-fill Number)
+            const playerSelects = container.querySelectorAll('.player-select');
+            playerSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const numInputId = this.dataset.numInput;
+                    if (numInputId) {
+                        const numInput = document.getElementById(numInputId);
+                        if (numInput) {
+                            const selectedOption = this.options[this.selectedIndex];
+                            numInput.value = selectedOption.dataset.num || "";
+                        }
+                    }
+                });
+            });
         }
 
         // --- Helper: Render Logos ---
@@ -1013,7 +1070,7 @@
                 output += `📌小週末就看籃球：\n`;
                 output += `▌${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}\n\n-\n\n`;
                 if(getValue('promo_link')) output += `${getValue('promo_link')}\n\n`;
-                output += COMMON_TAGS;
+                output += `${COMMON_TAGS}`;
 
             } else if (currentMode === 'matchup_highlight') {
                  const home = TEAMS[getValue('mu_home_team')];
@@ -1051,8 +1108,9 @@
                 output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
 
             } else if (currentMode === 'game_highlight') {
-                output = `${getValue('hl_title')}\n\n`;
-                output += `📺緯來體育台｜博斯運動二台｜TPBL官方YOUTUBE\n👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
+                // UPDATED: Auto prefix + No YT link
+                output = `❤️‍🔥👉🏻 ｜ ${getValue('hl_title')}\n\n`;
+                output += `📺 緯來電視網｜博斯運動二台｜TPBL官方 YOUTUBE\n\n`;
                 output += `${COMMON_TAGS} #TPBL例行賽`;
 
             } else if (currentMode === 'press_conf') {
