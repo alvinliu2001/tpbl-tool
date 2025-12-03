@@ -32,6 +32,18 @@
         .bg-brand-gold { background-color: #D8BF98; }
         .border-brand-gold { border-color: #D8BF98; }
         .focus-ring-gold:focus { --tw-ring-color: #D8BF98; }
+
+        /* Custom Select Arrow */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem !important; /* Make space for the arrow */
+        }
     </style>
     <script>
         tailwind.config = {
@@ -345,7 +357,7 @@
                     ${createInput('week_num', '第幾週 (Week)', 'number', '8')}
                     ${createTextarea('week_intro', '本週賽程引言', '', 4)}
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                        <p class="text-sm font-bold mb-2">賽程列表 (最多5場)</p>
+                        <p class="text-sm font-bold mb-2">本週賽程列表</p>
                         <div id="schedule_list_container" class="space-y-3"></div>
                         <button onclick="addScheduleItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增場次</button>
                     </div>
@@ -356,7 +368,7 @@
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('standings_content', '戰績分析文案', '', 8)}
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
-                        <p class="text-sm font-bold mb-2">本週賽事預告列表 (可不填)</p>
+                        <p class="text-sm font-bold mb-2">本週賽程列表</p>
                         <div id="standings_schedule_list_container" class="space-y-3"></div>
                         <button onclick="addStandingsGameItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增預告場次</button>
                     </div>
@@ -418,6 +430,7 @@
                 <select id="sch_away_${idx}" class="col-span-3 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                 <span class="col-span-1 text-center">vs</span>
                 <select id="sch_home_${idx}" class="col-span-3 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                <button onclick="this.parentElement.remove()" class="col-span-1 text-red-500 font-bold px-1">&times;</button>
             `;
             container.appendChild(div);
         }
