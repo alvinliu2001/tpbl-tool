@@ -169,7 +169,8 @@
             </div>
             
             <!-- Sidebar Nav -->
-            <nav id="sidebar-nav" class="flex flex-col flex-1 overflow-y-auto py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none transition-all duration-500 ease-in-out max-h-0 opacity-0 md:max-h-[calc(100vh-80px)] md:opacity-100 overflow-y-auto z-40 origin-top">
+            <!-- Fix: Remove overflow-hidden from base class, add md:overflow-y-auto for desktop scrolling -->
+            <nav id="sidebar-nav" class="flex flex-col flex-1 py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none transition-all duration-500 ease-in-out z-40 origin-top max-h-0 opacity-0 overflow-hidden md:max-h-full md:opacity-100 md:overflow-y-auto">
                 <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
                 <button onclick="switchMode('weekday_preview')" id="btn-weekday_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🗓️</span> 平日賽事預告</button>
                 <button onclick="switchMode('game_preview')" id="btn-game_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🔥</span> 單場賽程預告</button>
@@ -264,14 +265,14 @@
             const availableHeight = window.innerHeight - 70;
             
             if (nav.classList.contains('max-h-0')) {
-                nav.classList.remove('max-h-0', 'opacity-0');
+                nav.classList.remove('max-h-0', 'opacity-0', 'overflow-hidden');
                 // Set dynamic max-height for scrolling
                 nav.style.maxHeight = availableHeight + 'px';
-                nav.classList.add('opacity-100');
+                nav.classList.add('opacity-100', 'overflow-y-auto');
             } else {
                 nav.style.maxHeight = '0px'; // Reset inline style
-                nav.classList.add('max-h-0', 'opacity-0');
-                nav.classList.remove('opacity-100');
+                nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
+                nav.classList.remove('opacity-100', 'overflow-y-auto');
             }
         }
 
@@ -427,8 +428,8 @@
             if (window.innerWidth < 768) {
                 const nav = document.getElementById('sidebar-nav');
                 nav.style.maxHeight = '0px';
-                nav.classList.add('max-h-0', 'opacity-0');
-                nav.classList.remove('opacity-100');
+                nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
+                nav.classList.remove('opacity-100', 'overflow-y-auto');
             }
 
             const titles = {
@@ -815,7 +816,7 @@
                 const home = TEAMS[homeKey];
                 const away = TEAMS[awayKey];
                 
-                const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
+                const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（ ${toMathBoldSerif(getDayName(date))} ）`; 
                 
                 output = `#${toMathBoldSerif('GAMEDAY')}& #${toMathBoldSerif('ROSTER')}｜ ${headerDate}\n\n`;
                 output += `例行賽 ${toMathBoldSerif('GAME')} ${getValue('game_num')} ✦ ${time} ${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
@@ -1012,7 +1013,7 @@
                 output += `\n\n${COMMON_TAGS}`;
                 
             } else if (currentMode === 'weekly_local_eff') {
-                output = `🔥${toMathBoldSerif('POWERFUL LOCALS')} | ${toMathBoldSerif('WEEK')}${getValue('week_num')} ${toMathBoldSerif('EFF RANKING')}本土效率值排行 ✨\n\n`;
+                output = `🔥${toMathBoldSerif('POWERFUL LOCALS')} | ${toMathBoldSerif('WEEK')} ${getValue('week_num')} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行 ✨\n\n`;
                 output += `${getValue('eff_intro')}\n\n`;
                 
                 for (let i = 1; i <= 5; i++) { // Rankings usually 1 to 5 here based on screenshot logic order? No screenshot order 5 to 1? Actually screenshot image_01589d.png shows 24, 9, 2, 28, 5. Wait, no it's mostly single players. The screenshot order is random? No, looks like ranked but specific players highlighted. Let's stick to 1-5 input order.
