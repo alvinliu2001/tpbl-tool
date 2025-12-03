@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TPBL 社群文案生成工具</title>
+    <!-- Updated Title -->
+    <title>TPBL | 社群文案生成工具</title>
     <meta name="description" content="TPBL 職籃聯盟社群文案自動生成與管理工具">
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏀</text></svg>">
+    
+    <!-- Updated Favicon: Linking directly to the official TPBL website favicon -->
+    <link rel="icon" href="https://tpbl.basketball/favicon.png">
     
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -66,10 +68,22 @@
     <!-- Modified for RWD: w-full on mobile, sticky top, with toggle -->
     <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-30 sticky top-0 md:relative shadow-lg md:shadow-none">
         <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark">
-            <div>
-                <h1 class="text-xl md:text-2xl font-bold text-white tracking-wider">TPBL<span class="text-brand-gold">.TOOL</span></h1>
-                <p class="text-xs text-gray-500 mt-1">社群文案生成工具</p>
+            <div class="flex items-center gap-3">
+                <!-- Official SVG Logo Integration -->
+                <div id="logo-container">
+                    <svg class="h-10 w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
+                        <path d="M61.2654 17.7247C61.9017 15.9066 63.5198 9.80155 64.2979 6.71082C64.5686 5.56151 64.4628 4.35565 63.9961 3.27102C63.7265 2.70741 63.3569 2.19736 62.9053 1.76566C61.8884 0.803594 60.5381 0.273137 59.1383 0.285742H32.4381C34.2561 1.20205 34.9834 2.23836 35.4415 3.24557C35.736 3.91462 35.9833 5.22 35.5288 7.06716C35.2306 8.28527 29.9982 27.6332 29.9982 27.6332C29.9982 27.6332 47.9353 25.477 52.1059 24.6116C54.9494 24.0298 59.8764 21.6735 61.2654 17.7247ZM51.0624 16.9429C50.3057 18.953 49.0007 20.7108 47.2956 22.0168C45.5905 23.3227 43.5535 24.1247 41.4157 24.3316L45.15 10.4306L40.8303 7.6344H53.5568C53.5568 7.6344 52.3205 13.5104 51.0624 16.9429Z" fill="white"></path>
+                        <path d="M67.4359 6.33628C66.865 8.4707 62.9525 23.0226 62.9525 23.0226C62.9525 23.0226 73.1665 21.7899 79.2279 20.7463C87.0311 19.4009 93.2489 15.2703 95.107 9.98335C96.2414 6.75809 96.1687 4.79457 95.9033 3.8019C95.728 3.21289 95.432 2.66678 95.0342 2.19835C94.5313 1.59242 93.8995 1.10632 93.185 0.775453C92.4704 0.444584 91.691 0.277274 90.9036 0.285737H64.5488C66.7232 1.37294 68.1595 3.61281 67.4359 6.33628ZM85.3003 7.64531C85.0217 9.06412 84.6127 10.4542 84.0785 11.7978C82.3805 16.2048 78.6498 18.481 74.4828 19.0264L76.7953 10.4088L72.5083 7.63439L85.3003 7.64531Z" fill="white"></path>
+                        <path d="M32.4708 3.751C32.2927 3.27496 32.0317 2.83422 31.6999 2.44926C31.1204 1.76101 30.3964 1.20877 29.5795 0.831724C28.7626 0.454676 27.8726 0.262062 26.9729 0.267571H0C3.43616 1.95111 4.70153 3.94734 3.42888 7.62712H12.8574L3.06891 43.8868H13.5119L23.2277 7.6344H32.318C32.9216 5.87814 32.7617 4.62368 32.4708 3.751Z" fill="white"></path>
+                        <path d="M28.5074 33.1856L25.6312 43.9049H36.1614L40.1903 28.8913L24.3076 30.8184L28.5074 33.1856Z" fill="white"></path>
+                        <path d="M90.1327 27.6623C89.6818 24.317 86.1621 22.808 80.886 24.0698L77.5444 36.5199H69.7812L72.9228 24.8261L62.1162 26.1388L57.3456 43.9049H80.7624C84.144 41.9996 86.7111 38.698 88.1438 35.9418C89.3255 33.6728 90.5036 30.4185 90.1327 27.6623Z" fill="white"></path>
+                        <path d="M83.1223 21.5972C89.0637 21.1754 91.849 22.728 92.0926 26.4624C93.8561 22.3753 97.9104 19.9537 102.274 19.4082C98.0777 18.8592 96.0415 15.7176 96.0197 12.5287C94.2125 16.3612 89.4491 20.6227 83.1223 21.5972Z" fill="#D4C09D"></path>
+                        <path d="M99.0413 2.90741C99.4449 3.91826 99.2776 5.75814 99.0667 6.60172L98.3395 9.79791C96.9396 15.0303 100.256 18.2919 106.426 18.2919C106.426 18.2919 109.502 7.11444 109.804 6.09632C110.702 3.02741 107.986 0.278488 104.132 0.278488H96.0706C96.7348 0.458149 97.3486 0.788905 97.8639 1.24494C98.3792 1.70097 98.7822 2.26993 99.0413 2.90741Z" fill="white"></path>
+                        <path d="M101.55 36.6363L105.855 20.7463C100.096 20.4373 94.0343 25.0443 92.6671 30.8548L89.1655 43.9049H113.739L119.993 36.5199L101.55 36.6363Z" fill="white"></path>
+                    </svg>
+                </div>
             </div>
+            
             <!-- Mobile Menu Button -->
             <button onclick="toggleSidebar()" class="md:hidden text-white p-2 focus:outline-none border border-gray-700 rounded hover:bg-gray-800">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
