@@ -32,6 +32,10 @@
         .border-brand-gold { border-color: #D8BF98; }
         .focus-ring-gold:focus { --tw-ring-color: #D8BF98; }
 
+        /* Disabled Input Style */
+        .disabled-input { background-color: #f3f4f6; cursor: not-allowed; color: #9ca3af; }
+        input[readonly] { background-color: #f3f4f6; color: #4b5563; }
+
         /* Custom Select */
         select {
             -webkit-appearance: none;
@@ -95,10 +99,8 @@
 
     <!-- LANDING PAGE -->
     <div id="landing-page" class="fixed inset-0 z-50 bg-brand-dark flex flex-col md:flex-row overflow-hidden">
-        
-        <!-- Left Side: Content -->
+        <!-- Content -->
         <div class="w-full md:w-1/2 h-full flex flex-col justify-center px-8 md:px-24 relative z-10 bg-brand-dark overflow-y-auto">
-            
             <div class="flex-1 flex flex-col justify-center min-h-[400px]">
                 <!-- Logo -->
                 <div class="mb-6 flex justify-start">
@@ -116,7 +118,7 @@
                 
                 <!-- Title -->
                 <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 tracking-wide text-left">社群文案生成工具</h1>
-                <p class="text-gray-400 text-lg md:text-xl mb-10 font-light text-left">一個簡單實用的工具，幫助團隊產出社群貼文素材。</p>
+                <p class="text-gray-400 text-lg md:text-xl mb-10 font-light text-left">一個簡單實用的工具，幫助團隊高效產出文案。</p>
                 
                 <!-- Button -->
                 <div class="flex justify-start">
@@ -147,6 +149,7 @@
             <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative">
                 <div class="flex items-center gap-3">
                     <div id="logo-container" onclick="location.reload()" class="cursor-pointer" title="返回首頁">
+                        <!-- Small Logo -->
                         <svg class="h-6 md:h-7 w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
                             <path d="M61.2654 17.7247C61.9017 15.9066 63.5198 9.80155 64.2979 6.71082C64.5686 5.56151 64.4628 4.35565 63.9961 3.27102C63.7265 2.70741 63.3569 2.19736 62.9053 1.76566C61.8884 0.803594 60.5381 0.273137 59.1383 0.285742H32.4381C34.2561 1.20205 34.9834 2.23836 35.4415 3.24557C35.736 3.91462 35.9833 5.22 35.5288 7.06716C35.2306 8.28527 29.9982 27.6332 29.9982 27.6332C29.9982 27.6332 47.9353 25.477 52.1059 24.6116C54.9494 24.0298 59.8764 21.6735 61.2654 17.7247ZM51.0624 16.9429C50.3057 18.953 49.0007 20.7108 47.2956 22.0168C45.5905 23.3227 43.5535 24.1247 41.4157 24.3316L45.15 10.4306L40.8303 7.6344H53.5568C53.5568 7.6344 52.3205 13.5104 51.0624 16.9429Z" fill="white"></path>
                             <path d="M67.4359 6.33628C66.865 8.4707 62.9525 23.0226 62.9525 23.0226C62.9525 23.0226 73.1665 21.7899 79.2279 20.7463C87.0311 19.4009 93.2489 15.2703 95.107 9.98335C96.2414 6.75809 96.1687 4.79457 95.9033 3.8019C95.728 3.21289 95.432 2.66678 95.0342 2.19835C94.5313 1.59242 93.8995 1.10632 93.185 0.775453C92.4704 0.444584 91.691 0.277274 90.9036 0.285737H64.5488C66.7232 1.37294 68.1595 3.61281 67.4359 6.33628ZM85.3003 7.64531C85.0217 9.06412 84.6127 10.4542 84.0785 11.7978C82.3805 16.2048 78.6498 18.481 74.4828 19.0264L76.7953 10.4088L72.5083 7.63439L85.3003 7.64531Z" fill="white"></path>
@@ -169,7 +172,6 @@
             </div>
             
             <!-- Sidebar Nav -->
-            <!-- Added md:overflow-y-auto to ensure full sidebar content is scrollable on desktop -->
             <nav id="sidebar-nav" class="flex flex-col flex-1 py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none transition-all duration-500 ease-in-out z-40 origin-top max-h-0 opacity-0 overflow-hidden md:max-h-full md:opacity-100 md:overflow-y-auto">
                 <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
                 <button onclick="switchMode('weekday_preview')" id="btn-weekday_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><span>🗓️</span> 平日賽事預告</button>
@@ -261,28 +263,23 @@
         // --- Mobile Sidebar Toggle with Animation Logic ---
         function toggleSidebar() {
             const nav = document.getElementById('sidebar-nav');
-            // Calculate available height: Screen height - Header height (approx 65px)
             const availableHeight = window.innerHeight - 70;
             
             if (nav.classList.contains('max-h-0')) {
                 nav.classList.remove('max-h-0', 'opacity-0', 'overflow-hidden');
-                // Set dynamic max-height for scrolling
                 nav.style.maxHeight = availableHeight + 'px';
                 nav.classList.add('opacity-100', 'overflow-y-auto');
             } else {
-                nav.style.maxHeight = '0px'; // Reset inline style
+                nav.style.maxHeight = '0px'; 
                 nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
                 nav.classList.remove('opacity-100', 'overflow-y-auto');
             }
         }
         
-        // --- Resize Listener to Fix Desktop Nav Issue ---
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 768) {
                 const nav = document.getElementById('sidebar-nav');
-                // Clear inline styles so CSS classes take over
                 nav.style.maxHeight = '';
-                // Reset classes to closed state for mobile logic, but desktop media queries will override to show it
                 nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
                 nav.classList.remove('opacity-100', 'overflow-y-auto');
             }
@@ -299,6 +296,57 @@
             "雲豹": { full: "台啤永豐雲豹", emoji: "🐆", arena: "桃園巨蛋" }
         };
         const TEAM_KEYS = Object.keys(TEAMS);
+        
+        // Roster Data
+        const ROSTERS = {
+            "戰神": [
+                {num: "1", name: "洛夫頓"}, {num: "3", name: "丁聖儒"}, {num: "5", name: "魏芃禾"}, {num: "6", name: "江均"},
+                {num: "7", name: "劉彥廷"}, {num: "8", name: "陳文宏"}, {num: "9", name: "張兆辰"}, {num: "10", name: "基德"},
+                {num: "11", name: "黃聰翰"}, {num: "15", name: "謝銘駿"}, {num: "20", name: "孫思堯"}, {num: "21", name: "威力斯"},
+                {num: "23", name: "錢肯尼"}, {num: "29", name: "張耕淯"}, {num: "32", name: "齊曼加"}, {num: "33", name: "雷蒙恩"},
+                {num: "41", name: "蘇奕晉"}, {num: "62", name: "陳冠全"}
+            ],
+            "攻城獅": [
+                {num: "0", name: "李漢昇"}, {num: "2", name: "德魯"}, {num: "3", name: "克雷格"}, {num: "4", name: "高國豪"},
+                {num: "7", name: "曾柏喻"}, {num: "8", name: "朱雲豪"}, {num: "9", name: "田浩"}, {num: "10", name: "劉丞勳"},
+                {num: "11", name: "蕭順議"}, {num: "12", name: "李家瑞"}, {num: "17", name: "蔡宸綱"}, {num: "18", name: "帕塞獅"},
+                {num: "22", name: "提傑"}, {num: "25", name: "梁瀚"}, {num: "42", name: "盧冠軒"}, {num: "75", name: "李啓瑋"}
+            ],
+            "特攻": [
+                {num: "1", name: "李睿麒"}, {num: "2", name: "劉人豪"}, {num: "3", name: "飛馳"}, {num: "4", name: "劉旻諺"},
+                {num: "7", name: "魏嘉豪"}, {num: "9", name: "克力斯"}, {num: "10", name: "謝亞軒"}, {num: "11", name: "周承睿"},
+                {num: "16", name: "林韋翰"}, {num: "22", name: "黃泓瀚"}, {num: "28", name: "施晉堯"}, {num: "34", name: "徐宇煇"},
+                {num: "37", name: "林孟學"}, {num: "42", name: "艾斯卡"}, {num: "55", name: "奈森"}, {num: "76", name: "曾文鼎"},
+                {num: "77", name: "李沛澄"}
+            ],
+            "國王": [
+                {num: "1", name: "林書緯"}, {num: "2", name: "蘇培凱"}, {num: "5", name: "傑登"}, {num: "7", name: "林書豪"},
+                {num: "9", name: "李愷諺"}, {num: "10", name: "簡祐哲"}, {num: "11", name: "王柏智"}, {num: "12", name: "林彥廷"},
+                {num: "13", name: "呂政儒"}, {num: "16", name: "尚迪"}, {num: "17", name: "蘇士軒"}, {num: "19", name: "林金榜"},
+                {num: "20", name: "熊祥泰"}, {num: "24", name: "洪志善"}, {num: "25", name: "奧帝"}, {num: "26", name: "喬納森"},
+                {num: "31", name: "桑尼"}
+            ],
+            "夢想家": [
+                {num: "0", name: "陳振傑"}, {num: "2", name: "馬建豪"}, {num: "3", name: "張宗憲"}, {num: "5", name: "貝奇"},
+                {num: "7", name: "龍查"}, {num: "8", name: "王振原"}, {num: "9", name: "吳家駿"}, {num: "11", name: "林俊吉"},
+                {num: "20", name: "簡偉儒"}, {num: "21", name: "簡浩"}, {num: "24", name: "忻沃克"}, {num: "26", name: "李德威"},
+                {num: "27", name: "史承平"}, {num: "28", name: "盧冠良"}, {num: "34", name: "高柏鎧"}, {num: "35", name: "霍爾曼"},
+                {num: "41", name: "蔣淯安"}, {num: "88", name: "周柏臣"}
+            ],
+            "海神": [
+                {num: "0", name: "魏莨哲"}, {num: "1", name: "艾德"}, {num: "3", name: "摩爾斯"}, {num: "7", name: "于煥亞"},
+                {num: "8", name: "邱子軒"}, {num: "9", name: "唐維傑"}, {num: "10", name: "胡瓏貿"}, {num: "21", name: "呂威霆"},
+                {num: "24", name: "蘇文儒"}, {num: "28", name: "余純安"}, {num: "57", name: "吳曉謹"}, {num: "66", name: "陳懷安"},
+                {num: "85", name: "勤明慶"}
+            ],
+            "雲豹": [
+                {num: "5", name: "高錦瑋"}, {num: "6", name: "徐宏瑋"}, {num: "7", name: "麥卡洛"}, {num: "8", name: "汪哲宇"},
+                {num: "10", name: "丁冠皓"}, {num: "11", name: "莊博元"}, {num: "12", name: "林信寬"}, {num: "13", name: "米勒"},
+                {num: "21", name: "王皓吉"}, {num: "24", name: "克羅馬"}, {num: "27", name: "黃鎮"}, {num: "31", name: "董永全"},
+                {num: "33", name: "迪亞洛"}, {num: "57", name: "曹薰襄"}, {num: "72", name: "呂濟而"}, {num: "82", name: "劉元凱"}
+            ]
+        };
+
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
         const MONTHS = ["JAN.", "FEB.", "MAR.", "APR.", "MAY", "JUN.", "JUL.", "AUG.", "SEP.", "OCT.", "NOV.", "DEC."];
         
@@ -399,7 +447,24 @@
             </div>
         `;
         
-        const createTeamSelect = (id, label) => createSelect(id, label, TEAM_KEYS);
+        const createTeamSelect = (id, label) => `
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">${label}</label>
+                <select id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold focus:border-brand-gold team-select">
+                    <option value="" disabled selected>選擇球隊</option>
+                    ${TEAM_KEYS.map(k => `<option value="${k}">${k}</option>`).join('')}
+                </select>
+            </div>
+        `;
+
+        const createPlayerSelect = (id, label, teamSelectId, numInputId="") => `
+             <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">${label}</label>
+                <select id="${id}" data-team-select="${teamSelectId}" ${numInputId ? `data-num-input="${numInputId}"` : ''} class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold focus:border-brand-gold player-select disabled-input" disabled>
+                    <option value="">先選擇球隊...</option>
+                </select>
+            </div>
+        `;
 
         const createTimeSelect = (id, label, defaultValue="19:00") => `
             <div>
@@ -477,6 +542,8 @@
             }
 
             renderForm(mode);
+            // Re-bind listeners for dynamic dropdowns
+            bindDynamicEvents();
         }
 
         function renderForm(mode) {
@@ -509,24 +576,25 @@
                     ${createTextarea('promo_link', '贊助商版位 (可換行)', '📍SPORTS NATIONS店點資訊...', 3)}
                 `;
             } else if (mode === 'matchup_highlight') {
+                // MODIFIED: Use Team/Player selects
                 html += `
                     <div class="p-3 border rounded-md bg-gray-50 mb-3">
-                        <p class="text-sm font-bold text-gray-700 mb-2">對戰組合</p>
+                        <p class="text-sm font-bold text-gray-700 mb-2">對戰組合 (先選球隊 -> 再選球員)</p>
                         <div class="grid grid-cols-12 gap-2 items-center">
                             <div class="col-span-4">
-                                <select id="mu_home_team" class="w-full p-1 border rounded text-sm bg-white">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                                ${createTeamSelect('mu_home_team', '主隊')}
                             </div>
                             <div class="col-span-8">
-                                <input id="mu_home_player" type="text" placeholder="主隊球員 (德魯)" class="w-full p-1 border rounded text-sm">
+                                ${createPlayerSelect('mu_home_player', '主隊球員', 'mu_home_team')}
                             </div>
                             
                             <div class="col-span-12 text-center text-gray-400 text-xs font-bold my-1">VS</div>
                             
                             <div class="col-span-4">
-                                <select id="mu_away_team" class="w-full p-1 border rounded text-sm bg-white">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                                ${createTeamSelect('mu_away_team', '客隊')}
                             </div>
                             <div class="col-span-8">
-                                <input id="mu_away_player" type="text" placeholder="客隊球員 (洛夫頓)" class="w-full p-1 border rounded text-sm">
+                                ${createPlayerSelect('mu_away_player', '客隊球員', 'mu_away_team')}
                             </div>
                         </div>
                     </div>
@@ -561,6 +629,7 @@
                     ${createNextGameBlock("下場賽事資訊 (Next Game)")}
                 `;
             } else if (mode === 'potg') {
+                // MODIFIED: Use Team/Player selects
                 html += `
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         ${createTeamSelect('potg_away', '客隊 (Away)')}
@@ -570,8 +639,20 @@
                     ${createInput('promo_text', '底部活動文案', 'text', '🀄拚競技，超帶勁...')}
                 `;
             } else if (mode === 'local_player_highlight') {
+                 // MODIFIED: Use Team/Player selects with autofill
                  html += `
-                    ${createInput('lp_title', '標題 (例如：🦁曾柏喻全面控衛視野...)', 'text')}
+                    <div class="mb-4 p-3 bg-gray-50 border rounded-md">
+                         <p class="text-sm font-bold text-gray-700 mb-2">選擇球員 (自動帶入背號)</p>
+                         <div class="grid grid-cols-12 gap-2">
+                             <div class="col-span-4">${createTeamSelect('lp_team', '球隊')}</div>
+                             <div class="col-span-5">${createPlayerSelect('lp_name', '球員', 'lp_team', 'lp_num')}</div>
+                             <div class="col-span-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">背號</label>
+                                <input type="text" id="lp_num" readonly class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
+                             </div>
+                         </div>
+                         ${createInput('lp_title', '標題 (例如：🦁曾柏喻全面控衛視野...)', 'text')}
+                    </div>
                     ${createTextarea('lp_content', '球員表現描述', '', 4)}
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
                         <p class="text-xs font-bold text-gray-500 mb-2 uppercase">下場賽事資訊 (Next Game)</p>
@@ -596,6 +677,7 @@
                     ${createTextarea('ms_content', '內容描述', '', 5)}
                 `;
             } else if (mode === 'weekly_schedule') {
+                // MODIFIED: Updated 2-row layout
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '8')}
                     ${createTextarea('week_intro', '本週賽程引言', '', 4)}
@@ -607,6 +689,7 @@
                 `;
                 setTimeout(() => { addScheduleItem(); addScheduleItem(); }, 100);
             } else if (mode === 'weekly_standings') {
+                // MODIFIED: Updated 2-row layout
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('standings_content', '戰績分析文案', '', 8)}
@@ -618,6 +701,7 @@
                 `;
                  setTimeout(() => { addStandingsGameItem(); }, 100);
             } else if (mode === 'top5') {
+                 // MODIFIED: Use Team/Player selects with autofill
                  html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('top5_intro', '引言文案', '', 3)}
@@ -627,11 +711,9 @@
                             <div class="p-3 border rounded-md bg-gray-50">
                                 <span class="font-bold text-gray-700 block mb-1">第 ${i} 名</span>
                                 <div class="grid grid-cols-3 gap-2">
-                                    <select id="top${i}_team" class="p-2 border rounded text-sm bg-white col-span-1 focus:ring-brand-gold focus:border-brand-gold">
-                                        ${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}
-                                    </select>
-                                    <input id="top${i}_num" type="text" placeholder="背號 (21)" class="p-2 border rounded text-sm col-span-1 focus:ring-brand-gold focus:border-brand-gold">
-                                    <input id="top${i}_name" type="text" placeholder="球員名" class="p-2 border rounded text-sm col-span-1 focus:ring-brand-gold focus:border-brand-gold">
+                                    ${createTeamSelect(`top${i}_team`, '')}
+                                    ${createPlayerSelect(`top${i}_name`, '', `top${i}_team`, `top${i}_num`)}
+                                    <input id="top${i}_num" type="text" readonly placeholder="背號" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100">
                                 </div>
                             </div>
                         `).join('')}
@@ -639,9 +721,19 @@
                     ${createInput('vote_link', '投票連結', 'text')}
                 `;
             } else if (mode === 'potw') {
+                // MODIFIED: Use Team/Player selects
                 html += `
-                    ${createInput('player_name', '球員名稱 (中文+英文)', 'text', '布里茲克 Bogdan Bliznyuk')}
-                    ${createTeamSelect('player_team', '所屬隊伍')}
+                    <div class="grid grid-cols-2 gap-4">
+                        ${createTeamSelect('player_team', '所屬隊伍')}
+                        <div>
+                             <label class="block text-sm font-medium text-gray-700 mb-1">球員</label>
+                             <select id="player_name_select" data-team-select="player_team" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold focus:border-brand-gold player-select disabled-input" disabled>
+                                <option>先選擇球隊...</option>
+                             </select>
+                             <input type="hidden" id="player_num_dummy">
+                             <p class="text-xs text-gray-400 mt-1">*請手動補上英文名</p>
+                        </div>
+                    </div>
                     
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-2">
                         <p class="text-sm font-bold mb-2">本週數據 (STATS)</p>
@@ -654,24 +746,28 @@
                 `;
                 setTimeout(() => { addStatItem(); addStatItem(); addStatItem(); }, 100);
             } else if (mode === 'weekly_local_eff') {
+                // MODIFIED: Use Team/Player selects with autofill
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('eff_intro', '引言文案', '', 3)}
                     <div class="space-y-3 mt-4">
                          <p class="text-sm font-bold text-gray-500">本土效率值排行</p>
-                         <!-- 5 Players Input -->
                          ${[1,2,3,4,5].map(i => `
                             <div class="p-3 border rounded-md bg-gray-50">
-                                <div class="grid grid-cols-12 gap-2 mb-2">
+                                <div class="grid grid-cols-12 gap-2 mb-2 items-center">
                                     <div class="col-span-1 flex items-center justify-center font-bold text-gray-500">#${i}</div>
                                     <div class="col-span-4">
-                                        <select id="eff${i}_team" class="w-full p-1 border rounded text-sm bg-white">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                                        ${createTeamSelect(`eff${i}_team`, '')}
                                     </div>
-                                    <div class="col-span-2"><input id="eff${i}_num" type="text" placeholder="24" class="w-full p-1 border rounded text-sm"></div>
-                                    <div class="col-span-3"><input id="eff${i}_name" type="text" placeholder="姓名" class="w-full p-1 border rounded text-sm"></div>
-                                    <div class="col-span-2"><input id="eff${i}_val" type="text" placeholder="EFF" class="w-full p-1 border rounded text-sm"></div>
+                                    <div class="col-span-2">
+                                        <input id="eff${i}_num" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100">
+                                    </div>
+                                    <div class="col-span-3">
+                                        ${createPlayerSelect(`eff${i}_name`, '', `eff${i}_team`, `eff${i}_num`)}
+                                    </div>
+                                    <div class="col-span-2"><input id="eff${i}_val" type="text" placeholder="EFF" class="w-full p-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-brand-gold focus:border-brand-gold"></div>
                                 </div>
-                                <textarea id="eff${i}_desc" rows="2" class="w-full p-2 border rounded text-sm" placeholder="球員表現描述..."></textarea>
+                                <textarea id="eff${i}_desc" rows="2" class="w-full p-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="球員表現描述..."></textarea>
                             </div>
                          `).join('')}
                     </div>
@@ -696,27 +792,81 @@
             container.innerHTML = html;
         }
 
+        // --- Form Interaction Logic ---
+        function attachFormListeners() {
+            // Listen for changes on team selects
+            document.querySelectorAll('.team-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const teamName = this.value;
+                    const playerSelects = document.querySelectorAll(`.player-select[data-team-select="${this.id}"]`);
+                    
+                    playerSelects.forEach(pSelect => {
+                        // Reset
+                        pSelect.innerHTML = '<option value="">請選擇球員</option>';
+                        pSelect.disabled = true;
+                        pSelect.classList.add('disabled-input');
+                        pSelect.value = "";
+                        
+                        // Also clear linked number input if exists
+                        const numInputId = pSelect.dataset.numInput;
+                        if(numInputId) {
+                            const numInput = document.getElementById(numInputId);
+                            if(numInput) numInput.value = "";
+                        }
+
+                        // Populate
+                        if (teamName && ROSTERS[teamName]) {
+                            pSelect.disabled = false;
+                            pSelect.classList.remove('disabled-input');
+                            ROSTERS[teamName].forEach(player => {
+                                const option = document.createElement('option');
+                                option.value = player.name;
+                                option.text = player.name; // Just name in dropdown
+                                option.dataset.num = player.num;
+                                pSelect.appendChild(option);
+                            });
+                        }
+                    });
+                });
+            });
+
+            // Listen for changes on player selects (Auto-fill Number)
+            document.querySelectorAll('.player-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const numInputId = this.dataset.numInput;
+                    if (numInputId) {
+                        const numInput = document.getElementById(numInputId);
+                        const selectedOption = this.options[this.selectedIndex];
+                        if (numInput && selectedOption) {
+                            numInput.value = selectedOption.dataset.num || "";
+                        }
+                    }
+                });
+            });
+        }
+
         // --- Helper for Weekly Schedule (Optimized for Mobile) ---
         function addScheduleItem() {
             const container = document.getElementById('schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
             
-            div.className = "flex gap-2 text-sm items-center border-b pb-4 mb-2 md:border-0 md:pb-0 md:mb-0";
+            // FIXED: New Stacked Layout
+            div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
             
             div.innerHTML = `
-                <div class="flex-1 flex flex-col md:flex-row gap-2">
-                    <input type="date" id="sch_date_${idx}" class="w-full md:w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold md:h-9">
-                    <div class="flex gap-2 items-center w-full md:w-auto">
-                        <select id="sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${timeOptions}</select>
-                        <select id="sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                        <span class="text-center shrink-0">vs</span>
-                        <select id="sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    </div>
+                <div class="flex gap-2 mb-2">
+                    <input type="date" id="sch_date_${idx}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white">
+                    <select id="sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
                 </div>
-                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0 self-center md:self-auto text-xl md:text-base">&times;</button>
+                <div class="flex gap-2 items-center">
+                    <select id="sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <span class="text-gray-400 text-xs font-bold">VS</span>
+                    <select id="sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded">🗑️</button>
+                </div>
             `;
             container.appendChild(div);
         }
@@ -726,22 +876,22 @@
             const container = document.getElementById('standings_schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
-            div.className = "flex gap-2 text-sm items-center border-b pb-4 mb-2 md:border-0 md:pb-0 md:mb-0";
+            // FIXED: New Stacked Layout
+            div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
             
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
             
-            // Added h-9 to input and selects
             div.innerHTML = `
-                <div class="flex-1 flex flex-col md:flex-row gap-2">
-                    <input type="date" id="std_sch_date_${idx}" class="w-full md:w-32 p-1 border rounded focus:ring-brand-gold focus:border-brand-gold md:h-9">
-                    <div class="flex gap-2 items-center w-full md:w-auto">
-                        <select id="std_sch_time_${idx}" class="w-24 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${timeOptions}</select>
-                        <select id="std_sch_away_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                        <span class="text-center shrink-0">vs</span>
-                        <select id="std_sch_home_${idx}" class="flex-1 p-1 border rounded bg-white focus:ring-brand-gold focus:border-brand-gold md:h-9">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    </div>
+                <div class="flex gap-2 mb-2">
+                    <input type="date" id="std_sch_date_${idx}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white">
+                    <select id="std_sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
                 </div>
-                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2 shrink-0 self-center md:self-auto text-xl md:text-base">&times;</button>
+                <div class="flex gap-2 items-center">
+                    <select id="std_sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <span class="text-gray-400 text-xs font-bold">VS</span>
+                    <select id="std_sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded">🗑️</button>
+                </div>
             `;
             container.appendChild(div);
         }
@@ -776,13 +926,68 @@
             }
         }
 
+        // --- Robust Event Binding (NEW LOGIC) ---
+        function bindDynamicEvents() {
+            const container = document.getElementById('dynamic-form');
+            if(!container) return;
+
+            const teamSelects = container.querySelectorAll('.team-select');
+            teamSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const teamName = this.value;
+                    const playerSelects = container.querySelectorAll(`.player-select[data-team-select="${this.id}"]`);
+                    
+                    playerSelects.forEach(pSelect => {
+                        // Reset
+                        pSelect.innerHTML = '<option value="">請選擇球員</option>';
+                        pSelect.disabled = true;
+                        pSelect.classList.add('disabled-input');
+                        pSelect.value = "";
+                        
+                        const numInputId = pSelect.dataset.numInput;
+                        if(numInputId) {
+                            const numInput = document.getElementById(numInputId);
+                            if(numInput) numInput.value = "";
+                        }
+
+                        // Populate
+                        if (teamName && ROSTERS[teamName]) {
+                            pSelect.disabled = false;
+                            pSelect.classList.remove('disabled-input');
+                            ROSTERS[teamName].forEach(player => {
+                                const option = document.createElement('option');
+                                option.value = player.name;
+                                option.text = player.name; 
+                                option.dataset.num = player.num;
+                                pSelect.appendChild(option);
+                            });
+                        }
+                    });
+                });
+            });
+
+            // Player select change listener (Auto-fill Number)
+            const playerSelects = container.querySelectorAll('.player-select');
+            playerSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const numInputId = this.dataset.numInput;
+                    if (numInputId) {
+                        const numInput = document.getElementById(numInputId);
+                        if (numInput) {
+                            const selectedOption = this.options[this.selectedIndex];
+                            numInput.value = selectedOption.dataset.num || "";
+                        }
+                    }
+                });
+            });
+        }
+
         // --- Generation Logic ---
         function generateCopy() {
             let output = "";
             const getValue = (id) => document.getElementById(id)?.value || "";
             const getTeam = (key) => TEAMS[key];
 
-            // Common helper for Next Game Block
             const getNextGameText = () => {
                 const date = getValue('next_date');
                 if(!date) return "";
@@ -798,15 +1003,14 @@
             const getNextGameTextShort = () => {
                 const date = getValue('next_date');
                 if(!date) return "";
-                const monthDay = formatMonthDay(date); // DEC.03
-                const time = getValue('next_time'); // 19:00
+                const monthDay = formatMonthDay(date); 
+                const time = getValue('next_time'); 
                 const home = getValue('next_home');
                 const away = getValue('next_away');
                 const num = getValue('next_game_num');
                 return `📺NEXT GAME\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
             }
             
-            // Custom Helper for Local Player Highlight Next Game
             const getLocalPlayerNextGame = () => {
                 const date = getValue('next_date');
                 if(!date) return "";
@@ -842,9 +1046,9 @@
                 const date = getValue('match_date');
                 const home = TEAMS[getValue('home_team')];
                 const away = TEAMS[getValue('away_team')];
-                const dayName = getDayName(date); // WED
-                const mmdd = formatMMDD(date); // 12.03
-                const dayChi = getDayChi(date); // 三
+                const dayName = getDayName(date); 
+                const mmdd = formatMMDD(date); 
+                const dayChi = getDayChi(date); 
                 const title = getValue('promo_title');
                 
                 output = `🏀${toMathBoldSerif(title)}\n\n`;
@@ -989,6 +1193,8 @@
 
             } else if (currentMode === 'potw') {
                 const team = TEAMS[getValue('player_team')];
+                const name = getValue('player_name_select');
+                
                 output = `🥇${toMathBoldSerif('PLAYER OF THE WEEK')}｜#單週表現最佳球員\n\n`;
                 output += `🫶🏻${toMathBoldSerif('NOTHING BUT')} ${team.emoji}${getValue('player_name')}\n\n`;
                 
@@ -1018,7 +1224,7 @@
                     const home = TEAMS[getValue('next_home')];
                     const away = TEAMS[getValue('next_away')];
                     const time = getValue('next_time');
-                    const nameOnly = getValue('player_name').split(' ')[0] || "";
+                    const nameOnly = getValue('player_name_select').split(' ')[0] || "";
                     
                     output += `📌休息一下回來看${nameOnly}發威👀\n`;
                     output += `▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}`;
@@ -1030,14 +1236,14 @@
                 output += `${getValue('eff_intro')}\n\n`;
                 
                 for (let i = 1; i <= 5; i++) { 
-                    const teamKey = document.getElementById(`eff${i}_team`)?.value;
-                    const num = document.getElementById(`eff${i}_num`)?.value;
-                    const name = document.getElementById(`eff${i}_name`)?.value;
-                    const val = document.getElementById(`eff${i}_val`)?.value;
-                    const desc = document.getElementById(`eff${i}_desc`)?.value;
-                    
+                    const name = getValue(`eff${i}_name`);
                     if(name) {
+                        const teamKey = getValue(`eff${i}_team`);
                         const team = TEAMS[teamKey];
+                        const num = getValue(`eff${i}_num`);
+                        const val = getValue(`eff${i}_val`);
+                        const desc = getValue(`eff${i}_desc`);
+                        
                         output += `${team.emoji} #${num} ${name} | EFF ${val}\n`;
                         if(desc) output += `${desc}\n\n`;
                         else output += `\n`;
