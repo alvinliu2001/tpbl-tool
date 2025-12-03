@@ -60,16 +60,26 @@
         }
     </script>
 </head>
-<body class="bg-gray-50 text-gray-800 h-screen flex overflow-hidden">
+<body class="bg-gray-50 text-gray-800 md:h-screen flex flex-col md:flex-row md:overflow-hidden min-h-screen">
 
     <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 h-full">
-        <div class="p-6 border-b border-gray-800">
-            <h1 class="text-2xl font-bold text-white tracking-wider">TPBL<span class="text-brand-gold">.TOOL</span></h1>
-            <p class="text-xs text-gray-500 mt-1">社群文案生成工具</p>
+    <!-- Modified for RWD: w-full on mobile, sticky top, with toggle -->
+    <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-30 sticky top-0 md:relative shadow-lg md:shadow-none">
+        <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark">
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-white tracking-wider">TPBL<span class="text-brand-gold">.TOOL</span></h1>
+                <p class="text-xs text-gray-500 mt-1">社群文案生成工具</p>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button onclick="toggleSidebar()" class="md:hidden text-white p-2 focus:outline-none border border-gray-700 rounded hover:bg-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
         </div>
         
-        <nav class="flex-1 overflow-y-auto py-4 space-y-1">
+        <!-- Nav Container (Hidden on mobile by default) -->
+        <nav id="sidebar-nav" class="hidden md:flex flex-col flex-1 overflow-y-auto py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none max-h-[80vh] md:max-h-full">
             
             <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
             <button onclick="switchMode('weekday_preview')" id="btn-weekday_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3">
@@ -110,12 +120,13 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col md:flex-row h-full overflow-hidden">
+    <!-- Modified for RWD: Vertical stack on mobile, horizontal on desktop -->
+    <main class="flex-1 flex flex-col md:flex-row md:h-full md:overflow-hidden relative">
         
         <!-- Input Area (Scrollable) -->
-        <div class="flex-1 overflow-y-auto p-8 bg-white" id="input-container">
-            <div class="max-w-2xl mx-auto">
-                <h2 id="current-title" class="text-2xl font-bold mb-6 text-gray-800 border-l-4 border-brand-gold pl-4">請選擇功能</h2>
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-white md:h-full" id="input-container">
+            <div class="max-w-2xl mx-auto pb-10 md:pb-0">
+                <h2 id="current-title" class="text-xl md:text-2xl font-bold mb-6 text-gray-800 border-l-4 border-brand-gold pl-4">請選擇功能</h2>
                 
                 <!-- Dynamic Form Container -->
                 <div id="dynamic-form" class="space-y-5">
@@ -131,12 +142,12 @@
             </div>
         </div>
 
-        <!-- Output Area (Fixed) -->
-        <div class="w-full md:w-1/3 bg-gray-100 p-6 flex flex-col border-l border-gray-200">
+        <!-- Output Area (Fixed on Desktop, Stacked on Mobile) -->
+        <div class="w-full md:w-1/3 bg-gray-100 p-6 flex flex-col border-t md:border-t-0 md:border-l border-gray-200">
             <h3 class="text-lg font-bold mb-4 text-gray-700 flex items-center gap-2">
                 預覽結果
             </h3>
-            <textarea id="output-text" class="flex-1 w-full p-4 border border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-brand-gold bg-white leading-relaxed" placeholder="文案將顯示於此..."></textarea>
+            <textarea id="output-text" class="flex-1 w-full p-4 border border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-brand-gold bg-white leading-relaxed h-64 md:h-auto" placeholder="文案將顯示於此..."></textarea>
             
             <button onclick="copyToClipboard()" class="mt-4 w-full bg-white border-2 border-gray-200 hover:border-brand-dark text-gray-800 font-bold py-3 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2">
                 <span id="copy-text">一鍵複製</span>
@@ -147,6 +158,18 @@
 
     <!-- JavaScript Logic -->
     <script>
+        // --- Mobile Sidebar Toggle ---
+        function toggleSidebar() {
+            const nav = document.getElementById('sidebar-nav');
+            if (nav.classList.contains('hidden')) {
+                nav.classList.remove('hidden');
+                nav.classList.add('flex');
+            } else {
+                nav.classList.add('hidden');
+                nav.classList.remove('flex');
+            }
+        }
+
         // --- Data & Config ---
         const TEAMS = {
             "戰神": { full: "臺北台新戰神", emoji: "🛡️", arena: "和平籃球館" },
@@ -264,6 +287,12 @@
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`btn-${mode}`).classList.add('active');
             
+            // Auto-close sidebar on mobile after selection
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar-nav').classList.add('hidden');
+                document.getElementById('sidebar-nav').classList.remove('flex');
+            }
+
             const titles = {
                 'weekday_preview': '平日賽事預告',
                 'game_preview': '單場賽程預告',
