@@ -117,8 +117,8 @@
                 </div>
                 
                 <!-- Title -->
-                <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 tracking-wide text-left">社群文案生成工具</h1>
-                <p class="text-gray-400 text-lg md:text-xl mb-10 font-light text-left">一個簡單實用的工具，幫助團隊高效產出文案。</p>
+                <h1 class="text-3xl md:text-4xl font-semibold text-white mb-3 tracking-wide text-left">社群文案生成工具</h1>
+                <p class="text-gray-400 text-lg md:text-xl mb-10 font-extralight text-left">一個簡單實用的工具，幫助團隊高效產出文案。</p>
                 
                 <!-- Button -->
                 <div class="flex justify-start">
@@ -207,6 +207,9 @@
                     </div>
 
                     <div class="mt-8 pt-6 border-t border-gray-100">
+                        <div class="flex justify-end mb-2">
+                             <span id="last-saved-time" class="text-xs text-gray-400 transition-opacity duration-500 opacity-0"></span>
+                        </div>
                         <button onclick="generateCopy()" class="w-full bg-brand-dark hover:bg-brand-gold hover:text-brand-dark text-white font-bold py-4 px-6 rounded-lg transition duration-200 flex justify-center items-center gap-2 shadow-lg">
                             <span>生成文案</span>
                         </button>
@@ -234,7 +237,7 @@
 
         </main>
     </div>
-
+    
     <!-- JavaScript Logic -->
     <script>
         // --- Enter App from Landing Page ---
@@ -376,6 +379,7 @@
         const BROADCAST_INFO = "👉🏻轉播平台 📺 緯來電視網｜博斯運動二台｜TPBL官方YOUTUBE";
 
         let currentMode = '';
+        const STORAGE_PREFIX = 'tpbl_draft_';
 
         // --- Utils ---
         const toMathBoldSerif = (text) => {
@@ -491,6 +495,116 @@
             </div>
         `;
 
+        // --- Save / Load Logic ---
+        function saveToLocal() {
+            if (!currentMode) return;
+            const container = document.getElementById('dynamic-form');
+            if (!container) return;
+
+            const inputs = container.querySelectorAll('input, select, textarea');
+            const data = {};
+            
+            inputs.forEach(input => {
+                if (input.id) {
+                    if (input.type === 'checkbox') {
+                        data[input.id] = input.checked;
+                    } else {
+                        data[input.id] = input.value;
+                    }
+                }
+            });
+
+            // Save dynamic list counts
+            const scheduleList = document.getElementById('schedule_list_container');
+            if (scheduleList) data._count_schedule = scheduleList.children.length;
+
+            const standingsList = document.getElementById('standings_schedule_list_container');
+            if (standingsList) data._count_standings = standingsList.children.length;
+
+            const statsList = document.getElementById('stats_list_container');
+            if (statsList) data._count_stats = statsList.children.length;
+
+            localStorage.setItem(STORAGE_PREFIX + currentMode, JSON.stringify(data));
+            
+            // Show Last Saved Time
+            const ind = document.getElementById('last-saved-time');
+            if(ind) {
+                const now = new Date();
+                const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                ind.innerHTML = `已自動儲存 <i class="fa-solid fa-check ml-1"></i> ${timeStr}`;
+                ind.style.opacity = '1';
+            }
+        }
+
+        function loadFromLocal() {
+            if (!currentMode) return;
+            const raw = localStorage.getItem(STORAGE_PREFIX + currentMode);
+            
+            // Handle Defaults if no save data found
+            if (!raw) {
+                if (currentMode === 'weekly_schedule') {
+                    addScheduleItem(); addScheduleItem();
+                } else if (currentMode === 'weekly_standings') {
+                    addStandingsGameItem();
+                } else if (currentMode === 'potw') {
+                    addStatItem(); addStatItem(); addStatItem();
+                }
+                return; 
+            }
+
+            const data = JSON.parse(raw);
+
+            // Reconstruct Dynamic Lists
+            if (data._count_schedule !== undefined) {
+                const list = document.getElementById('schedule_list_container');
+                if (list) {
+                    list.innerHTML = ''; // Clear defaults
+                    for (let i = 0; i < data._count_schedule; i++) addScheduleItem();
+                }
+            }
+            if (data._count_standings !== undefined) {
+                const list = document.getElementById('standings_schedule_list_container');
+                if (list) {
+                    list.innerHTML = '';
+                    for (let i = 0; i < data._count_standings; i++) addStandingsGameItem();
+                }
+            }
+            if (data._count_stats !== undefined) {
+                const list = document.getElementById('stats_list_container');
+                if (list) {
+                    list.innerHTML = '';
+                    for (let i = 0; i < data._count_stats; i++) addStatItem();
+                }
+            }
+
+            // Restore Values (Pass 1: Team Selects & Checkboxes)
+            // We do team selects first to trigger change events for player selects
+            Object.keys(data).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (el.type === 'checkbox') {
+                        el.checked = data[id];
+                    } else if (el.classList.contains('team-select')) {
+                        el.value = data[id];
+                        el.dispatchEvent(new Event('change')); // Trigger player select population
+                    }
+                }
+            });
+
+            // Restore Values (Pass 2: Everything else)
+            Object.keys(data).forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.classList.contains('team-select') && el.type !== 'checkbox') {
+                    el.value = data[id];
+                    // Special handle for custom stat type visibility
+                    if (id.startsWith('stat_type_')) {
+                        const idx = id.split('_')[2];
+                        toggleCustomStat(idx);
+                    }
+                }
+            });
+        }
+
         // --- Switch Mode Logic ---
         function switchMode(mode) {
             currentMode = mode;
@@ -537,8 +651,8 @@
             }
 
             renderForm(mode);
-            // Re-bind listeners for dynamic dropdowns
             bindDynamicEvents();
+            loadFromLocal(); // Load saved data after render
         }
 
         function renderForm(mode) {
@@ -612,7 +726,6 @@
                     </div>
                 `;
             } else if (mode === 'game_highlight') {
-                // UPDATED: Auto prefix + No YT link
                 html += `
                     ${createInput('hl_title', '精華標題 (不需輸入開頭符號)', 'text', '戰神陪你提前過聖誕！Merry ChristMARS 🎄')}
                 `;
@@ -644,14 +757,11 @@
                                 <input type="text" id="lp_num" readonly class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
                              </div>
                          </div>
-                         ${createInput('lp_title', '標題 (例如：🦁曾柏喻全面控衛視野...)', 'text')}
+                         ${createInput('lp_title', '標題文案 (自動加上 Emoji 與 姓名)', 'text', '全面控衛視野...')}
                     </div>
                     ${createTextarea('lp_content', '球員表現描述', '', 4)}
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
                         <p class="text-xs font-bold text-gray-500 mb-2 uppercase">下場賽事資訊 (Next Game)</p>
-                        <div class="mb-2">
-                             ${createInput('lp_next_player_name', '下場球員名稱 (例如：曾柏喻)', 'text')}
-                        </div>
                         <div class="grid grid-cols-2 gap-4">
                             ${createInput('next_date', '日期', 'date', '', today)}
                             ${createInput('next_game_num', '場次 (Game)', 'number')}
@@ -694,7 +804,7 @@
                         <button onclick="addScheduleItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增場次</button>
                     </div>
                 `;
-                setTimeout(() => { addScheduleItem(); addScheduleItem(); }, 100);
+                // Removed setTimeout, relying on loadFromLocal logic
             } else if (mode === 'weekly_standings') {
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
@@ -705,7 +815,7 @@
                         <button onclick="addStandingsGameItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增預告場次</button>
                     </div>
                 `;
-                 setTimeout(() => { addStandingsGameItem(); }, 100);
+                 // Removed setTimeout, relying on loadFromLocal logic
             } else if (mode === 'top5') {
                  // MODIFIED: Use Team/Player selects with autofill
                  html += `
@@ -733,7 +843,7 @@
                         <div>
                              <label class="block text-sm font-medium text-gray-700 mb-1">球員</label>
                              <select id="player_name_select" data-team-select="player_team" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold focus:border-brand-gold player-select disabled-input" disabled>
-                                <option>先選擇球隊</option>
+                                <option>先選擇球隊...</option>
                              </select>
                              <input type="hidden" id="player_num_dummy">
                              <p class="text-xs text-gray-400 mt-1">*請手動補上英文名</p>
@@ -749,7 +859,7 @@
                     ${createTextarea('player_desc', '球員表現描述', '', 6)}
                     ${createNextGameBlock("下場賽事資訊 (Next Game)")}
                 `;
-                setTimeout(() => { addStatItem(); addStatItem(); addStatItem(); }, 100);
+                // Removed setTimeout, relying on loadFromLocal logic
             } else if (mode === 'weekly_local_eff') {
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
@@ -782,7 +892,6 @@
                     ${createTextarea('kicks_intro', '引言文案', '', 4)}
                 `;
             } else if (mode === 'season_stats') {
-                // MODIFIED: Season Stats simplified
                 html += `
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">標題後綴</label>
@@ -815,7 +924,7 @@
             container.innerHTML = html;
         }
 
-        // --- Form Interaction Logic ---
+        // ... existing listeners ...
         function attachFormListeners() {
             // Listen for changes on team selects
             document.querySelectorAll('.team-select').forEach(select => {
@@ -830,7 +939,6 @@
                         pSelect.classList.add('disabled-input');
                         pSelect.value = "";
                         
-                        // Also clear linked number input if exists
                         const numInputId = pSelect.dataset.numInput;
                         if(numInputId) {
                             const numInput = document.getElementById(numInputId);
@@ -844,7 +952,7 @@
                             ROSTERS[teamName].forEach(player => {
                                 const option = document.createElement('option');
                                 option.value = player.name;
-                                option.text = player.name; // Just name in dropdown
+                                option.text = player.name; 
                                 option.dataset.num = player.num;
                                 pSelect.appendChild(option);
                             });
@@ -859,8 +967,8 @@
                     const numInputId = this.dataset.numInput;
                     if (numInputId) {
                         const numInput = document.getElementById(numInputId);
-                        const selectedOption = this.options[this.selectedIndex];
-                        if (numInput && selectedOption) {
+                        if (numInput) {
+                            const selectedOption = this.options[this.selectedIndex];
                             numInput.value = selectedOption.dataset.num || "";
                         }
                     }
@@ -868,17 +976,14 @@
             });
         }
 
-        // --- Helper for Weekly Schedule (Optimized for Mobile) ---
+        // --- Helper for Weekly Schedule ---
         function addScheduleItem() {
             const container = document.getElementById('schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
-            
-            // FIXED: New Stacked Layout
             div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
-            
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
-            const today = new Date().toISOString().split('T')[0]; // Get today
+            const today = new Date().toISOString().split('T')[0]; 
 
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
@@ -895,16 +1000,14 @@
             container.appendChild(div);
         }
 
-        // --- Helper for Standings Schedule (Optimized for Mobile) ---
+        // --- Helper for Standings Schedule ---
         function addStandingsGameItem() {
             const container = document.getElementById('standings_schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
-            // FIXED: New Stacked Layout
             div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
-            
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
-            const today = new Date().toISOString().split('T')[0]; // Get today
+            const today = new Date().toISOString().split('T')[0]; 
 
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
@@ -927,7 +1030,6 @@
             const idx = container.children.length;
             const div = document.createElement('div');
             div.className = "flex gap-2 items-center";
-            
             const typeOptions = STAT_TYPES.map(t => `<option value="${t.val}">${t.label}</option>`).join('');
             
             div.innerHTML = `
@@ -951,7 +1053,7 @@
             }
         }
 
-        // --- Robust Event Binding (NEW LOGIC) ---
+        // --- Robust Event Binding ---
         function bindDynamicEvents() {
             const container = document.getElementById('dynamic-form');
             if(!container) return;
@@ -991,7 +1093,6 @@
                 });
             });
 
-            // Player select change listener (Auto-fill Number)
             const playerSelects = container.querySelectorAll('.player-select');
             playerSelects.forEach(select => {
                 select.addEventListener('change', function() {
@@ -1007,9 +1108,16 @@
             });
         }
 
-        // --- Helper: Render Logos ---
-        function renderLogos() {
-            // No longer needed as logos are now inline images
+        // --- Utils ---
+        function copyToClipboard() {
+            const copyText = document.getElementById("output-text");
+            copyText.select();
+            document.execCommand("copy");
+            
+            const btn = document.getElementById("copy-text");
+            const original = btn.innerText;
+            btn.innerText = "已複製！";
+            setTimeout(() => btn.innerText = original, 2000);
         }
 
         // --- Generation Logic ---
@@ -1050,7 +1158,7 @@
                 const home = getValue('next_home');
                 const away = getValue('next_away');
                 const arena = TEAMS[home].arena;
-                const player = getValue('lp_next_player_name');
+                const player = getValue('lp_name'); // UPDATED: Use selected player name directly
                 return `📌 下場${player}：\n▌${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
             };
 
@@ -1145,7 +1253,11 @@
                 output += `\n\n-\n\n${getValue('promo_text')}\n\n${COMMON_TAGS} #TPBL例行賽`;
 
             } else if (currentMode === 'local_player_highlight') {
-                output = `${getValue('lp_title')}\n\n`;
+                const team = TEAMS[getValue('lp_team')];
+                const name = getValue('lp_name');
+                const titleSuffix = getValue('lp_title');
+                
+                output = `${team.emoji}${name}${titleSuffix}\n\n`;
                 output += `${getValue('lp_content')}\n\n-\n\n`;
                 output += getLocalPlayerNextGame();
                 output += `\n\n${COMMON_TAGS}`;
@@ -1328,19 +1440,10 @@
             document.getElementById('output-text').value = output;
         }
 
-        // --- Utils ---
-        function copyToClipboard() {
-            const copyText = document.getElementById("output-text");
-            copyText.select();
-            document.execCommand("copy");
-            
-            const btn = document.getElementById("copy-text");
-            const original = btn.innerText;
-            btn.innerText = "已複製！";
-            setTimeout(() => btn.innerText = original, 2000);
-        }
+        // Initialize Auto-Save
+        setInterval(saveToLocal, 5000);
 
-        // Initialize
+        // Initialize App
         switchMode('game_preview');
         // renderLogos(); // Removed SVG render call
     </script>
