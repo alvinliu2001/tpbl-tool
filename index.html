@@ -742,6 +742,9 @@
 
             localStorage.setItem(STORAGE_PREFIX + currentMode, JSON.stringify(data));
             
+            // Also save current mode
+            localStorage.setItem('tpbl_last_mode', currentMode);
+
             // Show Last Saved Time
             const ind = document.getElementById('last-saved-time');
             if(ind) {
@@ -781,14 +784,31 @@
                 if (list) { list.innerHTML = ''; for (let i = 0; i < data._count_stats; i++) addStatItem(); }
             }
 
+            // Restore Values in 2 passes:
+            // Pass 1: Team Selects & Checkboxes (triggers population of players)
             Object.keys(data).forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
-                    if (el.type === 'checkbox') el.checked = data[id];
-                    else {
+                    if (el.type === 'checkbox') {
+                        el.checked = data[id];
+                    } else if (el.classList.contains('team-select')) {
                         el.value = data[id];
-                        if (el.classList.contains('team-select')) el.dispatchEvent(new Event('change'));
-                        if (id.startsWith('stat_type_')) toggleCustomStat(id.split('_')[2]);
+                        el.dispatchEvent(new Event('change')); // Trigger player select population
+                    }
+                }
+            });
+
+            // Pass 2: Everything else (including Player Selects, now populated)
+            Object.keys(data).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (!el.classList.contains('team-select') && el.type !== 'checkbox') {
+                        el.value = data[id];
+                        // Special handle for custom stat type visibility
+                        if (id.startsWith('stat_type_')) {
+                            const idx = id.split('_')[2];
+                            toggleCustomStat(idx);
+                        }
                     }
                 }
             });
@@ -949,6 +969,9 @@
         // --- Switch Mode Logic ---
         function switchMode(mode) {
             currentMode = mode;
+            // Save mode preference
+            localStorage.setItem('tpbl_last_mode', mode);
+
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`btn-${mode}`).classList.add('active');
             
@@ -1305,6 +1328,15 @@
         }
         
         function bindSmartEvents(mode) {
+             // ... smart events binding ...
+             // Add debounce save listener
+             const debouncedSave = debounce(saveToLocal, 1000);
+             const form = document.getElementById('dynamic-form');
+             if(form) {
+                 form.addEventListener('input', debouncedSave);
+                 form.addEventListener('change', saveToLocal);
+             }
+
              // Game Preview Smart Logic
              if (mode === 'game_preview' || mode === 'weekday_preview') {
                  const d = document.getElementById('match_date');
@@ -1319,7 +1351,6 @@
              
              // Matchup Highlight Smart Logic
              if (mode === 'matchup_highlight') {
-                 // For matchup, the inputs are in the NextGameBlock at top, named next_date etc.
                  const d = document.getElementById('next_date');
                  const t = document.getElementById('next_time');
                  const g = document.getElementById('next_game_num');
@@ -1327,7 +1358,6 @@
                  if(t) t.addEventListener('change', (e) => handleTimeChange(e, 'next'));
                  if(g) g.addEventListener('input', (e) => handleGameNumChange(e, 'next'));
                  
-                 // Also link top teams to bottom matchup teams (Req 10)
                  const na = document.getElementById('next_away');
                  const nh = document.getElementById('next_home');
                  if(na) na.addEventListener('change', () => updateSelect('mu_away_team', na.value));
@@ -1336,7 +1366,6 @@
              
              // Final Score / POTG Smart Logic
              if(mode === 'final_score' || mode === 'potg') {
-                 // POTG uses implied Past Game default, Next Game block follows.
                  const nd = document.getElementById('next_date');
                  const nt = document.getElementById('next_time');
                  if(nd) nd.addEventListener('change', (e) => handleDateChange(e, 'next'));
@@ -1378,6 +1407,15 @@
         }
 
         // --- Helper Helpers ---
+        // ... (unchanged helpers) ...
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
         function addScheduleItemWithData(game) {
             const container = document.getElementById('schedule_list_container');
             const idx = container.children.length;
@@ -1780,11 +1818,13 @@
             document.getElementById('output-text').value = output;
         }
 
-        // Initialize Auto-Save
+        // Initialize with Smart Save
         setInterval(saveToLocal, 5000);
+        window.addEventListener('beforeunload', () => saveToLocal()); // Safe-guard
 
-        // Initialize App
-        switchMode('game_preview');
+        // Initialize App with Remembered Mode
+        const lastMode = localStorage.getItem('tpbl_last_mode') || 'game_preview';
+        switchMode(lastMode);
     </script>
 </body>
 </html>
