@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Title -->
-    <title>TPBL | 社群文案生成工具</title>
+    <title>TPBL | 社群文案生成工具 v4 (Cloud Sync)</title>
     <meta name="description" content="TPBL 職籃聯盟社群文案自動生成與管理工具">
     
     <!-- Favicon -->
@@ -84,6 +84,14 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Status Indicator */
+        #sync-status {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.3s;
         }
     </style>
     <script>
@@ -186,6 +194,13 @@
                 <button onclick="switchMode('monthly_kicks')" id="btn-monthly_kicks" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-shoe-prints w-6 text-center"></i> 每月精選實戰球鞋</button>
                 <button onclick="switchMode('season_stats')" id="btn-season_stats" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-simple w-6 text-center"></i> 數據累計排行</button>
             </nav>
+            
+            <!-- Sync Status in Sidebar -->
+            <div class="p-4 mt-auto">
+                <div id="sync-status" class="bg-gray-800 text-gray-400">
+                    <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 準備同步名單...
+                </div>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -418,8 +433,8 @@
             { id: 126, date: "2026-05-03", time: "17:00", home: "國王", away: "特攻" }
         ];
 
-        // Roster Data
-        const ROSTERS = {
+        // Roster Data - Fallback
+        let ROSTERS = {
             "攻城獅": [
                 {num: "0", name: "李漢昇"}, {num: "2", name: "德魯"}, {num: "3", name: "克雷格"}, {num: "4", name: "高國豪"},
                 {num: "7", name: "曾柏喻"}, {num: "8", name: "朱雲豪"}, {num: "9", name: "田浩"}, {num: "10", name: "劉丞勳"},
@@ -466,6 +481,8 @@
                 {num: "41", name: "蘇奕晉"}, {num: "62", name: "陳冠全"}
             ]
         };
+
+        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1wcKacc8kQqyiqm9sUdStN4W7fB7FzXcCLL6UpySBE9g/export?format=csv";
 
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
         const MONTHS = ["JAN.", "FEB.", "MAR.", "APR.", "MAY", "JUN.", "JUL.", "AUG.", "SEP.", "OCT.", "NOV.", "DEC."];
@@ -643,6 +660,53 @@
         
         function getGamesInDateRange(startStr, endStr) {
             return SEASON_SCHEDULE_2526.filter(g => g.date >= startStr && g.date <= endStr);
+        }
+
+        // --- Fetch Roster Data ---
+        async function fetchRosterData() {
+            const statusDiv = document.getElementById('sync-status');
+            try {
+                statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 同步中...';
+                
+                const response = await fetch(GOOGLE_SHEET_CSV_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const csvText = await response.text();
+                
+                const rows = csvText.split(/\r?\n/);
+                const newRosters = {};
+                
+                // Start from index 1 to skip header (assuming Team, Name, Number)
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i].split(',');
+                    if (row.length < 3) continue;
+                    
+                    const team = row[0].trim();
+                    const name = row[1].trim();
+                    const num = row[2].trim();
+                    
+                    if (team && name && num) {
+                        if (!newRosters[team]) newRosters[team] = [];
+                        newRosters[team].push({ name, num });
+                    }
+                }
+                
+                if (Object.keys(newRosters).length > 0) {
+                    ROSTERS = newRosters;
+                    statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 雲端名單同步完成';
+                    // Re-trigger population if a team is already selected
+                    const teamSelects = document.querySelectorAll('.team-select');
+                    teamSelects.forEach(select => {
+                        if (select.value) {
+                            select.dispatchEvent(new Event('change'));
+                        }
+                    });
+                } else {
+                    throw new Error('No data found');
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用內建備份名單';
+            }
         }
 
         // --- UI Builders ---
@@ -1822,9 +1886,12 @@
         setInterval(saveToLocal, 5000);
         window.addEventListener('beforeunload', () => saveToLocal()); // Safe-guard
 
-        // Initialize App with Remembered Mode
-        const lastMode = localStorage.getItem('tpbl_last_mode') || 'game_preview';
-        switchMode(lastMode);
+        // Initialize Roster Fetch
+        fetchRosterData().then(() => {
+            // After roster loaded, load saved state (so players are populated correctly)
+            const lastMode = localStorage.getItem('tpbl_last_mode') || 'game_preview';
+            switchMode(lastMode);
+        });
     </script>
 </body>
 </html>
