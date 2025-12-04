@@ -108,11 +108,9 @@
         <div class="w-full md:w-1/2 h-full flex flex-col justify-center px-8 md:px-24 relative z-10 bg-brand-dark overflow-y-auto">
             
             <div class="flex-1 flex flex-col justify-center min-h-[400px]">
-                <!-- Logo (Content injected via JS to prevent breakage) -->
+                <!-- Logo -->
                 <div class="mb-6 flex justify-start">
-                    <svg class="h-10 md:h-12 w-auto tpbl-logo-target" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
-                        <!-- Paths injected by JS -->
-                    </svg>
+                    <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-10 md:h-12 w-auto">
                 </div>
                 
                 <!-- Title -->
@@ -148,10 +146,7 @@
             <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative">
                 <div class="flex items-center gap-3">
                     <div id="logo-container" onclick="location.reload()" class="cursor-pointer" title="返回首頁">
-                        <!-- Small Logo (Content injected via JS) -->
-                        <svg class="h-6 md:h-7 w-auto tpbl-logo-target" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" fill="none">
-                             <!-- Paths injected by JS -->
-                        </svg>
+                        <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-6 md:h-7 w-auto">
                     </div>
                 </div>
                 
@@ -221,7 +216,7 @@
                 <h3 class="text-lg font-bold mb-4 text-gray-700 flex items-center gap-2">
                     預覽結果
                 </h3>
-                <textarea id="output-text" class="flex-1 w-full p-4 border border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-brand-gold bg-white leading-relaxed h-64 md:h-auto" placeholder="文案將顯示於此..."></textarea>
+                <textarea id="output-text" class="flex-1 w-full p-4 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-brand-gold bg-white leading-relaxed h-64 md:h-auto" placeholder="文案將顯示於此..."></textarea>
                 
                 <button onclick="copyToClipboard()" class="mt-4 w-full bg-white border-2 border-gray-200 hover:border-brand-dark text-gray-800 font-bold py-3 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2">
                     <span id="copy-text">一鍵複製</span>
@@ -277,18 +272,6 @@
             }
         });
 
-        // --- LOGO DATA ---
-        const LOGO_SVG_CONTENT = `
-            <path d="M61.2654 17.7247C61.9017 15.9066 63.5198 9.80155 64.2979 6.71082C64.5686 5.56151 64.4628 4.35565 63.9961 3.27102C63.7265 2.70741 63.3569 2.19736 62.9053 1.76566C61.8884 0.803594 60.5381 0.273137 59.1383 0.285742H32.4381C34.2561 1.20205 34.9834 2.23836 35.4415 3.24557C35.736 3.91462 35.9833 5.22 35.5288 7.06716C35.2306 8.28527 29.9982 27.6332 29.9982 27.6332C29.9982 27.6332 47.9353 25.477 52.1059 24.6116C54.9494 24.0298 59.8764 21.6735 61.2654 17.7247ZM51.0624 16.9429C50.3057 18.953 49.0007 20.7108 47.2956 22.0168C45.5905 23.3227 43.5535 24.1247 41.4157 24.3316L45.15 10.4306L40.8303 7.6344H53.5568C53.5568 7.6344 52.3205 13.5104 51.0624 16.9429Z" fill="white"></path>
-            <path d="M67.4359 6.33628C66.865 8.4707 62.9525 23.0226 62.9525 23.0226C62.9525 23.0226 73.1665 21.7899 79.2279 20.7463C87.0311 19.4009 93.2489 15.2703 95.107 9.98335C96.2414 6.75809 96.1687 4.79457 95.9033 3.8019C95.728 3.21289 95.432 2.66678 95.0342 2.19835C94.5313 1.59242 93.8995 1.10632 93.185 0.775453C92.4704 0.444584 91.691 0.277274 90.9036 0.285737H64.5488C66.7232 1.37294 68.1595 3.61281 67.4359 6.33628ZM85.3003 7.64531C85.0217 9.06412 84.6127 10.4542 84.0785 11.7978C82.3805 16.2048 78.6498 18.481 74.4828 19.0264L76.7953 10.4088L72.5083 7.63439L85.3003 7.64531Z" fill="white"></path>
-            <path d="M32.4708 3.751C32.2927 3.27496 32.0317 2.83422 31.6999 2.44926C31.1204 1.76101 30.3964 1.20877 29.5795 0.831724C28.7626 0.454676 27.8726 0.262062 26.9729 0.267571H0C3.43616 1.95111 4.70153 3.94734 3.42888 7.62712H12.8574L3.06891 43.8868H13.5119L23.2277 7.6344H32.318C32.9216 5.87814 32.7617 4.62368 32.4708 3.751Z" fill="white"></path>
-            <path d="M28.5074 33.1856L25.6312 43.9049H36.1614L40.1903 28.8913L24.3076 30.8184L28.5074 33.1856Z" fill="white"></path>
-            <path d="M90.1327 27.6623C89.6818 24.317 86.1621 22.808 80.886 24.0698L77.5444 36.5199H69.7812L72.9228 24.8261L62.1162 26.1388L57.3456 43.9049H80.7624C84.144 41.9996 86.7111 38.698 88.1438 35.9418C89.3255 33.6728 90.5036 30.4185 90.1327 27.6623Z" fill="white"></path>
-            <path d="M83.1223 21.5972C89.0637 21.1754 91.849 22.728 92.0926 26.4624C93.8561 22.3753 97.9104 19.9537 102.274 19.4082C98.0777 18.8592 96.0415 15.7176 96.0197 12.5287C94.2125 16.3612 89.4491 20.6227 83.1223 21.5972Z" fill="#D4C09D"></path>
-            <path d="M99.0413 2.90741C99.4449 3.91826 99.2776 5.75814 99.0667 6.60172L98.3395 9.79791C96.9396 15.0303 100.256 18.2919 106.426 18.2919C106.426 18.2919 109.502 7.11444 109.804 6.09632C110.702 3.02741 107.986 0.278488 104.132 0.278488H96.0706C96.7348 0.458149 97.3486 0.788905 97.8639 1.24494C98.3792 1.70097 98.7822 2.26993 99.0413 2.90741Z" fill="white"></path>
-            <path d="M101.55 36.6363L105.855 20.7463C100.096 20.4373 94.0343 25.0443 92.6671 30.8548L89.1655 43.9049H113.739L119.993 36.5199L101.55 36.6363Z" fill="white"></path>
-        `;
-
         // --- Data & Config ---
         const TEAMS = {
             "戰神": { full: "臺北台新戰神", emoji: "🛡️", arena: "和平籃球館" },
@@ -301,54 +284,52 @@
         };
         const TEAM_KEYS = Object.keys(TEAMS);
         
-        // Roster Data (2024-25 Season)
+        // Roster Data
         const ROSTERS = {
+            "攻城獅": [
+                {num: "0", name: "李漢昇"}, {num: "2", name: "德魯"}, {num: "3", name: "克雷格"}, {num: "4", name: "高國豪"},
+                {num: "7", name: "曾柏喻"}, {num: "8", name: "朱雲豪"}, {num: "9", name: "田浩"}, {num: "10", name: "劉丞勳"},
+                {num: "11", name: "蕭順議"}, {num: "12", name: "李家瑞"}, {num: "17", name: "蔡宸綱"}, {num: "18", name: "帕塞獅"},
+                {num: "22", name: "提傑"}, {num: "25", name: "梁瀚"}, {num: "42", name: "盧冠軒"}, {num: "75", name: "李啓瑋"}
+            ],
+            "夢想家": [
+                {num: "0", name: "陳振傑"}, {num: "2", name: "馬建豪"}, {num: "3", name: "張宗憲"}, {num: "9", name: "吳家駿"},
+                {num: "11", name: "林俊吉"}, {num: "20", name: "簡偉儒"}, {num: "23", name: "恩尼斯"}, {num: "24", name: "忻沃克"},
+                {num: "26", name: "李德威"}, {num: "27", name: "史承平"}, {num: "28", name: "盧冠良"}, {num: "33", name: "湯普金斯"},
+                {num: "34", name: "高柏鎧"}, {num: "35", name: "霍爾曼"}, {num: "41", name: "蔣淯安"}, {num: "88", name: "周柏臣"}
+            ],
+            "雲豹": [
+                {num: "5", name: "高錦瑋"}, {num: "6", name: "徐宏瑋"}, {num: "7", name: "麥卡洛"}, {num: "8", name: "汪哲宇"},
+                {num: "10", name: "丁冠皓"}, {num: "11", name: "莊博元"}, {num: "12", name: "林信寬"}, {num: "13", name: "米勒"},
+                {num: "21", name: "王皓吉"}, {num: "24", name: "克羅馬"}, {num: "27", name: "黃鎮"}, {num: "31", name: "董永全"},
+                {num: "33", name: "迪亞洛"}, {num: "57", name: "曹薰襄"}, {num: "82", name: "劉元凱"}
+            ],
+            "海神": [
+                {num: "0", name: "魏莨哲"}, {num: "2", name: "詹姆斯"}, {num: "6", name: "歐提斯"}, {num: "7", name: "于煥亞"},
+                {num: "10", name: "胡瓏貿"}, {num: "11", name: "施晉堯"}, {num: "21", name: "呂威霆"}, {num: "22", name: "崔維斯"},
+                {num: "24", name: "蘇文儒"}, {num: "28", name: "余純安"}, {num: "30", name: "廖偉皓"}, {num: "32", name: "布里茲克"},
+                {num: "57", name: "吳曉謹"}, {num: "66", name: "陳懷安"}, {num: "85", name: "勤明慶"}, {num: "92", name: "凱帝"}
+            ],
+            "特攻": [
+                {num: "0", name: "阿巴西"}, {num: "1", name: "李睿麒"}, {num: "3", name: "林安龍"}, {num: "5", name: "余維豪"},
+                {num: "7", name: "魏嘉豪"}, {num: "10", name: "謝亞軒"}, {num: "11", name: "內馬"}, {num: "12", name: "林任鴻"},
+                {num: "14", name: "曾信武"}, {num: "16", name: "林韋翰"}, {num: "18", name: "飛克"}, {num: "19", name: "馬可"},
+                {num: "22", name: "黃泓瀚"}, {num: "24", name: "簡廷兆"}, {num: "28", name: "霸夫"}, {num: "76", name: "曾文鼎"},
+                {num: "77", name: "李沛澄"}
+            ],
+            "國王": [
+                {num: "1", name: "林書緯"}, {num: "2", name: "蘇培凱"}, {num: "5", name: "傑登"}, {num: "8", name: "鍾理翔"},
+                {num: "9", name: "李愷諺"}, {num: "10", name: "簡祐哲"}, {num: "11", name: "王柏智"}, {num: "12", name: "林彥廷"},
+                {num: "13", name: "呂政儒"}, {num: "16", name: "尚迪"}, {num: "17", name: "蘇士軒"}, {num: "19", name: "林金榜"},
+                {num: "20", name: "熊祥泰"}, {num: "24", name: "洪志善"}, {num: "25", name: "奧帝"}, {num: "26", name: "喬納森"},
+                {num: "31", name: "桑尼"}, {num: "42", name: "沃許本"}
+            ],
             "戰神": [
                 {num: "1", name: "洛夫頓"}, {num: "3", name: "丁聖儒"}, {num: "5", name: "魏芃禾"}, {num: "6", name: "江均"},
                 {num: "7", name: "劉彥廷"}, {num: "8", name: "陳文宏"}, {num: "9", name: "張兆辰"}, {num: "10", name: "基德"},
                 {num: "11", name: "黃聰翰"}, {num: "15", name: "謝銘駿"}, {num: "20", name: "孫思堯"}, {num: "21", name: "威力斯"},
                 {num: "23", name: "錢肯尼"}, {num: "29", name: "張耕淯"}, {num: "32", name: "齊曼加"}, {num: "33", name: "雷蒙恩"},
                 {num: "41", name: "蘇奕晉"}, {num: "62", name: "陳冠全"}
-            ],
-            "攻城獅": [
-                {num: "0", name: "李漢昇"}, {num: "2", name: "德魯"}, {num: "4", name: "高國豪"}, {num: "7", name: "曾柏喻"},
-                {num: "8", name: "朱雲豪"}, {num: "9", name: "田浩"}, {num: "10", name: "劉丞勳"}, {num: "11", name: "蕭順議"},
-                {num: "12", name: "李家瑞"}, {num: "17", name: "蔡宸綱"}, {num: "18", name: "帕塞獅"}, {num: "22", name: "提傑"},
-                {num: "31", name: "瑞斯"}, {num: "42", name: "盧冠軒"}, {num: "52", name: "容毅燊"}, {num: "75", name: "李啓瑋"}
-            ],
-            "特攻": [
-                {num: "1", name: "李睿麒"}, {num: "2", name: "劉人豪"}, {num: "3", name: "飛馳"}, {num: "4", name: "劉旻諺"},
-                {num: "7", name: "魏嘉豪"}, {num: "9", name: "克力斯"}, {num: "10", name: "謝亞軒"}, {num: "11", name: "周承睿"},
-                {num: "12", name: "林任鴻"}, {num: "16", name: "林韋翰"}, {num: "22", name: "黃泓瀚"}, {num: "24", name: "簡廷兆"},
-                {num: "28", name: "施晉堯"}, {num: "34", name: "徐宇煇"}, {num: "37", name: "林孟學"}, {num: "42", name: "艾斯卡"},
-                {num: "55", name: "奈森"}, {num: "76", name: "曾文鼎"}, {num: "77", name: "李沛澄"}
-            ],
-            "國王": [
-                {num: "1", name: "林書緯"}, {num: "2", name: "蘇培凱"}, {num: "5", name: "傑登"}, {num: "7", name: "林書豪"},
-                {num: "9", name: "李愷諺"}, {num: "10", name: "簡祐哲"}, {num: "11", name: "王柏智"}, {num: "12", name: "林彥廷"},
-                {num: "13", name: "呂政儒"}, {num: "16", name: "尚迪"}, {num: "17", name: "蘇士軒"}, {num: "19", name: "林金榜"},
-                {num: "20", name: "熊祥泰"}, {num: "24", name: "洪志善"}, {num: "25", name: "奧帝"}, {num: "26", name: "喬納森"},
-                {num: "31", name: "桑尼"}, {num: "42", name: "沃許本"}
-            ],
-            "夢想家": [
-                {num: "0", name: "陳振傑"}, {num: "2", name: "馬建豪"}, {num: "3", name: "張宗憲"}, {num: "5", name: "貝奇"},
-                {num: "7", name: "龍查"}, {num: "9", name: "吳家駿"}, {num: "11", name: "林俊吉"}, {num: "20", name: "簡偉儒"},
-                {num: "23", name: "恩尼斯"}, {num: "24", name: "忻沃克"}, {num: "26", name: "李德威"}, {num: "27", name: "史承平"},
-                {num: "28", name: "盧冠良"}, {num: "33", name: "湯普金斯"}, {num: "34", name: "高柏鎧"}, {num: "35", name: "霍爾曼"},
-                {num: "41", name: "蔣淯安"}, {num: "88", name: "周柏臣"}
-            ],
-            "海神": [
-                {num: "0", name: "魏莨哲"}, {num: "1", name: "艾德"}, {num: "3", name: "克雷格"}, {num: "7", name: "于煥亞"},
-                {num: "8", name: "邱子軒"}, {num: "9", name: "唐維傑"}, {num: "10", name: "胡瓏貿"}, {num: "18", name: "吳怡斌"},
-                {num: "21", name: "呂威霆"}, {num: "22", name: "摩爾斯"}, {num: "24", name: "蘇文儒"}, {num: "28", name: "余純安"},
-                {num: "32", name: "布里茲克"}, {num: "34", name: "威勝"}, {num: "57", name: "吳曉謹"}, {num: "66", name: "陳懷安"},
-                {num: "85", name: "勤明慶"}, {num: "92", name: "凱帝"}
-            ],
-            "雲豹": [
-                {num: "5", name: "高錦瑋"}, {num: "6", name: "徐宏瑋"}, {num: "7", name: "麥卡洛"}, {num: "8", name: "汪哲宇"},
-                {num: "10", name: "丁冠皓"}, {num: "11", name: "莊博元"}, {num: "12", name: "林信寬"}, {num: "13", name: "米勒"},
-                {num: "21", name: "王皓吉"}, {num: "24", name: "克羅馬"}, {num: "27", name: "黃鎮"}, {num: "31", name: "董永全"},
-                {num: "33", name: "迪亞洛"}, {num: "57", name: "曹薰襄"}, {num: "72", name: "呂濟而"}, {num: "82", name: "劉元凱"}
             ]
         };
 
@@ -681,7 +662,22 @@
             } else if (mode === 'career_milestone') {
                 html += `
                     ${createInput('ms_title', '紀錄標題 (例如：防線上的盜球高手，百抄達成！👌)', 'text')}
-                    ${createInput('ms_player_info', '球員資訊 (例如：#24 克羅馬 Lasannah Kromah)', 'text')}
+                    
+                    <div class="p-3 bg-gray-50 border rounded-md mb-4">
+                        <p class="text-sm font-bold text-gray-700 mb-2">達成球員</p>
+                        <div class="grid grid-cols-12 gap-2">
+                            <div class="col-span-4">${createTeamSelect('ms_team', '球隊')}</div>
+                            <div class="col-span-5">${createPlayerSelect('ms_name', '球員', 'ms_team', 'ms_num')}</div>
+                            <div class="col-span-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">背號</label>
+                                <input type="text" id="ms_num" readonly class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            ${createInput('ms_eng_name', '英文名 (選填)', 'text', 'Lasannah Kromah')}
+                        </div>
+                    </div>
+
                     ${createInput('ms_achievement', '達成成就 (例如：正式成為 TPBL 首位達成100次抄截的男人🔥)', 'text')}
                     ${createTextarea('ms_content', '內容描述', '', 5)}
                 `;
@@ -890,7 +886,7 @@
                     <select id="sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     <span class="text-gray-400 text-xs font-bold">VS</span>
                     <select id="sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 font-bold px-2 text-xl">&times;</button>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded text-xl">&times;</button>
                 </div>
             `;
             container.appendChild(div);
@@ -916,7 +912,7 @@
                     <select id="std_sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     <span class="text-center shrink-0 text-xs font-bold">VS</span>
                     <select id="std_sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 font-bold px-2 text-xl">&times;</button>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded text-xl">&times;</button>
                 </div>
             `;
             container.appendChild(div);
@@ -1010,10 +1006,7 @@
 
         // --- Helper: Render Logos ---
         function renderLogos() {
-            const targets = document.querySelectorAll('.tpbl-logo-target');
-            targets.forEach(el => {
-                el.innerHTML = LOGO_SVG_CONTENT;
-            });
+            // No longer needed as logos are now inline images
         }
 
         // --- Generation Logic ---
@@ -1042,7 +1035,7 @@
                 const home = getValue('next_home');
                 const away = getValue('next_away');
                 const num = getValue('next_game_num');
-                return `📺NEXT GAME\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
+                return `📺 NEXT GAME\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
             }
             
             const getLocalPlayerNextGame = () => {
@@ -1087,7 +1080,7 @@
                 
                 output = `🏀${toMathBoldSerif(title)}\n\n`;
                 output += `${getValue('promo_text')}\n\n-\n\n`;
-                output += `📌小週末就看籃球：\n`;
+                output += `📌 小週末就看籃球：\n`;
                 output += `▌${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}\n\n-\n\n`;
                 if(getValue('promo_link')) output += `${getValue('promo_link')}\n\n`;
                 output += `${COMMON_TAGS}`;
@@ -1109,7 +1102,7 @@
                      const h = TEAMS[getValue('next_home')];
                      const a = TEAMS[getValue('next_away')];
                      const num = getValue('next_game_num');
-                     output += `📌今天晚上看頂尖對決：\n`;
+                     output += `📌 今天晚上看頂尖對決：\n`;
                      output += `▌${mmdd}（${day}）｜${time}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n\n`;
                  }
                  output += `${COMMON_TAGS}`;
@@ -1123,13 +1116,13 @@
                     const monthDay = formatMonthDay(date);
                     const home = TEAMS[getValue('next_home')];
                     const away = TEAMS[getValue('next_away')];
-                    output += `📺NEXT GAME\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
+                    output += `📺 NEXT GAME\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
                 }
                 output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
 
             } else if (currentMode === 'game_highlight') {
                 // UPDATED: Auto prefix + No YT link
-                output = `❤️‍🔥👉🏻 ｜ ${getValue('hl_title')}\n\n`;
+                output = `❤️‍🔥👉🏻｜${getValue('hl_title')}\n\n`;
                 output += `📺 緯來電視網｜博斯運動二台｜TPBL官方 YOUTUBE\n\n`;
                 output += `${COMMON_TAGS} #TPBL例行賽`;
 
@@ -1156,7 +1149,17 @@
 
             } else if (currentMode === 'career_milestone') {
                 output = `${getValue('ms_title')}\n\n`;
-                output += `${getValue('ms_player_info')}\n`;
+                
+                const msNum = getValue('ms_num');
+                const msName = getValue('ms_name');
+                const msEng = getValue('ms_eng_name');
+                let playerInfo = '';
+                if(msName) {
+                    playerInfo = `#${msNum} ${msName}`;
+                    if(msEng) playerInfo += ` ${msEng}`;
+                }
+                
+                output += `${playerInfo}\n`;
                 output += `${getValue('ms_achievement')}\n`;
                 output += `${getValue('ms_content')}\n\n`;
                 output += `${COMMON_TAGS}`;
@@ -1188,7 +1191,7 @@
                 const hasChildren = listContainer && listContainer.children.length > 0;
                 
                 if (hasChildren) {
-                    output += `📌本週賽事預告：\n`;
+                    output += `📌 本週賽事預告：\n`;
                     Array.from(listContainer.children).forEach(div => {
                         const inputs = div.querySelectorAll('input, select');
                         const d = inputs[0].value;
@@ -1230,8 +1233,8 @@
                 const team = TEAMS[getValue('player_team')];
                 const name = getValue('player_name_select');
                 
-                output = `🥇${toMathBoldSerif('PLAYER OF THE WEEK')}｜#單週表現最佳球員\n\n`;
-                output += `🫶🏻${toMathBoldSerif('NOTHING BUT')} ${team.emoji}${getValue('player_name')}\n\n`;
+                output = `🥇 ${toMathBoldSerif('PLAYER OF THE WEEK')}｜#單週表現最佳球員\n\n`;
+                output += `🫶🏻 ${toMathBoldSerif('NOTHING BUT')}${team.emoji}${getValue('player_name')}\n\n`;
                 
                 const statContainer = document.getElementById('stats_list_container');
                 let statsArr = [];
@@ -1261,7 +1264,7 @@
                     const time = getValue('next_time');
                     const nameOnly = getValue('player_name_select').split(' ')[0] || "";
                     
-                    output += `📌休息一下回來看${nameOnly}發威👀\n`;
+                    output += `📌 休息一下回來看${nameOnly}發威👀\n`;
                     output += `▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}`;
                 }
                 output += `\n\n${COMMON_TAGS}`;
@@ -1295,11 +1298,27 @@
                 output += `${COMMON_TAGS} #momentum`;
 
             } else if (currentMode === 'season_stats') {
+                // MODIFIED: Season Stats generation logic
                 output = `📊${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n`;
                 output += `${getValue('stats_content')}\n\n`;
-                output += `${getValue('stats_date_note')}\n\n-\n\n`;
-                output += `${getValue('vote_title')}\n`;
-                output += `🔗投票連結｜${getValue('vote_link')}\n\n`;
+                
+                // Generate Date Note
+                const cutoff = getValue('stats_cutoff_date');
+                const s2425 = document.getElementById('season_2425').checked;
+                const s2526 = document.getElementById('season_2526').checked;
+                let seasons = [];
+                if(s2425) seasons.push('24-25');
+                if(s2526) seasons.push('25-26');
+                
+                if(cutoff) {
+                   output += `*數據統計至${formatDateFull(cutoff)}，包含${seasons.join('、')}賽季\n\n-\n\n`;
+                }
+                
+                // Generate Vote Info
+                const month = getValue('stats_vote_month');
+                output += `📌 ${month}月MVP投票進行中 :\n`;
+                output += `🔗投票連結｜${FIXED_VOTE_LINK}\n\n`;
+                
                 output += `${COMMON_TAGS}`;
             }
 
@@ -1320,7 +1339,7 @@
 
         // Initialize
         switchMode('game_preview');
-        renderLogos(); // Inject logos on load
+        // renderLogos(); // Removed SVG render call
     </script>
 </body>
 </html>
