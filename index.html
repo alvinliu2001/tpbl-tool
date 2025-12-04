@@ -9,7 +9,6 @@
     
     <!-- Favicon -->
     <link rel="icon" href="https://tpbl.basketball/favicon.png">
-    <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/apple-touch-icon.png">
     
     <!-- Font Awesome Icons -->
@@ -253,7 +252,7 @@
             }, 500);
         }
 
-        // --- Mobile Sidebar Toggle with Animation Logic ---
+        // --- Mobile Sidebar Toggle ---
         function toggleSidebar() {
             const nav = document.getElementById('sidebar-nav');
             const availableHeight = window.innerHeight - 70;
@@ -268,7 +267,6 @@
                 nav.classList.remove('opacity-100', 'overflow-y-auto');
             }
         }
-        
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 768) {
                 const nav = document.getElementById('sidebar-nav');
@@ -290,6 +288,136 @@
         };
         const TEAM_KEYS = Object.keys(TEAMS);
         
+        // --- 25-26 SEASON SCHEDULE (Full Updated G1-G126) ---
+        const SEASON_SCHEDULE_2526 = [
+            { id: 1, date: "2025-10-11", time: "17:00", home: "國王", away: "海神" },
+            { id: 2, date: "2025-10-12", time: "17:00", home: "國王", away: "夢想家" },
+            { id: 3, date: "2025-10-18", time: "14:30", home: "夢想家", away: "海神" },
+            { id: 4, date: "2025-10-18", time: "17:00", home: "國王", away: "特攻" },
+            { id: 5, date: "2025-10-19", time: "14:30", home: "夢想家", away: "雲豹" },
+            { id: 6, date: "2025-10-19", time: "17:00", home: "國王", away: "戰神" },
+            { id: 7, date: "2025-10-25", time: "14:30", home: "海神", away: "國王" },
+            { id: 8, date: "2025-10-25", time: "17:00", home: "特攻", away: "戰神" },
+            { id: 9, date: "2025-10-26", time: "14:30", home: "海神", away: "攻城獅" },
+            { id: 10, date: "2025-10-26", time: "17:00", home: "特攻", away: "雲豹" },
+            { id: 11, date: "2025-10-29", time: "19:00", home: "海神", away: "夢想家" },
+            { id: 12, date: "2025-11-01", time: "14:30", home: "海神", away: "戰神" },
+            { id: 13, date: "2025-11-01", time: "17:00", home: "特攻", away: "夢想家" },
+            { id: 14, date: "2025-11-02", time: "14:30", home: "海神", away: "雲豹" },
+            { id: 15, date: "2025-11-02", time: "17:00", home: "特攻", away: "攻城獅" },
+            { id: 16, date: "2025-11-05", time: "19:00", home: "夢想家", away: "攻城獅" },
+            { id: 17, date: "2025-11-07", time: "19:00", home: "夢想家", away: "特攻" },
+            { id: 18, date: "2025-11-08", time: "14:30", home: "國王", away: "攻城獅" },
+            { id: 19, date: "2025-11-08", time: "17:00", home: "雲豹", away: "戰神" },
+            { id: 20, date: "2025-11-09", time: "14:30", home: "國王", away: "海神" },
+            { id: 21, date: "2025-11-09", time: "17:00", home: "雲豹", away: "特攻" },
+            { id: 22, date: "2025-11-12", time: "19:00", home: "國王", away: "夢想家" },
+            { id: 23, date: "2025-11-15", time: "14:30", home: "攻城獅", away: "特攻" },
+            { id: 24, date: "2025-11-15", time: "17:00", home: "戰神", away: "國王" },
+            { id: 25, date: "2025-11-16", time: "14:30", home: "攻城獅", away: "海神" },
+            { id: 26, date: "2025-11-16", time: "17:00", home: "戰神", away: "雲豹" },
+            { id: 27, date: "2025-11-19", time: "19:00", home: "雲豹", away: "海神" },
+            { id: 28, date: "2025-11-22", time: "14:30", home: "夢想家", away: "攻城獅" },
+            { id: 29, date: "2025-11-22", time: "17:00", home: "雲豹", away: "國王" },
+            { id: 30, date: "2025-11-23", time: "14:30", home: "夢想家", away: "戰神" },
+            { id: 31, date: "2025-11-23", time: "17:00", home: "雲豹", away: "特攻" },
+            { id: 32, date: "2025-12-03", time: "19:00", home: "戰神", away: "攻城獅" },
+            { id: 33, date: "2025-12-06", time: "14:30", home: "雲豹", away: "攻城獅" },
+            { id: 34, date: "2025-12-06", time: "17:00", home: "戰神", away: "特攻" },
+            { id: 35, date: "2025-12-07", time: "14:30", home: "雲豹", away: "夢想家" },
+            { id: 36, date: "2025-12-07", time: "17:00", home: "戰神", away: "海神" },
+            { id: 37, date: "2025-12-13", time: "14:30", home: "海神", away: "攻城獅" },
+            { id: 38, date: "2025-12-13", time: "17:00", home: "特攻", away: "雲豹" },
+            { id: 39, date: "2025-12-14", time: "14:30", home: "海神", away: "夢想家" },
+            { id: 40, date: "2025-12-14", time: "17:00", home: "特攻", away: "國王" },
+            { id: 41, date: "2025-12-20", time: "14:30", home: "國王", away: "雲豹" },
+            { id: 42, date: "2025-12-20", time: "17:00", home: "攻城獅", away: "夢想家" },
+            { id: 43, date: "2025-12-21", time: "14:30", home: "國王", away: "特攻" },
+            { id: 44, date: "2025-12-21", time: "17:00", home: "攻城獅", away: "戰神" },
+            { id: 45, date: "2025-12-24", time: "19:00", home: "攻城獅", away: "雲豹" },
+            { id: 46, date: "2025-12-27", time: "14:30", home: "夢想家", away: "戰神" },
+            { id: 47, date: "2025-12-27", time: "17:00", home: "國王", away: "攻城獅" },
+            { id: 48, date: "2025-12-28", time: "14:30", home: "夢想家", away: "特攻" },
+            { id: 49, date: "2025-12-28", time: "17:00", home: "國王", away: "海神" },
+            { id: 50, date: "2025-12-31", time: "19:00", home: "特攻", away: "國王" },
+            { id: 51, date: "2026-01-03", time: "14:30", home: "海神", away: "雲豹" },
+            { id: 52, date: "2026-01-03", time: "17:00", home: "特攻", away: "攻城獅" },
+            { id: 53, date: "2026-01-04", time: "14:30", home: "海神", away: "國王" },
+            { id: 54, date: "2026-01-04", time: "17:00", home: "特攻", away: "夢想家" },
+            { id: 55, date: "2026-01-07", time: "19:00", home: "海神", away: "戰神" },
+            { id: 56, date: "2026-01-09", time: "19:00", home: "雲豹", away: "國王" },
+            { id: 57, date: "2026-01-10", time: "14:30", home: "海神", away: "特攻" },
+            { id: 58, date: "2026-01-10", time: "17:00", home: "戰神", away: "夢想家" },
+            { id: 59, date: "2026-01-11", time: "14:30", home: "海神", away: "攻城獅" },
+            { id: 60, date: "2026-01-11", time: "17:00", home: "戰神", away: "雲豹" },
+            { id: 61, date: "2026-01-17", time: "14:30", home: "夢想家", away: "國王" },
+            { id: 62, date: "2026-01-17", time: "17:00", home: "戰神", away: "特攻" },
+            { id: 63, date: "2026-01-18", time: "14:30", home: "夢想家", away: "雲豹" },
+            { id: 64, date: "2026-01-18", time: "17:00", home: "戰神", away: "攻城獅" },
+            { id: 65, date: "2026-01-24", time: "14:30", home: "特攻", away: "海神" },
+            { id: 66, date: "2026-01-24", time: "17:00", home: "攻城獅", away: "夢想家" },
+            { id: 67, date: "2026-01-25", time: "14:30", home: "特攻", away: "戰神" },
+            { id: 68, date: "2026-01-25", time: "17:00", home: "攻城獅", away: "國王" },
+            { id: 69, date: "2026-01-31", time: "17:00", home: "雲豹", away: "攻城獅" },
+            { id: 70, date: "2026-01-31", time: "17:00", home: "夢想家", away: "國王" },
+            { id: 71, date: "2026-02-01", time: "14:30", home: "夢想家", away: "海神" },
+            { id: 72, date: "2026-02-01", time: "17:00", home: "雲豹", away: "戰神" },
+            { id: 73, date: "2026-02-07", time: "14:30", home: "海神", away: "雲豹" },
+            { id: 74, date: "2026-02-07", time: "17:00", home: "戰神", away: "國王" },
+            { id: 75, date: "2026-02-08", time: "14:30", home: "海神", away: "特攻" },
+            { id: 76, date: "2026-02-08", time: "17:00", home: "戰神", away: "夢想家" },
+            { id: 77, date: "2026-02-11", time: "19:00", home: "戰神", away: "海神" },
+            { id: 78, date: "2026-02-14", time: "14:30", home: "國王", away: "戰神" },
+            { id: 79, date: "2026-02-14", time: "17:00", home: "雲豹", away: "夢想家" },
+            { id: 80, date: "2026-02-15", time: "14:30", home: "國王", away: "攻城獅" },
+            { id: 81, date: "2026-02-15", time: "17:00", home: "雲豹", away: "特攻" },
+            { id: 82, date: "2026-03-04", time: "19:00", home: "國王", away: "雲豹" },
+            { id: 83, date: "2026-03-06", time: "19:00", home: "國王", away: "戰神" },
+            { id: 84, date: "2026-03-07", time: "14:30", home: "海神", away: "夢想家" },
+            { id: 85, date: "2026-03-07", time: "17:00", home: "雲豹", away: "攻城獅" },
+            { id: 86, date: "2026-03-08", time: "14:30", home: "海神", away: "特攻" },
+            { id: 87, date: "2026-03-08", time: "17:00", home: "雲豹", away: "國王" },
+            { id: 88, date: "2026-03-11", time: "19:00", home: "攻城獅", away: "戰神" },
+            { id: 89, date: "2026-03-14", time: "14:30", home: "夢想家", away: "特攻" },
+            { id: 90, date: "2026-03-14", time: "17:00", home: "攻城獅", away: "海神" },
+            { id: 91, date: "2026-03-15", time: "14:30", home: "夢想家", away: "雲豹" },
+            { id: 92, date: "2026-03-15", time: "17:00", home: "攻城獅", away: "國王" },
+            { id: 93, date: "2026-03-21", time: "14:30", home: "特攻", away: "海神" },
+            { id: 94, date: "2026-03-21", time: "17:00", home: "戰神", away: "雲豹" },
+            { id: 95, date: "2026-03-22", time: "14:30", home: "特攻", away: "攻城獅" },
+            { id: 96, date: "2026-03-22", time: "17:00", home: "戰神", away: "夢想家" },
+            { id: 97, date: "2026-03-25", time: "19:00", home: "夢想家", away: "海神" },
+            { id: 98, date: "2026-03-27", time: "19:00", home: "夢想家", away: "國王" },
+            { id: 99, date: "2026-03-28", time: "14:30", home: "攻城獅", away: "特攻" },
+            { id: 100, date: "2026-03-28", time: "17:00", home: "戰神", away: "海神" },
+            { id: 101, date: "2026-03-29", time: "14:30", home: "攻城獅", away: "雲豹" },
+            { id: 102, date: "2026-03-29", time: "17:00", home: "戰神", away: "國王" },
+            { id: 103, date: "2026-04-01", time: "19:00", home: "特攻", away: "戰神" },
+            { id: 104, date: "2026-04-04", time: "14:30", home: "特攻", away: "夢想家" },
+            { id: 105, date: "2026-04-04", time: "17:00", home: "雲豹", away: "海神" },
+            { id: 106, date: "2026-04-05", time: "14:30", home: "特攻", away: "國王" },
+            { id: 107, date: "2026-04-05", time: "17:00", home: "雲豹", away: "戰神" },
+            { id: 108, date: "2026-04-08", time: "19:00", home: "攻城獅", away: "特攻" },
+            { id: 109, date: "2026-04-11", time: "14:30", home: "海神", away: "國王" },
+            { id: 110, date: "2026-04-11", time: "17:00", home: "攻城獅", away: "雲豹" },
+            { id: 111, date: "2026-04-12", time: "14:30", home: "海神", away: "戰神" },
+            { id: 112, date: "2026-04-12", time: "17:00", home: "攻城獅", away: "夢想家" },
+            { id: 113, date: "2026-04-18", time: "14:30", home: "夢想家", away: "戰神" },
+            { id: 114, date: "2026-04-18", time: "17:00", home: "特攻", away: "雲豹" },
+            { id: 115, date: "2026-04-19", time: "14:30", home: "夢想家", away: "攻城獅" },
+            { id: 116, date: "2026-04-19", time: "17:00", home: "特攻", away: "海神" },
+            { id: 117, date: "2026-04-24", time: "19:00", home: "國王", away: "夢想家" },
+            { id: 118, date: "2026-04-25", time: "14:30", home: "雲豹", away: "海神" },
+            { id: 119, date: "2026-04-25", time: "17:00", home: "戰神", away: "攻城獅" },
+            { id: 120, date: "2026-04-26", time: "14:30", home: "雲豹", away: "夢想家" },
+            { id: 121, date: "2026-04-26", time: "17:00", home: "戰神", away: "特攻" },
+            { id: 122, date: "2026-04-29", time: "19:00", home: "攻城獅", away: "國王" },
+            { id: 123, date: "2026-05-02", time: "14:30", home: "攻城獅", away: "戰神" },
+            { id: 124, date: "2026-05-02", time: "17:00", home: "國王", away: "雲豹" },
+            { id: 125, date: "2026-05-03", time: "14:30", home: "攻城獅", away: "海神" },
+            { id: 126, date: "2026-05-03", time: "17:00", home: "國王", away: "特攻" }
+        ];
+
         // Roster Data
         const ROSTERS = {
             "攻城獅": [
@@ -379,7 +507,7 @@
         const BROADCAST_INFO = "👉🏻轉播平台 📺 緯來電視網｜博斯運動二台｜TPBL官方YOUTUBE";
 
         let currentMode = '';
-        const STORAGE_PREFIX = 'tpbl_draft_';
+        const STORAGE_PREFIX = 'tpbl_v3_';
 
         // --- Utils ---
         const toMathBoldSerif = (text) => {
@@ -427,6 +555,94 @@
         const formatDateFull = (dateStr) => {
              const date = parseDateLocal(dateStr);
              return `${date.getFullYear()}/${String(date.getMonth()+1).padStart(2,'0')}/${String(date.getDate()).padStart(2,'0')}`;
+        }
+        
+        // --- Helper: Schedule Logic ---
+        function getNearestNextGame(fromDateStr) {
+            const fromDate = new Date(fromDateStr);
+            for (const game of SEASON_SCHEDULE_2526) {
+                const gameDate = new Date(game.date);
+                if (gameDate >= fromDate) {
+                    return game; 
+                }
+            }
+            return SEASON_SCHEDULE_2526[SEASON_SCHEDULE_2526.length-1];
+        }
+        
+        function getNearestPastGame(fromDateStr) {
+            const fromDate = new Date(fromDateStr);
+            // Search backwards
+            for (let i = SEASON_SCHEDULE_2526.length - 1; i >= 0; i--) {
+                const game = SEASON_SCHEDULE_2526[i];
+                const gameDate = new Date(game.date);
+                if (gameDate <= fromDate) {
+                    return game;
+                }
+            }
+            return SEASON_SCHEDULE_2526[0];
+        }
+        
+        function getGameByDateAndTime(dateStr, timeStr) {
+            let match = SEASON_SCHEDULE_2526.find(g => g.date === dateStr && g.time === timeStr);
+            if (match) return match;
+            match = SEASON_SCHEDULE_2526.find(g => g.date === dateStr);
+            return match;
+        }
+        
+        function getGameById(id) {
+            return SEASON_SCHEDULE_2526.find(g => g.id == id);
+        }
+
+        function getNextGameAfterId(gameId) {
+            return SEASON_SCHEDULE_2526.find(g => g.id > gameId);
+        }
+        
+        function getNextGameForTeam(teamName, currentId) {
+            // Find next game where team is home OR away
+            return SEASON_SCHEDULE_2526.find(g => g.id > currentId && (g.home === teamName || g.away === teamName));
+        }
+        
+        function getNextGameForTeamByDate(teamName, fromDateStr) {
+             const fromDate = new Date(fromDateStr);
+             return SEASON_SCHEDULE_2526.find(g => {
+                 const gDate = new Date(g.date);
+                 return gDate > fromDate && (g.home === teamName || g.away === teamName);
+             });
+        }
+
+        function getWeekdayGame(fromDateStr) {
+            const fromDate = new Date(fromDateStr);
+            for (const game of SEASON_SCHEDULE_2526) {
+                 const d = new Date(game.date.replace(/-/g, '/')); // Ensure proper parsing
+                 const gDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+                 const fDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+
+                 if (gDate >= fDate) {
+                     const day = gDate.getDay();
+                     if (day !== 0 && day !== 6) return game;
+                 }
+            }
+            return null;
+        }
+        
+        // Week 8 = 2025-12-01 (Mon) to 2025-12-07 (Sun)
+        function getDatesForWeek(weekNum) {
+            const week8Start = new Date("2025-12-01");
+            const diffWeeks = weekNum - 8;
+            const targetStart = new Date(week8Start);
+            targetStart.setDate(week8Start.getDate() + (diffWeeks * 7));
+            
+            const targetEnd = new Date(targetStart);
+            targetEnd.setDate(targetStart.getDate() + 6);
+            
+            return {
+                start: targetStart.toISOString().split('T')[0],
+                end: targetEnd.toISOString().split('T')[0]
+            };
+        }
+        
+        function getGamesInDateRange(startStr, endStr) {
+            return SEASON_SCHEDULE_2526.filter(g => g.date >= startStr && g.date <= endStr);
         }
 
         // --- UI Builders ---
@@ -542,67 +758,192 @@
             
             // Handle Defaults if no save data found
             if (!raw) {
-                if (currentMode === 'weekly_schedule') {
-                    addScheduleItem(); addScheduleItem();
-                } else if (currentMode === 'weekly_standings') {
-                    addStandingsGameItem();
-                } else if (currentMode === 'potw') {
-                    addStatItem(); addStatItem(); addStatItem();
-                }
+                // Initialize default logic based on requirements (Auto-fills)
+                setTimeout(() => {
+                    initAutoFillLogic(currentMode);
+                }, 100); 
                 return; 
             }
 
             const data = JSON.parse(raw);
-
-            // Reconstruct Dynamic Lists
+            
+             // Reconstruct Dynamic Lists
             if (data._count_schedule !== undefined) {
                 const list = document.getElementById('schedule_list_container');
-                if (list) {
-                    list.innerHTML = ''; // Clear defaults
-                    for (let i = 0; i < data._count_schedule; i++) addScheduleItem();
-                }
+                if (list) { list.innerHTML = ''; for (let i = 0; i < data._count_schedule; i++) addScheduleItem(); }
             }
             if (data._count_standings !== undefined) {
                 const list = document.getElementById('standings_schedule_list_container');
-                if (list) {
-                    list.innerHTML = '';
-                    for (let i = 0; i < data._count_standings; i++) addStandingsGameItem();
-                }
+                if (list) { list.innerHTML = ''; for (let i = 0; i < data._count_standings; i++) addStandingsGameItem(); }
             }
             if (data._count_stats !== undefined) {
                 const list = document.getElementById('stats_list_container');
-                if (list) {
-                    list.innerHTML = '';
-                    for (let i = 0; i < data._count_stats; i++) addStatItem();
-                }
+                if (list) { list.innerHTML = ''; for (let i = 0; i < data._count_stats; i++) addStatItem(); }
             }
 
-            // Restore Values (Pass 1: Team Selects & Checkboxes)
-            // We do team selects first to trigger change events for player selects
             Object.keys(data).forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
-                    if (el.type === 'checkbox') {
-                        el.checked = data[id];
-                    } else if (el.classList.contains('team-select')) {
+                    if (el.type === 'checkbox') el.checked = data[id];
+                    else {
                         el.value = data[id];
-                        el.dispatchEvent(new Event('change')); // Trigger player select population
+                        if (el.classList.contains('team-select')) el.dispatchEvent(new Event('change'));
+                        if (id.startsWith('stat_type_')) toggleCustomStat(id.split('_')[2]);
                     }
                 }
             });
-
-            // Restore Values (Pass 2: Everything else)
-            Object.keys(data).forEach(id => {
-                const el = document.getElementById(id);
-                if (el && !el.classList.contains('team-select') && el.type !== 'checkbox') {
-                    el.value = data[id];
-                    // Special handle for custom stat type visibility
-                    if (id.startsWith('stat_type_')) {
-                        const idx = id.split('_')[2];
-                        toggleCustomStat(idx);
+        }
+        
+        // --- SMART AUTO-FILL LOGIC (Requirement 1-11) ---
+        function initAutoFillLogic(mode) {
+             const today = new Date().toISOString().split('T')[0];
+             
+             // Req 1 & 2: Game Previews
+             if (mode === 'game_preview') {
+                 const game = getNearestNextGame(today);
+                 if (game) fillGameInfo(game, 'match');
+             } else if (mode === 'weekday_preview') {
+                 const game = getWeekdayGame(today);
+                 if (game) fillGameInfo(game, 'match');
+             } 
+             // Req 7: POTG (Nearest PAST game)
+             else if (mode === 'potg') {
+                 const game = getNearestPastGame(today);
+                 if(game) {
+                     updateVal('potg_game_num', game.id);
+                     updateSelect('potg_away', game.away);
+                     updateSelect('potg_home', game.home);
+                     const nextGame = getNextGameAfterId(game.id);
+                     if(nextGame) fillNextGameBlock(nextGame);
+                 }
+             }
+             // Req 4, 5, 10: Today's Game Default (Matchup Highlight, Final Score)
+             else if (['final_score', 'matchup_highlight'].includes(mode)) {
+                 const game = getNearestNextGame(today); 
+                 if (game) {
+                     if(mode === 'matchup_highlight') {
+                         fillGameInfo(game, 'next'); // "Today's Game" inputs are at top, named next_*
+                     } else if (mode === 'final_score') {
+                         updateVal('game_num', game.id); // Triggers listener for next game info
+                         // Manually trigger handleGameNumChange logic
+                         const nextGame = getNextGameAfterId(game.id);
+                         if(nextGame) fillNextGameBlock(nextGame);
+                     }
+                 }
+             }
+        }
+        
+        // Generic Filler
+        function fillGameInfo(game, prefix) {
+            updateVal(`${prefix}_date`, game.date);
+            updateVal(`${prefix}_time`, game.time);
+            updateVal(`${prefix}_game_num`, game.id);
+            if(document.getElementById('game_num')) updateVal('game_num', game.id);
+            
+            updateSelect(`${prefix}_away`, game.away); 
+            updateSelect(`${prefix}_home`, game.home); 
+            
+            // Sync logic for Matchup Highlight
+            if(prefix === 'next' && currentMode === 'matchup_highlight') {
+                updateSelect('mu_away_team', game.away);
+                updateSelect('mu_home_team', game.home);
+            }
+        }
+        
+        function fillNextGameBlock(game) {
+            updateVal('next_date', game.date);
+            updateVal('next_time', game.time);
+            updateVal('next_game_num', game.id);
+            updateSelect('next_away', game.away);
+            updateSelect('next_home', game.home);
+        }
+        
+        function updateVal(id, val) {
+            const el = document.getElementById(id);
+            if(el) el.value = val;
+        }
+        
+        function updateSelect(id, val) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.value = val;
+                el.dispatchEvent(new Event('change'));
+            }
+        }
+        
+        // --- Event Handlers for Requirements ---
+        
+        function handleDateChange(e, prefix) {
+            const date = e.target.value;
+            const game = getGameByDateAndTime(date, "14:30"); // Default find first
+            if(game) {
+                fillGameInfo(game, prefix);
+                // Also trigger Next Game update if applicable
+                const nextGame = getNextGameAfterId(game.id);
+                if(nextGame && document.getElementById('next_date') && prefix !== 'next') fillNextGameBlock(nextGame);
+            }
+        }
+        
+        function handleTimeChange(e, prefix) {
+             const dateEl = document.getElementById(`${prefix}_date`);
+             if(!dateEl) return;
+             const game = getGameByDateAndTime(dateEl.value, e.target.value);
+             if(game) {
+                 fillGameInfo(game, prefix);
+                 const nextGame = getNextGameAfterId(game.id);
+                 if(nextGame && document.getElementById('next_date') && prefix !== 'next') fillNextGameBlock(nextGame);
+             }
+        }
+        
+        function handleGameNumChange(e, prefix) {
+            const id = e.target.value;
+            const game = getGameById(id);
+            if(game) {
+                if (prefix === 'potg') {
+                    updateSelect('potg_away', game.away);
+                    updateSelect('potg_home', game.home);
+                    const nextGame = getNextGameAfterId(game.id);
+                    if(nextGame) fillNextGameBlock(nextGame);
+                } else {
+                    fillGameInfo(game, prefix);
+                    const nextGame = getNextGameAfterId(game.id);
+                    if(nextGame && document.getElementById('next_date') && prefix !== 'next') fillNextGameBlock(nextGame);
+                    
+                    // Special case: Final Score needs to update Next Game block (which has IDs starting with next_)
+                    if(currentMode === 'final_score' && nextGame) {
+                        fillNextGameBlock(nextGame);
                     }
                 }
+            }
+        }
+        
+        function handleWeekChange(e, isStandings) {
+            const weekNum = parseInt(e.target.value) || 8;
+            const targetWeek = isStandings ? weekNum + 1 : weekNum; 
+            
+            const range = getDatesForWeek(targetWeek);
+            const games = getGamesInDateRange(range.start, range.end);
+            
+            const containerId = isStandings ? 'standings_schedule_list_container' : 'schedule_list_container';
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            
+            container.innerHTML = ''; // Clear
+            games.forEach(g => {
+                if(isStandings) addStandingsGameItemWithData(g);
+                else addScheduleItemWithData(g);
             });
+        }
+        
+        function handlePlayerTeamChangeForNextGame(e) {
+            // Req 6, 8, 9, 11: Player/Team select updates Next Game Block
+            const team = e.target.value;
+            if(!team) return;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const nextGame = getNextGameForTeamByDate(team, today);
+            
+            if(nextGame) fillNextGameBlock(nextGame);
         }
 
         // --- Switch Mode Logic ---
@@ -651,8 +992,9 @@
             }
 
             renderForm(mode);
-            bindDynamicEvents();
-            loadFromLocal(); // Load saved data after render
+            attachFormListeners(); // Re-attach standard listeners
+            bindSmartEvents(mode); // Attach new smart logic
+            loadFromLocal(); 
         }
 
         function renderForm(mode) {
@@ -662,32 +1004,40 @@
 
             if (mode === 'game_preview') {
                 html += `
+                    <div class="flex items-end gap-2 mb-4">
+                        <div class="flex-1">
+                             <label class="block text-sm font-medium text-gray-700 mb-1">場次 (GAME)</label>
+                             <input type="number" id="game_num" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="33" value="33">
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-2 gap-4">
-                        ${createInput('game_num', '場次 (GAME)', 'number', '32', '32')}
                         ${createInput('match_date', '比賽日期', 'date', '', today)}
                         ${createTimeSelect('match_time', '比賽時間', '19:00')}
-                        <div></div>
-                        ${createTeamSelect('away_team', '客隊 (Away)')}
-                        ${createTeamSelect('home_team', '主隊 (Home)')}
+                        ${createTeamSelect('match_away', '客隊 (Away)')}
+                        ${createTeamSelect('match_home', '主隊 (Home)')}
                     </div>
                     ${createTextarea('highlight_text', '觀賽亮點', '輸入本場看點文案...', 6)}
                     ${createInput('yt_link', 'YouTube 轉播連結', 'text')}
                 `;
             } else if (mode === 'weekday_preview') {
                 html += `
-                     <div class="grid grid-cols-2 gap-4">
+                      <div class="grid grid-cols-2 gap-4">
                         ${createInput('match_date', '比賽日期', 'date', '', today)}
                         ${createTimeSelect('match_time', '比賽時間', '19:00')}
-                        ${createTeamSelect('away_team', '客隊 (Away)')}
-                        ${createTeamSelect('home_team', '主隊 (Home)')}
+                        ${createTeamSelect('match_away', '客隊 (Away)')}
+                        ${createTeamSelect('match_home', '主隊 (Home)')}
                     </div>
                     ${createInput('promo_title', '預告標題 (如：WEDNESDAY NIGHT...)', 'text', 'WEDNESDAY NIGHT, LET’S GOOOO')}
                     ${createTextarea('promo_text', '預告文案', '本季首次交手的...', 4)}
                     ${createTextarea('promo_link', '贊助商版位 (可換行)', '📍SPORTS NATIONS店點資訊...', 3)}
                 `;
             } else if (mode === 'matchup_highlight') {
+                // Req 10: Today's Game info at top
+                // Req 4: Bi-directional linkage
                 html += `
-                    <div class="p-3 border rounded-md bg-gray-50 mb-3">
+                     ${createNextGameBlock("今日比賽資訊 (Match Info)")}
+                    <div class="p-3 border rounded-md bg-gray-50 mb-3 mt-4">
                         <p class="text-sm font-bold text-gray-700 mb-2">對戰組合</p>
                         <div class="grid grid-cols-12 gap-2 items-center">
                             <div class="col-span-4">
@@ -708,22 +1058,15 @@
                         </div>
                     </div>
                     ${createTextarea('matchup_content', '對戰分析/亮點文案', '', 6)}
-                    ${createNextGameBlock("今日比賽資訊 (Today's Game)")}
+                   
                 `;
             } else if (mode === 'final_score') {
+                // Req 5: Game Num change triggers next info update
                 html += `
-                    ${createInput('game_num', '場次 (GAME)', 'number', '31')}
+                    ${createInput('game_num', '場次 (GAME)', 'number', '33')}
                     ${createInput('match_title', '標題 (例如：全隊「豹」進13記外線...)', 'text')}
                     ${createTextarea('match_recap', '比賽回顧文案', '', 6)}
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
-                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">下場賽事資訊 (Next Game)</p>
-                        <div class="grid grid-cols-2 gap-4">
-                            ${createInput('next_date', '日期', 'date', '', today)}
-                            ${createTimeSelect('next_time', '時間', '19:00')}
-                            ${createTeamSelect('next_away', '客隊 (Away)')}
-                            ${createTeamSelect('next_home', '主隊 (Home)')}
-                        </div>
-                    </div>
+                    ${createNextGameBlock("下場賽事資訊 (Next Game)")}
                 `;
             } else if (mode === 'game_highlight') {
                 html += `
@@ -731,6 +1074,9 @@
                 `;
             } else if (mode === 'press_conf') {
                 html += `
+                     <div class="mb-4">
+                         ${createTeamSelect('pc_team_select', '受訪球隊 (選擇以帶入下場賽事)')}
+                     </div>
                     ${createInput('pc_title', '標題 (英文/中文)', 'text', '🗣️ FACING THE STORM...')}
                     ${createTextarea('pc_quote', '語錄 (不需要打引號)', '', 3)}
                     ${createTextarea('pc_content', '內容', '', 6)}
@@ -738,6 +1084,10 @@
                 `;
             } else if (mode === 'potg') {
                 html += `
+                    <div class="mb-4">
+                         <label class="block text-sm font-medium text-gray-700 mb-1">場次 (GAME)</label>
+                         <input type="number" id="potg_game_num" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="33">
+                    </div>
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         ${createTeamSelect('potg_away', '客隊 (Away)')}
                         ${createTeamSelect('potg_home', '主隊 (Home)')}
@@ -760,17 +1110,7 @@
                          ${createInput('lp_title', '標題文案 (自動加上 Emoji 與 姓名)', 'text', '全面控衛視野...')}
                     </div>
                     ${createTextarea('lp_content', '球員表現描述', '', 4)}
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
-                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">下場賽事資訊 (Next Game)</p>
-                        <div class="grid grid-cols-2 gap-4">
-                            ${createInput('next_date', '日期', 'date', '', today)}
-                            ${createInput('next_game_num', '場次 (Game)', 'number')}
-                            ${createTimeSelect('next_time', '時間', '19:00')}
-                            <div></div>
-                            ${createTeamSelect('next_away', '客隊 (Away)')}
-                            ${createTeamSelect('next_home', '主隊 (Home)')}
-                        </div>
-                    </div>
+                    ${createNextGameBlock("下場賽事資訊 (Next Game)")}
                 `;
             } else if (mode === 'career_milestone') {
                 html += `
@@ -799,25 +1139,22 @@
                     ${createInput('week_num', '第幾週 (Week)', 'number', '8')}
                     ${createTextarea('week_intro', '本週賽程引言', '', 4)}
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                        <p class="text-sm font-bold mb-2">本週賽程列表</p>
+                        <p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入)</p>
                         <div id="schedule_list_container" class="space-y-3"></div>
                         <button onclick="addScheduleItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增場次</button>
                     </div>
                 `;
-                // Removed setTimeout, relying on loadFromLocal logic
             } else if (mode === 'weekly_standings') {
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('standings_content', '戰績分析文案', '', 8)}
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
-                        <p class="text-sm font-bold mb-2">本週賽程列表</p>
+                        <p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入下週)</p>
                         <div id="standings_schedule_list_container" class="space-y-3"></div>
                         <button onclick="addStandingsGameItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增預告場次</button>
                     </div>
                 `;
-                 // Removed setTimeout, relying on loadFromLocal logic
             } else if (mode === 'top5') {
-                 // MODIFIED: Use Team/Player selects with autofill
                  html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                     ${createTextarea('top5_intro', '引言文案', '', 3)}
@@ -859,7 +1196,6 @@
                     ${createTextarea('player_desc', '球員表現描述', '', 6)}
                     ${createNextGameBlock("下場賽事資訊 (Next Game)")}
                 `;
-                // Removed setTimeout, relying on loadFromLocal logic
             } else if (mode === 'weekly_local_eff') {
                 html += `
                     ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
@@ -924,28 +1260,21 @@
             container.innerHTML = html;
         }
 
-        // ... existing listeners ...
+        // --- Event Binding ---
         function attachFormListeners() {
-            // Listen for changes on team selects
+            // Re-attach basic team select listener (fill player list)
             document.querySelectorAll('.team-select').forEach(select => {
                 select.addEventListener('change', function() {
                     const teamName = this.value;
                     const playerSelects = document.querySelectorAll(`.player-select[data-team-select="${this.id}"]`);
-                    
                     playerSelects.forEach(pSelect => {
-                        // Reset
                         pSelect.innerHTML = '<option value="">請選擇球員</option>';
                         pSelect.disabled = true;
                         pSelect.classList.add('disabled-input');
                         pSelect.value = "";
-                        
                         const numInputId = pSelect.dataset.numInput;
-                        if(numInputId) {
-                            const numInput = document.getElementById(numInputId);
-                            if(numInput) numInput.value = "";
-                        }
+                        if(numInputId) { const ni = document.getElementById(numInputId); if(ni) ni.value = ""; }
 
-                        // Populate
                         if (teamName && ROSTERS[teamName]) {
                             pSelect.disabled = false;
                             pSelect.classList.remove('disabled-input');
@@ -961,7 +1290,6 @@
                 });
             });
 
-            // Listen for changes on player selects (Auto-fill Number)
             document.querySelectorAll('.player-select').forEach(select => {
                 select.addEventListener('change', function() {
                     const numInputId = this.dataset.numInput;
@@ -975,56 +1303,128 @@
                 });
             });
         }
+        
+        function bindSmartEvents(mode) {
+             // Game Preview Smart Logic
+             if (mode === 'game_preview' || mode === 'weekday_preview') {
+                 const d = document.getElementById('match_date');
+                 const t = document.getElementById('match_time');
+                 if(d) d.addEventListener('change', (e) => handleDateChange(e, 'match'));
+                 if(t) t.addEventListener('change', (e) => handleTimeChange(e, 'match'));
+                 if(mode === 'game_preview') {
+                     const gn = document.getElementById('game_num');
+                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'match'));
+                 }
+             }
+             
+             // Matchup Highlight Smart Logic
+             if (mode === 'matchup_highlight') {
+                 // For matchup, the inputs are in the NextGameBlock at top, named next_date etc.
+                 const d = document.getElementById('next_date');
+                 const t = document.getElementById('next_time');
+                 const g = document.getElementById('next_game_num');
+                 if(d) d.addEventListener('change', (e) => handleDateChange(e, 'next')); 
+                 if(t) t.addEventListener('change', (e) => handleTimeChange(e, 'next'));
+                 if(g) g.addEventListener('input', (e) => handleGameNumChange(e, 'next'));
+                 
+                 // Also link top teams to bottom matchup teams (Req 10)
+                 const na = document.getElementById('next_away');
+                 const nh = document.getElementById('next_home');
+                 if(na) na.addEventListener('change', () => updateSelect('mu_away_team', na.value));
+                 if(nh) nh.addEventListener('change', () => updateSelect('mu_home_team', nh.value));
+             }
+             
+             // Final Score / POTG Smart Logic
+             if(mode === 'final_score' || mode === 'potg') {
+                 // POTG uses implied Past Game default, Next Game block follows.
+                 const nd = document.getElementById('next_date');
+                 const nt = document.getElementById('next_time');
+                 if(nd) nd.addEventListener('change', (e) => handleDateChange(e, 'next'));
+                 if(nt) nt.addEventListener('change', (e) => handleTimeChange(e, 'next'));
+                 
+                 if(mode === 'final_score') {
+                     const gn = document.getElementById('game_num');
+                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'next')); 
+                 }
+                 if(mode === 'potg') {
+                     const gn = document.getElementById('potg_game_num');
+                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'potg'));
+                 }
+             }
+             
+             // Weekly Lists
+             if(mode === 'weekly_schedule') {
+                 const w = document.getElementById('week_num');
+                 if(w) w.addEventListener('input', (e) => handleWeekChange(e, false));
+             }
+             if(mode === 'weekly_standings') {
+                 const w = document.getElementById('week_num');
+                 if(w) w.addEventListener('input', (e) => handleWeekChange(e, true));
+             }
+             
+             // Local Player / Press Conf / POTW
+             if(mode === 'local_player_highlight') {
+                 const t = document.getElementById('lp_team');
+                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
+             }
+             if(mode === 'press_conf') {
+                 const t = document.getElementById('pc_team_select');
+                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
+             }
+             if(mode === 'potw') {
+                 const t = document.getElementById('player_team');
+                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
+             }
+        }
 
-        // --- Helper for Weekly Schedule ---
-        function addScheduleItem() {
+        // --- Helper Helpers ---
+        function addScheduleItemWithData(game) {
             const container = document.getElementById('schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
             div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
-            const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
-            const today = new Date().toISOString().split('T')[0]; 
+            const timeOptions = GAME_TIMES.map(t => `<option value="${t}" ${t===game.time?'selected':''}>${t}</option>`).join('');
 
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
-                    <input type="date" id="sch_date_${idx}" value="${today}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
+                    <input type="date" id="sch_date_${idx}" value="${game.date}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
                     <select id="sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
                 </div>
                 <div class="flex gap-2 items-center">
-                    <select id="sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <select id="sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.away}</option>${TEAM_KEYS.filter(k=>k!=game.away).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     <span class="text-gray-400 text-xs font-bold">VS</span>
-                    <select id="sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <select id="sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.home}</option>${TEAM_KEYS.filter(k=>k!=game.home).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded text-xl">&times;</button>
                 </div>
             `;
             container.appendChild(div);
         }
-
-        // --- Helper for Standings Schedule ---
-        function addStandingsGameItem() {
-            const container = document.getElementById('standings_schedule_list_container');
+        
+        function addStandingsGameItemWithData(game) {
+             const container = document.getElementById('standings_schedule_list_container');
             const idx = container.children.length;
             const div = document.createElement('div');
             div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
-            const timeOptions = GAME_TIMES.map(t => `<option value="${t}">${t}</option>`).join('');
-            const today = new Date().toISOString().split('T')[0]; 
+            const timeOptions = GAME_TIMES.map(t => `<option value="${t}" ${t===game.time?'selected':''}>${t}</option>`).join('');
 
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
-                    <input type="date" id="std_sch_date_${idx}" value="${today}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
+                    <input type="date" id="std_sch_date_${idx}" value="${game.date}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
                     <select id="std_sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
                 </div>
                 <div class="flex gap-2 items-center">
-                    <select id="std_sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <select id="std_sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.away}</option>${TEAM_KEYS.filter(k=>k!=game.away).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     <span class="text-center shrink-0 text-xs font-bold">VS</span>
-                    <select id="std_sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select">${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <select id="std_sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.home}</option>${TEAM_KEYS.filter(k=>k!=game.home).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
                     <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded text-xl">&times;</button>
                 </div>
             `;
             container.appendChild(div);
         }
-
-        // --- Helper for POTW Stats ---
+        
+        // --- Standard Add Item (Manual) ---
+        function addScheduleItem() { addScheduleItemWithData({date: new Date().toISOString().split('T')[0], time: '14:30', away: '', home: ''}); }
+        function addStandingsGameItem() { addStandingsGameItemWithData({date: new Date().toISOString().split('T')[0], time: '14:30', away: '', home: ''}); }
         function addStatItem() {
             const container = document.getElementById('stats_list_container');
             const idx = container.children.length;
@@ -1046,66 +1446,10 @@
         function toggleCustomStat(idx) {
             const select = document.getElementById(`stat_type_${idx}`);
             const customInput = document.getElementById(`stat_cust_${idx}`);
-            if (select.value === 'custom') {
-                customInput.classList.remove('hidden');
-            } else {
-                customInput.classList.add('hidden');
+            if (select && customInput) {
+                if (select.value === 'custom') customInput.classList.remove('hidden');
+                else customInput.classList.add('hidden');
             }
-        }
-
-        // --- Robust Event Binding ---
-        function bindDynamicEvents() {
-            const container = document.getElementById('dynamic-form');
-            if(!container) return;
-
-            const teamSelects = container.querySelectorAll('.team-select');
-            teamSelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    const teamName = this.value;
-                    const playerSelects = container.querySelectorAll(`.player-select[data-team-select="${this.id}"]`);
-                    
-                    playerSelects.forEach(pSelect => {
-                        // Reset
-                        pSelect.innerHTML = '<option value="">請選擇球員</option>';
-                        pSelect.disabled = true;
-                        pSelect.classList.add('disabled-input');
-                        pSelect.value = "";
-                        
-                        const numInputId = pSelect.dataset.numInput;
-                        if(numInputId) {
-                            const numInput = document.getElementById(numInputId);
-                            if(numInput) numInput.value = "";
-                        }
-
-                        // Populate
-                        if (teamName && ROSTERS[teamName]) {
-                            pSelect.disabled = false;
-                            pSelect.classList.remove('disabled-input');
-                            ROSTERS[teamName].forEach(player => {
-                                const option = document.createElement('option');
-                                option.value = player.name;
-                                option.text = player.name; 
-                                option.dataset.num = player.num;
-                                pSelect.appendChild(option);
-                            });
-                        }
-                    });
-                });
-            });
-
-            const playerSelects = container.querySelectorAll('.player-select');
-            playerSelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    const numInputId = this.dataset.numInput;
-                    if (numInputId) {
-                        const numInput = document.getElementById(numInputId);
-                        if (numInput) {
-                            const selectedOption = this.options[this.selectedIndex];
-                            numInput.value = selectedOption.dataset.num || "";
-                        }
-                    }
-                });
-            });
         }
 
         // --- Utils ---
@@ -1158,7 +1502,7 @@
                 const home = getValue('next_home');
                 const away = getValue('next_away');
                 const arena = TEAMS[home].arena;
-                const player = getValue('lp_name'); // UPDATED: Use selected player name directly
+                const player = getValue('lp_name'); 
                 return `📌 下場${player}：\n▌${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
             };
 
@@ -1166,8 +1510,8 @@
             if (currentMode === 'game_preview') {
                 const date = getValue('match_date');
                 const time = getValue('match_time');
-                const homeKey = getValue('home_team');
-                const awayKey = getValue('away_team');
+                const homeKey = getValue('match_home');
+                const awayKey = getValue('match_away');
                 const home = TEAMS[homeKey];
                 const away = TEAMS[awayKey];
                 
@@ -1182,8 +1526,8 @@
 
             } else if (currentMode === 'weekday_preview') {
                 const date = getValue('match_date');
-                const home = TEAMS[getValue('home_team')];
-                const away = TEAMS[getValue('away_team')];
+                const home = TEAMS[getValue('match_home')];
+                const away = TEAMS[getValue('match_away')];
                 const dayName = getDayName(date); 
                 const mmdd = formatMMDD(date); 
                 const dayChi = getDayChi(date); 
@@ -1232,7 +1576,6 @@
                 output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
 
             } else if (currentMode === 'game_highlight') {
-                // UPDATED: Auto prefix + No YT link
                 output = `❤️‍🔥👉🏻｜${getValue('hl_title')}\n\n`;
                 output += `📺 緯來電視網｜博斯運動二台｜TPBL官方 YOUTUBE\n\n`;
                 output += `${COMMON_TAGS} #TPBL例行賽`;
@@ -1413,11 +1756,9 @@
                 output += `${COMMON_TAGS} #momentum`;
 
             } else if (currentMode === 'season_stats') {
-                // MODIFIED: Season Stats generation logic
                 output = `📊${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n`;
                 output += `${getValue('stats_content')}\n\n`;
                 
-                // Generate Date Note
                 const cutoff = getValue('stats_cutoff_date');
                 const s2425 = document.getElementById('season_2425').checked;
                 const s2526 = document.getElementById('season_2526').checked;
@@ -1429,7 +1770,6 @@
                    output += `*數據統計至${formatDateFull(cutoff)}，包含${seasons.join('、')}賽季\n\n-\n\n`;
                 }
                 
-                // Generate Vote Info
                 const month = getValue('stats_vote_month');
                 output += `📌 ${month}月MVP投票進行中 :\n`;
                 output += `🔗投票連結｜${FIXED_VOTE_LINK}\n\n`;
@@ -1445,7 +1785,6 @@
 
         // Initialize App
         switchMode('game_preview');
-        // renderLogos(); // Removed SVG render call
     </script>
 </body>
 </html>
