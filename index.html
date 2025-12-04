@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Title -->
-    <title>TPBL | 社群文案生成工具 v4 (Cloud Sync)</title>
+    <title>TPBL | 社群文案生成工具 v4.5 (Fixes)</title>
     <meta name="description" content="TPBL 職籃聯盟社群文案自動生成與管理工具">
     
     <!-- Favicon -->
@@ -198,7 +198,7 @@
             <!-- Sync Status in Sidebar -->
             <div class="p-4 mt-auto">
                 <div id="sync-status" class="bg-gray-800 text-gray-400">
-                    <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 準備同步名單...
+                    <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 準備同步名單與賽程...
                 </div>
             </div>
         </aside>
@@ -303,135 +303,137 @@
         };
         const TEAM_KEYS = Object.keys(TEAMS);
         
-        // --- 25-26 SEASON SCHEDULE (Full Updated G1-G126) ---
-        const SEASON_SCHEDULE_2526 = [
-            { id: 1, date: "2025-10-11", time: "17:00", home: "國王", away: "海神" },
-            { id: 2, date: "2025-10-12", time: "17:00", home: "國王", away: "夢想家" },
-            { id: 3, date: "2025-10-18", time: "14:30", home: "夢想家", away: "海神" },
-            { id: 4, date: "2025-10-18", time: "17:00", home: "國王", away: "特攻" },
-            { id: 5, date: "2025-10-19", time: "14:30", home: "夢想家", away: "雲豹" },
-            { id: 6, date: "2025-10-19", time: "17:00", home: "國王", away: "戰神" },
-            { id: 7, date: "2025-10-25", time: "14:30", home: "海神", away: "國王" },
-            { id: 8, date: "2025-10-25", time: "17:00", home: "特攻", away: "戰神" },
-            { id: 9, date: "2025-10-26", time: "14:30", home: "海神", away: "攻城獅" },
-            { id: 10, date: "2025-10-26", time: "17:00", home: "特攻", away: "雲豹" },
-            { id: 11, date: "2025-10-29", time: "19:00", home: "海神", away: "夢想家" },
-            { id: 12, date: "2025-11-01", time: "14:30", home: "海神", away: "戰神" },
-            { id: 13, date: "2025-11-01", time: "17:00", home: "特攻", away: "夢想家" },
-            { id: 14, date: "2025-11-02", time: "14:30", home: "海神", away: "雲豹" },
-            { id: 15, date: "2025-11-02", time: "17:00", home: "特攻", away: "攻城獅" },
-            { id: 16, date: "2025-11-05", time: "19:00", home: "夢想家", away: "攻城獅" },
-            { id: 17, date: "2025-11-07", time: "19:00", home: "夢想家", away: "特攻" },
-            { id: 18, date: "2025-11-08", time: "14:30", home: "國王", away: "攻城獅" },
-            { id: 19, date: "2025-11-08", time: "17:00", home: "雲豹", away: "戰神" },
-            { id: 20, date: "2025-11-09", time: "14:30", home: "國王", away: "海神" },
-            { id: 21, date: "2025-11-09", time: "17:00", home: "雲豹", away: "特攻" },
-            { id: 22, date: "2025-11-12", time: "19:00", home: "國王", away: "夢想家" },
-            { id: 23, date: "2025-11-15", time: "14:30", home: "攻城獅", away: "特攻" },
-            { id: 24, date: "2025-11-15", time: "17:00", home: "戰神", away: "國王" },
-            { id: 25, date: "2025-11-16", time: "14:30", home: "攻城獅", away: "海神" },
-            { id: 26, date: "2025-11-16", time: "17:00", home: "戰神", away: "雲豹" },
-            { id: 27, date: "2025-11-19", time: "19:00", home: "雲豹", away: "海神" },
-            { id: 28, date: "2025-11-22", time: "14:30", home: "夢想家", away: "攻城獅" },
-            { id: 29, date: "2025-11-22", time: "17:00", home: "雲豹", away: "國王" },
-            { id: 30, date: "2025-11-23", time: "14:30", home: "夢想家", away: "戰神" },
-            { id: 31, date: "2025-11-23", time: "17:00", home: "雲豹", away: "特攻" },
-            { id: 32, date: "2025-12-03", time: "19:00", home: "戰神", away: "攻城獅" },
-            { id: 33, date: "2025-12-06", time: "14:30", home: "雲豹", away: "攻城獅" },
-            { id: 34, date: "2025-12-06", time: "17:00", home: "戰神", away: "特攻" },
-            { id: 35, date: "2025-12-07", time: "14:30", home: "雲豹", away: "夢想家" },
-            { id: 36, date: "2025-12-07", time: "17:00", home: "戰神", away: "海神" },
-            { id: 37, date: "2025-12-13", time: "14:30", home: "海神", away: "攻城獅" },
-            { id: 38, date: "2025-12-13", time: "17:00", home: "特攻", away: "雲豹" },
-            { id: 39, date: "2025-12-14", time: "14:30", home: "海神", away: "夢想家" },
-            { id: 40, date: "2025-12-14", time: "17:00", home: "特攻", away: "國王" },
-            { id: 41, date: "2025-12-20", time: "14:30", home: "國王", away: "雲豹" },
-            { id: 42, date: "2025-12-20", time: "17:00", home: "攻城獅", away: "夢想家" },
-            { id: 43, date: "2025-12-21", time: "14:30", home: "國王", away: "特攻" },
-            { id: 44, date: "2025-12-21", time: "17:00", home: "攻城獅", away: "戰神" },
-            { id: 45, date: "2025-12-24", time: "19:00", home: "攻城獅", away: "雲豹" },
-            { id: 46, date: "2025-12-27", time: "14:30", home: "夢想家", away: "戰神" },
-            { id: 47, date: "2025-12-27", time: "17:00", home: "國王", away: "攻城獅" },
-            { id: 48, date: "2025-12-28", time: "14:30", home: "夢想家", away: "特攻" },
-            { id: 49, date: "2025-12-28", time: "17:00", home: "國王", away: "海神" },
-            { id: 50, date: "2025-12-31", time: "19:00", home: "特攻", away: "國王" },
-            { id: 51, date: "2026-01-03", time: "14:30", home: "海神", away: "雲豹" },
-            { id: 52, date: "2026-01-03", time: "17:00", home: "特攻", away: "攻城獅" },
-            { id: 53, date: "2026-01-04", time: "14:30", home: "海神", away: "國王" },
-            { id: 54, date: "2026-01-04", time: "17:00", home: "特攻", away: "夢想家" },
-            { id: 55, date: "2026-01-07", time: "19:00", home: "海神", away: "戰神" },
-            { id: 56, date: "2026-01-09", time: "19:00", home: "雲豹", away: "國王" },
-            { id: 57, date: "2026-01-10", time: "14:30", home: "海神", away: "特攻" },
-            { id: 58, date: "2026-01-10", time: "17:00", home: "戰神", away: "夢想家" },
-            { id: 59, date: "2026-01-11", time: "14:30", home: "海神", away: "攻城獅" },
-            { id: 60, date: "2026-01-11", time: "17:00", home: "戰神", away: "雲豹" },
-            { id: 61, date: "2026-01-17", time: "14:30", home: "夢想家", away: "國王" },
-            { id: 62, date: "2026-01-17", time: "17:00", home: "戰神", away: "特攻" },
-            { id: 63, date: "2026-01-18", time: "14:30", home: "夢想家", away: "雲豹" },
-            { id: 64, date: "2026-01-18", time: "17:00", home: "戰神", away: "攻城獅" },
-            { id: 65, date: "2026-01-24", time: "14:30", home: "特攻", away: "海神" },
-            { id: 66, date: "2026-01-24", time: "17:00", home: "攻城獅", away: "夢想家" },
-            { id: 67, date: "2026-01-25", time: "14:30", home: "特攻", away: "戰神" },
-            { id: 68, date: "2026-01-25", time: "17:00", home: "攻城獅", away: "國王" },
-            { id: 69, date: "2026-01-31", time: "17:00", home: "雲豹", away: "攻城獅" },
-            { id: 70, date: "2026-01-31", time: "17:00", home: "夢想家", away: "國王" },
-            { id: 71, date: "2026-02-01", time: "14:30", home: "夢想家", away: "海神" },
-            { id: 72, date: "2026-02-01", time: "17:00", home: "雲豹", away: "戰神" },
-            { id: 73, date: "2026-02-07", time: "14:30", home: "海神", away: "雲豹" },
-            { id: 74, date: "2026-02-07", time: "17:00", home: "戰神", away: "國王" },
-            { id: 75, date: "2026-02-08", time: "14:30", home: "海神", away: "特攻" },
-            { id: 76, date: "2026-02-08", time: "17:00", home: "戰神", away: "夢想家" },
-            { id: 77, date: "2026-02-11", time: "19:00", home: "戰神", away: "海神" },
-            { id: 78, date: "2026-02-14", time: "14:30", home: "國王", away: "戰神" },
-            { id: 79, date: "2026-02-14", time: "17:00", home: "雲豹", away: "夢想家" },
-            { id: 80, date: "2026-02-15", time: "14:30", home: "國王", away: "攻城獅" },
-            { id: 81, date: "2026-02-15", time: "17:00", home: "雲豹", away: "特攻" },
-            { id: 82, date: "2026-03-04", time: "19:00", home: "國王", away: "雲豹" },
-            { id: 83, date: "2026-03-06", time: "19:00", home: "國王", away: "戰神" },
-            { id: 84, date: "2026-03-07", time: "14:30", home: "海神", away: "夢想家" },
-            { id: 85, date: "2026-03-07", time: "17:00", home: "雲豹", away: "攻城獅" },
-            { id: 86, date: "2026-03-08", time: "14:30", home: "海神", away: "特攻" },
-            { id: 87, date: "2026-03-08", time: "17:00", home: "雲豹", away: "國王" },
-            { id: 88, date: "2026-03-11", time: "19:00", home: "攻城獅", away: "戰神" },
-            { id: 89, date: "2026-03-14", time: "14:30", home: "夢想家", away: "特攻" },
-            { id: 90, date: "2026-03-14", time: "17:00", home: "攻城獅", away: "海神" },
-            { id: 91, date: "2026-03-15", time: "14:30", home: "夢想家", away: "雲豹" },
-            { id: 92, date: "2026-03-15", time: "17:00", home: "攻城獅", away: "國王" },
-            { id: 93, date: "2026-03-21", time: "14:30", home: "特攻", away: "海神" },
-            { id: 94, date: "2026-03-21", time: "17:00", home: "戰神", away: "雲豹" },
-            { id: 95, date: "2026-03-22", time: "14:30", home: "特攻", away: "攻城獅" },
-            { id: 96, date: "2026-03-22", time: "17:00", home: "戰神", away: "夢想家" },
-            { id: 97, date: "2026-03-25", time: "19:00", home: "夢想家", away: "海神" },
-            { id: 98, date: "2026-03-27", time: "19:00", home: "夢想家", away: "國王" },
-            { id: 99, date: "2026-03-28", time: "14:30", home: "攻城獅", away: "特攻" },
-            { id: 100, date: "2026-03-28", time: "17:00", home: "戰神", away: "海神" },
-            { id: 101, date: "2026-03-29", time: "14:30", home: "攻城獅", away: "雲豹" },
-            { id: 102, date: "2026-03-29", time: "17:00", home: "戰神", away: "國王" },
-            { id: 103, date: "2026-04-01", time: "19:00", home: "特攻", away: "戰神" },
-            { id: 104, date: "2026-04-04", time: "14:30", home: "特攻", away: "夢想家" },
-            { id: 105, date: "2026-04-04", time: "17:00", home: "雲豹", away: "海神" },
-            { id: 106, date: "2026-04-05", time: "14:30", home: "特攻", away: "國王" },
-            { id: 107, date: "2026-04-05", time: "17:00", home: "雲豹", away: "戰神" },
-            { id: 108, date: "2026-04-08", time: "19:00", home: "攻城獅", away: "特攻" },
-            { id: 109, date: "2026-04-11", time: "14:30", home: "海神", away: "國王" },
-            { id: 110, date: "2026-04-11", time: "17:00", home: "攻城獅", away: "雲豹" },
-            { id: 111, date: "2026-04-12", time: "14:30", home: "海神", away: "戰神" },
-            { id: 112, date: "2026-04-12", time: "17:00", home: "攻城獅", away: "夢想家" },
-            { id: 113, date: "2026-04-18", time: "14:30", home: "夢想家", away: "戰神" },
-            { id: 114, date: "2026-04-18", time: "17:00", home: "特攻", away: "雲豹" },
-            { id: 115, date: "2026-04-19", time: "14:30", home: "夢想家", away: "攻城獅" },
-            { id: 116, date: "2026-04-19", time: "17:00", home: "特攻", away: "海神" },
-            { id: 117, date: "2026-04-24", time: "19:00", home: "國王", away: "夢想家" },
-            { id: 118, date: "2026-04-25", time: "14:30", home: "雲豹", away: "海神" },
-            { id: 119, date: "2026-04-25", time: "17:00", home: "戰神", away: "攻城獅" },
-            { id: 120, date: "2026-04-26", time: "14:30", home: "雲豹", away: "夢想家" },
-            { id: 121, date: "2026-04-26", time: "17:00", home: "戰神", away: "特攻" },
-            { id: 122, date: "2026-04-29", time: "19:00", home: "攻城獅", away: "國王" },
-            { id: 123, date: "2026-05-02", time: "14:30", home: "攻城獅", away: "戰神" },
-            { id: 124, date: "2026-05-02", time: "17:00", home: "國王", away: "雲豹" },
-            { id: 125, date: "2026-05-03", time: "14:30", home: "攻城獅", away: "海神" },
-            { id: 126, date: "2026-05-03", time: "17:00", home: "國王", away: "特攻" }
+        // --- BUILT-IN FALLBACK DATA (G1-G126) ---
+        const DEFAULT_SCHEDULE = [
+            { id: 1, date: "2025-10-11", time: "17:00", home: "國王", away: "海神", arena: "新莊體育館" },
+            { id: 2, date: "2025-10-12", time: "17:00", home: "國王", away: "夢想家", arena: "新莊體育館" },
+            { id: 3, date: "2025-10-18", time: "14:30", home: "夢想家", away: "海神", arena: "臺中洲際迷你蛋" },
+            { id: 4, date: "2025-10-18", time: "17:00", home: "國王", away: "特攻", arena: "新莊體育館" },
+            { id: 5, date: "2025-10-19", time: "14:30", home: "夢想家", away: "雲豹", arena: "臺中洲際迷你蛋" },
+            { id: 6, date: "2025-10-19", time: "17:00", home: "國王", away: "戰神", arena: "新莊體育館" },
+            { id: 7, date: "2025-10-25", time: "14:30", home: "海神", away: "國王", arena: "高雄巨蛋" },
+            { id: 8, date: "2025-10-25", time: "17:00", home: "特攻", away: "戰神", arena: "新莊體育館" },
+            { id: 9, date: "2025-10-26", time: "14:30", home: "海神", away: "攻城獅", arena: "高雄巨蛋" },
+            { id: 10, date: "2025-10-26", time: "17:00", home: "特攻", away: "雲豹", arena: "新莊體育館" },
+            { id: 11, date: "2025-10-29", time: "19:00", home: "海神", away: "夢想家", arena: "高雄巨蛋" },
+            { id: 12, date: "2025-11-01", time: "14:30", home: "海神", away: "戰神", arena: "高雄巨蛋" },
+            { id: 13, date: "2025-11-01", time: "17:00", home: "特攻", away: "夢想家", arena: "新莊體育館" },
+            { id: 14, date: "2025-11-02", time: "14:30", home: "海神", away: "雲豹", arena: "高雄巨蛋" },
+            { id: 15, date: "2025-11-02", time: "17:00", home: "特攻", away: "攻城獅", arena: "新莊體育館" },
+            { id: 16, date: "2025-11-05", time: "19:00", home: "夢想家", away: "攻城獅", arena: "臺中洲際迷你蛋" },
+            { id: 17, date: "2025-11-07", time: "19:00", home: "夢想家", away: "特攻", arena: "臺中洲際迷你蛋" },
+            { id: 18, date: "2025-11-08", time: "14:30", home: "國王", away: "攻城獅", arena: "新莊體育館" },
+            { id: 19, date: "2025-11-08", time: "17:00", home: "雲豹", away: "戰神", arena: "桃園巨蛋" },
+            { id: 20, date: "2025-11-09", time: "14:30", home: "國王", away: "海神", arena: "新莊體育館" },
+            { id: 21, date: "2025-11-09", time: "17:00", home: "雲豹", away: "特攻", arena: "桃園巨蛋" },
+            { id: 22, date: "2025-11-12", time: "19:00", home: "國王", away: "夢想家", arena: "新莊體育館" },
+            { id: 23, date: "2025-11-15", time: "14:30", home: "攻城獅", away: "特攻", arena: "新竹縣立體育館" },
+            { id: 24, date: "2025-11-15", time: "17:00", home: "戰神", away: "國王", arena: "和平籃球館" },
+            { id: 25, date: "2025-11-16", time: "14:30", home: "攻城獅", away: "海神", arena: "新竹縣立體育館" },
+            { id: 26, date: "2025-11-16", time: "17:00", home: "戰神", away: "雲豹", arena: "和平籃球館" },
+            { id: 27, date: "2025-11-19", time: "19:00", home: "雲豹", away: "海神", arena: "桃園巨蛋" },
+            { id: 28, date: "2025-11-22", time: "14:30", home: "夢想家", away: "攻城獅", arena: "臺中洲際迷你蛋" },
+            { id: 29, date: "2025-11-22", time: "17:00", home: "雲豹", away: "國王", arena: "桃園巨蛋" },
+            { id: 30, date: "2025-11-23", time: "14:30", home: "夢想家", away: "戰神", arena: "臺中洲際迷你蛋" },
+            { id: 31, date: "2025-11-23", time: "17:00", home: "雲豹", away: "特攻", arena: "桃園巨蛋" },
+            { id: 32, date: "2025-12-03", time: "19:00", home: "戰神", away: "攻城獅", arena: "和平籃球館" },
+            { id: 33, date: "2025-12-06", time: "14:30", home: "雲豹", away: "攻城獅", arena: "桃園巨蛋" },
+            { id: 34, date: "2025-12-06", time: "17:00", home: "戰神", away: "特攻", arena: "和平籃球館" },
+            { id: 35, date: "2025-12-07", time: "14:30", home: "雲豹", away: "夢想家", arena: "桃園巨蛋" },
+            { id: 36, date: "2025-12-07", time: "17:00", home: "戰神", away: "海神", arena: "和平籃球館" },
+            { id: 37, date: "2025-12-13", time: "14:30", home: "海神", away: "攻城獅", arena: "高雄巨蛋" },
+            { id: 38, date: "2025-12-13", time: "17:00", home: "特攻", away: "雲豹", arena: "新莊體育館" },
+            { id: 39, date: "2025-12-14", time: "14:30", home: "海神", away: "夢想家", arena: "高雄巨蛋" },
+            { id: 40, date: "2025-12-14", time: "17:00", home: "特攻", away: "國王", arena: "新莊體育館" },
+            { id: 41, date: "2025-12-20", time: "14:30", home: "國王", away: "雲豹", arena: "新莊體育館" },
+            { id: 42, date: "2025-12-20", time: "17:00", home: "攻城獅", away: "夢想家", arena: "新竹縣立體育館" },
+            { id: 43, date: "2025-12-21", time: "14:30", home: "國王", away: "特攻", arena: "新莊體育館" },
+            { id: 44, date: "2025-12-21", time: "17:00", home: "攻城獅", away: "戰神", arena: "新竹縣立體育館" },
+            { id: 45, date: "2025-12-24", time: "19:00", home: "攻城獅", away: "雲豹", arena: "新竹縣立體育館" },
+            { id: 46, date: "2025-12-27", time: "14:30", home: "夢想家", away: "戰神", arena: "臺中洲際迷你蛋" },
+            { id: 47, date: "2025-12-27", time: "17:00", home: "國王", away: "攻城獅", arena: "新莊體育館" },
+            { id: 48, date: "2025-12-28", time: "14:30", home: "夢想家", away: "特攻", arena: "臺中洲際迷你蛋" },
+            { id: 49, date: "2025-12-28", time: "17:00", home: "國王", away: "海神", arena: "新莊體育館" },
+            { id: 50, date: "2025-12-31", time: "19:00", home: "特攻", away: "國王", arena: "新莊體育館" },
+            { id: 51, date: "2026-01-03", time: "14:30", home: "海神", away: "雲豹", arena: "高雄巨蛋" },
+            { id: 52, date: "2026-01-03", time: "17:00", home: "特攻", away: "攻城獅", arena: "新莊體育館" },
+            { id: 53, date: "2026-01-04", time: "14:30", home: "海神", away: "國王", arena: "高雄巨蛋" },
+            { id: 54, date: "2026-01-04", time: "17:00", home: "特攻", away: "夢想家", arena: "新莊體育館" },
+            { id: 55, date: "2026-01-07", time: "19:00", home: "海神", away: "戰神", arena: "高雄巨蛋" },
+            { id: 56, date: "2026-01-09", time: "19:00", home: "雲豹", away: "國王", arena: "健行科大體育館" },
+            { id: 57, date: "2026-01-10", time: "14:30", home: "海神", away: "特攻", arena: "高雄巨蛋" },
+            { id: 58, date: "2026-01-10", time: "17:00", home: "戰神", away: "夢想家", arena: "和平籃球館" },
+            { id: 59, date: "2026-01-11", time: "14:30", home: "海神", away: "攻城獅", arena: "高雄巨蛋" },
+            { id: 60, date: "2026-01-11", time: "17:00", home: "戰神", away: "雲豹", arena: "和平籃球館" },
+            { id: 61, date: "2026-01-17", time: "14:30", home: "夢想家", away: "國王", arena: "臺中洲際迷你蛋" },
+            { id: 62, date: "2026-01-17", time: "17:00", home: "戰神", away: "特攻", arena: "和平籃球館" },
+            { id: 63, date: "2026-01-18", time: "14:30", home: "夢想家", away: "雲豹", arena: "臺中洲際迷你蛋" },
+            { id: 64, date: "2026-01-18", time: "17:00", home: "戰神", away: "攻城獅", arena: "和平籃球館" },
+            { id: 65, date: "2026-01-24", time: "14:30", home: "特攻", away: "海神", arena: "新莊體育館" },
+            { id: 66, date: "2026-01-24", time: "17:00", home: "攻城獅", away: "夢想家", arena: "新竹縣立體育館" },
+            { id: 67, date: "2026-01-25", time: "14:30", home: "特攻", away: "戰神", arena: "新莊體育館" },
+            { id: 68, date: "2026-01-25", time: "17:00", home: "攻城獅", away: "國王", arena: "新竹縣立體育館" },
+            { id: 69, date: "2026-01-31", time: "17:00", home: "雲豹", away: "攻城獅", arena: "健行科大體育館" },
+            { id: 70, date: "2026-01-31", time: "17:00", home: "夢想家", away: "國王", arena: "臺中洲際迷你蛋" },
+            { id: 71, date: "2026-02-01", time: "14:30", home: "夢想家", away: "海神", arena: "臺中洲際迷你蛋" },
+            { id: 72, date: "2026-02-01", time: "17:00", home: "雲豹", away: "戰神", arena: "健行科大體育館" },
+            { id: 73, date: "2026-02-07", time: "14:30", home: "海神", away: "雲豹", arena: "高雄巨蛋" },
+            { id: 74, date: "2026-02-07", time: "17:00", home: "戰神", away: "國王", arena: "和平籃球館" },
+            { id: 75, date: "2026-02-08", time: "14:30", home: "海神", away: "特攻", arena: "高雄巨蛋" },
+            { id: 76, date: "2026-02-08", time: "17:00", home: "戰神", away: "夢想家", arena: "和平籃球館" },
+            { id: 77, date: "2026-02-11", time: "19:00", home: "戰神", away: "海神", arena: "和平籃球館" },
+            { id: 78, date: "2026-02-14", time: "14:30", home: "國王", away: "戰神", arena: "新莊體育館" },
+            { id: 79, date: "2026-02-14", time: "17:00", home: "雲豹", away: "夢想家", arena: "健行科大體育館" },
+            { id: 80, date: "2026-02-15", time: "14:30", home: "國王", away: "攻城獅", arena: "新莊體育館" },
+            { id: 81, date: "2026-02-15", time: "17:00", home: "雲豹", away: "特攻", arena: "健行科大體育館" },
+            { id: 82, date: "2026-03-04", time: "19:00", home: "國王", away: "雲豹", arena: "新莊體育館" },
+            { id: 83, date: "2026-03-06", time: "19:00", home: "國王", away: "戰神", arena: "新莊體育館" },
+            { id: 84, date: "2026-03-07", time: "14:30", home: "海神", away: "夢想家", arena: "高雄巨蛋" },
+            { id: 85, date: "2026-03-07", time: "17:00", home: "雲豹", away: "攻城獅", arena: "健行科大體育館" },
+            { id: 86, date: "2026-03-08", time: "14:30", home: "海神", away: "特攻", arena: "高雄巨蛋" },
+            { id: 87, date: "2026-03-08", time: "17:00", home: "雲豹", away: "國王", arena: "健行科大體育館" },
+            { id: 88, date: "2026-03-11", time: "19:00", home: "攻城獅", away: "戰神", arena: "新竹縣立體育館" },
+            { id: 89, date: "2026-03-14", time: "14:30", home: "夢想家", away: "特攻", arena: "臺中洲際迷你蛋" },
+            { id: 90, date: "2026-03-14", time: "17:00", home: "攻城獅", away: "海神", arena: "新竹縣立體育館" },
+            { id: 91, date: "2026-03-15", time: "14:30", home: "夢想家", away: "雲豹", arena: "臺中洲際迷你蛋" },
+            { id: 92, date: "2026-03-15", time: "17:00", home: "攻城獅", away: "國王", arena: "新竹縣立體育館" },
+            { id: 93, date: "2026-03-21", time: "14:30", home: "特攻", away: "海神", arena: "新莊體育館" },
+            { id: 94, date: "2026-03-21", time: "17:00", home: "戰神", away: "雲豹", arena: "和平籃球館" },
+            { id: 95, date: "2026-03-22", time: "14:30", home: "特攻", away: "攻城獅", arena: "新莊體育館" },
+            { id: 96, date: "2026-03-22", time: "17:00", home: "戰神", away: "夢想家", arena: "和平籃球館" },
+            { id: 97, date: "2026-03-25", time: "19:00", home: "夢想家", away: "海神", arena: "臺中洲際迷你蛋" },
+            { id: 98, date: "2026-03-27", time: "19:00", home: "夢想家", away: "國王", arena: "臺中洲際迷你蛋" },
+            { id: 99, date: "2026-03-28", time: "14:30", home: "攻城獅", away: "特攻", arena: "新竹縣立體育館" },
+            { id: 100, date: "2026-03-28", time: "17:00", home: "戰神", away: "海神", arena: "和平籃球館" },
+            { id: 101, date: "2026-03-29", time: "14:30", home: "攻城獅", away: "雲豹", arena: "新竹縣立體育館" },
+            { id: 102, date: "2026-03-29", time: "17:00", home: "戰神", away: "國王", arena: "和平籃球館" },
+            { id: 103, date: "2026-04-01", time: "19:00", home: "特攻", away: "戰神", arena: "新莊體育館" },
+            { id: 104, date: "2026-04-04", time: "14:30", home: "特攻", away: "夢想家", arena: "新莊體育館" },
+            { id: 105, date: "2026-04-04", time: "17:00", home: "雲豹", away: "海神", arena: "健行科大體育館" },
+            { id: 106, date: "2026-04-05", time: "14:30", home: "特攻", away: "國王", arena: "新莊體育館" },
+            { id: 107, date: "2026-04-05", time: "17:00", home: "雲豹", away: "戰神", arena: "健行科大體育館" },
+            { id: 108, date: "2026-04-08", time: "19:00", home: "攻城獅", away: "特攻", arena: "新竹縣立體育館" },
+            { id: 109, date: "2026-04-11", time: "14:30", home: "海神", away: "國王", arena: "高雄巨蛋" },
+            { id: 110, date: "2026-04-11", time: "17:00", home: "攻城獅", away: "雲豹", arena: "新竹縣立體育館" },
+            { id: 111, date: "2026-04-12", time: "14:30", home: "海神", away: "戰神", arena: "高雄巨蛋" },
+            { id: 112, date: "2026-04-12", time: "17:00", home: "攻城獅", away: "夢想家", arena: "新竹縣立體育館" },
+            { id: 113, date: "2026-04-18", time: "14:30", home: "夢想家", away: "戰神", arena: "臺中洲際迷你蛋" },
+            { id: 114, date: "2026-04-18", time: "17:00", home: "特攻", away: "雲豹", arena: "新莊體育館" },
+            { id: 115, date: "2026-04-19", time: "14:30", home: "夢想家", away: "攻城獅", arena: "臺中洲際迷你蛋" },
+            { id: 116, date: "2026-04-19", time: "17:00", home: "特攻", away: "海神", arena: "新莊體育館" },
+            { id: 117, date: "2026-04-24", time: "19:00", home: "國王", away: "夢想家", arena: "新莊體育館" },
+            { id: 118, date: "2026-04-25", time: "14:30", home: "雲豹", away: "海神", arena: "健行科大體育館" },
+            { id: 119, date: "2026-04-25", time: "17:00", home: "戰神", away: "攻城獅", arena: "和平籃球館" },
+            { id: 120, date: "2026-04-26", time: "14:30", home: "雲豹", away: "夢想家", arena: "健行科大體育館" },
+            { id: 121, date: "2026-04-26", time: "17:00", home: "戰神", away: "特攻", arena: "和平籃球館" },
+            { id: 122, date: "2026-04-29", time: "19:00", home: "攻城獅", away: "國王", arena: "新竹縣立體育館" },
+            { id: 123, date: "2026-05-02", time: "14:30", home: "攻城獅", away: "戰神", arena: "新竹縣立體育館" },
+            { id: 124, date: "2026-05-02", time: "17:00", home: "國王", away: "雲豹", arena: "新莊體育館" },
+            { id: 125, date: "2026-05-03", time: "14:30", home: "攻城獅", away: "海神", arena: "新竹縣立體育館" },
+            { id: 126, date: "2026-05-03", time: "17:00", home: "國王", away: "特攻", arena: "新莊體育館" }
         ];
+        
+        let SEASON_SCHEDULE_DB = [...DEFAULT_SCHEDULE];
 
         // Roster Data - Fallback
         let ROSTERS = {
@@ -440,49 +442,13 @@
                 {num: "7", name: "曾柏喻"}, {num: "8", name: "朱雲豪"}, {num: "9", name: "田浩"}, {num: "10", name: "劉丞勳"},
                 {num: "11", name: "蕭順議"}, {num: "12", name: "李家瑞"}, {num: "17", name: "蔡宸綱"}, {num: "18", name: "帕塞獅"},
                 {num: "22", name: "提傑"}, {num: "25", name: "梁瀚"}, {num: "42", name: "盧冠軒"}, {num: "75", name: "李啓瑋"}
-            ],
-            "夢想家": [
-                {num: "0", name: "陳振傑"}, {num: "2", name: "馬建豪"}, {num: "3", name: "張宗憲"}, {num: "9", name: "吳家駿"},
-                {num: "11", name: "林俊吉"}, {num: "20", name: "簡偉儒"}, {num: "23", name: "恩尼斯"}, {num: "24", name: "忻沃克"},
-                {num: "26", name: "李德威"}, {num: "27", name: "史承平"}, {num: "28", name: "盧冠良"}, {num: "33", name: "湯普金斯"},
-                {num: "34", name: "高柏鎧"}, {num: "35", name: "霍爾曼"}, {num: "41", name: "蔣淯安"}, {num: "88", name: "周柏臣"}
-            ],
-            "雲豹": [
-                {num: "5", name: "高錦瑋"}, {num: "6", name: "徐宏瑋"}, {num: "7", name: "麥卡洛"}, {num: "8", name: "汪哲宇"},
-                {num: "10", name: "丁冠皓"}, {num: "11", name: "莊博元"}, {num: "12", name: "林信寬"}, {num: "13", name: "米勒"},
-                {num: "21", name: "王皓吉"}, {num: "24", name: "克羅馬"}, {num: "27", name: "黃鎮"}, {num: "31", name: "董永全"},
-                {num: "33", name: "迪亞洛"}, {num: "57", name: "曹薰襄"}, {num: "82", name: "劉元凱"}
-            ],
-            "海神": [
-                {num: "0", name: "魏莨哲"}, {num: "2", name: "詹姆斯"}, {num: "6", name: "歐提斯"}, {num: "7", name: "于煥亞"},
-                {num: "10", name: "胡瓏貿"}, {num: "11", name: "施晉堯"}, {num: "21", name: "呂威霆"}, {num: "22", name: "崔維斯"},
-                {num: "24", name: "蘇文儒"}, {num: "28", name: "余純安"}, {num: "30", name: "廖偉皓"}, {num: "32", name: "布里茲克"},
-                {num: "57", name: "吳曉謹"}, {num: "66", name: "陳懷安"}, {num: "85", name: "勤明慶"}, {num: "92", name: "凱帝"}
-            ],
-            "特攻": [
-                {num: "0", name: "阿巴西"}, {num: "1", name: "李睿麒"}, {num: "3", name: "林安龍"}, {num: "5", name: "余維豪"},
-                {num: "7", name: "魏嘉豪"}, {num: "10", name: "謝亞軒"}, {num: "11", name: "內馬"}, {num: "12", name: "林任鴻"},
-                {num: "14", name: "曾信武"}, {num: "16", name: "林韋翰"}, {num: "18", name: "飛克"}, {num: "19", name: "馬可"},
-                {num: "22", name: "黃泓瀚"}, {num: "24", name: "簡廷兆"}, {num: "28", name: "霸夫"}, {num: "76", name: "曾文鼎"},
-                {num: "77", name: "李沛澄"}
-            ],
-            "國王": [
-                {num: "1", name: "林書緯"}, {num: "2", name: "蘇培凱"}, {num: "5", name: "傑登"}, {num: "8", name: "鍾理翔"},
-                {num: "9", name: "李愷諺"}, {num: "10", name: "簡祐哲"}, {num: "11", name: "王柏智"}, {num: "12", name: "林彥廷"},
-                {num: "13", name: "呂政儒"}, {num: "16", name: "尚迪"}, {num: "17", name: "蘇士軒"}, {num: "19", name: "林金榜"},
-                {num: "20", name: "熊祥泰"}, {num: "24", name: "洪志善"}, {num: "25", name: "奧帝"}, {num: "26", name: "喬納森"},
-                {num: "31", name: "桑尼"}, {num: "42", name: "沃許本"}
-            ],
-            "戰神": [
-                {num: "1", name: "洛夫頓"}, {num: "3", name: "丁聖儒"}, {num: "5", name: "魏芃禾"}, {num: "6", name: "江均"},
-                {num: "7", name: "劉彥廷"}, {num: "8", name: "陳文宏"}, {num: "9", name: "張兆辰"}, {num: "10", name: "基德"},
-                {num: "11", name: "黃聰翰"}, {num: "15", name: "謝銘駿"}, {num: "20", name: "孫思堯"}, {num: "21", name: "威力斯"},
-                {num: "23", name: "錢肯尼"}, {num: "29", name: "張耕淯"}, {num: "32", name: "齊曼加"}, {num: "33", name: "雷蒙恩"},
-                {num: "41", name: "蘇奕晉"}, {num: "62", name: "陳冠全"}
             ]
         };
 
-        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1wcKacc8kQqyiqm9sUdStN4W7fB7FzXcCLL6UpySBE9g/export?format=csv";
+        // Use CORS Proxy for better reliability
+        const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+        const GOOGLE_ROSTER_CSV_URL = "https://docs.google.com/spreadsheets/d/1wcKacc8kQqyiqm9sUdStN4W7fB7FzXcCLL6UpySBE9g/export?format=csv";
+        const GOOGLE_SCHEDULE_CSV_URL = "https://docs.google.com/spreadsheets/d/1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc/export?format=csv";
 
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
         const MONTHS = ["JAN.", "FEB.", "MAR.", "APR.", "MAY", "JUN.", "JUL.", "AUG.", "SEP.", "OCT.", "NOV.", "DEC."];
@@ -542,7 +508,7 @@
 
         const parseDateLocal = (dateStr) => {
             if (!dateStr) return new Date();
-            const parts = dateStr.split('-');
+            const parts = dateStr.replace(/\//g, '-').split('-'); // Handle both / and -
             return new Date(parts[0], parts[1] - 1, parts[2]);
         };
 
@@ -574,64 +540,76 @@
              return `${date.getFullYear()}/${String(date.getMonth()+1).padStart(2,'0')}/${String(date.getDate()).padStart(2,'0')}`;
         }
         
+        // --- Helper: Normalization for Team Names ---
+        function normalizeTeamName(name) {
+            if(!name) return "";
+            name = name.trim();
+            if (TEAMS[name]) return name;
+            for (const [key, data] of Object.entries(TEAMS)) {
+                if (data.full === name) return key;
+            }
+            for (const [key, data] of Object.entries(TEAMS)) {
+                if (name.includes(key)) return key;
+            }
+            return name; 
+        }
+
         // --- Helper: Schedule Logic ---
         function getNearestNextGame(fromDateStr) {
-            const fromDate = new Date(fromDateStr);
-            for (const game of SEASON_SCHEDULE_2526) {
-                const gameDate = new Date(game.date);
+            const fromDate = parseDateLocal(fromDateStr);
+            for (const game of SEASON_SCHEDULE_DB) {
+                const gameDate = parseDateLocal(game.date);
                 if (gameDate >= fromDate) {
                     return game; 
                 }
             }
-            return SEASON_SCHEDULE_2526[SEASON_SCHEDULE_2526.length-1];
+            return SEASON_SCHEDULE_DB[SEASON_SCHEDULE_DB.length-1];
         }
         
         function getNearestPastGame(fromDateStr) {
-            const fromDate = new Date(fromDateStr);
+            const fromDate = parseDateLocal(fromDateStr);
             // Search backwards
-            for (let i = SEASON_SCHEDULE_2526.length - 1; i >= 0; i--) {
-                const game = SEASON_SCHEDULE_2526[i];
-                const gameDate = new Date(game.date);
+            for (let i = SEASON_SCHEDULE_DB.length - 1; i >= 0; i--) {
+                const game = SEASON_SCHEDULE_DB[i];
+                const gameDate = parseDateLocal(game.date);
                 if (gameDate <= fromDate) {
                     return game;
                 }
             }
-            return SEASON_SCHEDULE_2526[0];
+            return SEASON_SCHEDULE_DB[0];
         }
         
         function getGameByDateAndTime(dateStr, timeStr) {
-            let match = SEASON_SCHEDULE_2526.find(g => g.date === dateStr && g.time === timeStr);
+            let match = SEASON_SCHEDULE_DB.find(g => g.date === dateStr && g.time === timeStr);
             if (match) return match;
-            match = SEASON_SCHEDULE_2526.find(g => g.date === dateStr);
+            match = SEASON_SCHEDULE_DB.find(g => g.date === dateStr);
             return match;
         }
         
         function getGameById(id) {
-            return SEASON_SCHEDULE_2526.find(g => g.id == id);
+            return SEASON_SCHEDULE_DB.find(g => g.id == id);
         }
 
         function getNextGameAfterId(gameId) {
-            return SEASON_SCHEDULE_2526.find(g => g.id > gameId);
+            return SEASON_SCHEDULE_DB.find(g => g.id > gameId);
         }
         
         function getNextGameForTeam(teamName, currentId) {
-            // Find next game where team is home OR away
-            return SEASON_SCHEDULE_2526.find(g => g.id > currentId && (g.home === teamName || g.away === teamName));
+            return SEASON_SCHEDULE_DB.find(g => g.id > currentId && (g.home === teamName || g.away === teamName));
         }
         
         function getNextGameForTeamByDate(teamName, fromDateStr) {
-             const fromDate = new Date(fromDateStr);
-             return SEASON_SCHEDULE_2526.find(g => {
-                 const gDate = new Date(g.date);
+             const fromDate = parseDateLocal(fromDateStr);
+             return SEASON_SCHEDULE_DB.find(g => {
+                 const gDate = parseDateLocal(g.date);
                  return gDate > fromDate && (g.home === teamName || g.away === teamName);
              });
         }
 
         function getWeekdayGame(fromDateStr) {
-            const fromDate = new Date(fromDateStr);
-            for (const game of SEASON_SCHEDULE_2526) {
-                 const d = new Date(game.date.replace(/-/g, '/')); // Ensure proper parsing
-                 const gDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+            const fromDate = parseDateLocal(fromDateStr);
+            for (const game of SEASON_SCHEDULE_DB) {
+                 const gDate = parseDateLocal(game.date);
                  const fDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
 
                  if (gDate >= fDate) {
@@ -642,7 +620,6 @@
             return null;
         }
         
-        // Week 8 = 2025-12-01 (Mon) to 2025-12-07 (Sun)
         function getDatesForWeek(weekNum) {
             const week8Start = new Date("2025-12-01");
             const diffWeeks = weekNum - 8;
@@ -659,53 +636,118 @@
         }
         
         function getGamesInDateRange(startStr, endStr) {
-            return SEASON_SCHEDULE_2526.filter(g => g.date >= startStr && g.date <= endStr);
+            return SEASON_SCHEDULE_DB.filter(g => g.date >= startStr && g.date <= endStr);
         }
 
-        // --- Fetch Roster Data ---
-        async function fetchRosterData() {
+        // --- Fetch Data (Roster & Schedule) ---
+        async function fetchAllData() {
             const statusDiv = document.getElementById('sync-status');
+            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 同步資料中...';
+            
             try {
-                statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 同步中...';
+                await Promise.all([fetchRosterData(), fetchScheduleData()]);
+                statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 雲端資料同步完成';
                 
-                const response = await fetch(GOOGLE_SHEET_CSV_URL);
+                const teamSelects = document.querySelectorAll('.team-select');
+                teamSelects.forEach(s => { if(s.value) s.dispatchEvent(new Event('change')); });
+                
+                if(currentMode) initAutoFillLogic(currentMode);
+
+            } catch (error) {
+                console.error("Sync Error", error);
+                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用內建備份資料庫';
+            }
+        }
+
+        async function fetchRosterData() {
+            try {
+                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now()));
                 if (!response.ok) throw new Error('Network response was not ok');
-                const csvText = await response.text();
+                let csvText = await response.text();
+                
+                // Remove BOM
+                if (csvText.charCodeAt(0) === 0xFEFF) {
+                    csvText = csvText.slice(1);
+                }
                 
                 const rows = csvText.split(/\r?\n/);
                 const newRosters = {};
                 
-                // Start from index 1 to skip header (assuming Team, Name, Number)
                 for (let i = 1; i < rows.length; i++) {
                     const row = rows[i].split(',');
                     if (row.length < 3) continue;
-                    
-                    const team = row[0].trim();
+                    const teamRaw = row[0].trim();
                     const name = row[1].trim();
                     const num = row[2].trim();
-                    
+
+                    const team = normalizeTeamName(teamRaw);
+
                     if (team && name && num) {
                         if (!newRosters[team]) newRosters[team] = [];
                         newRosters[team].push({ name, num });
                     }
                 }
-                
-                if (Object.keys(newRosters).length > 0) {
-                    ROSTERS = newRosters;
-                    statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 雲端名單同步完成';
-                    // Re-trigger population if a team is already selected
-                    const teamSelects = document.querySelectorAll('.team-select');
-                    teamSelects.forEach(select => {
-                        if (select.value) {
-                            select.dispatchEvent(new Event('change'));
-                        }
-                    });
-                } else {
-                    throw new Error('No data found');
+                if(Object.keys(newRosters).length > 0) ROSTERS = newRosters;
+            } catch (e) {
+                console.warn("Roster fetch failed, using default.", e);
+            }
+        }
+
+        async function fetchScheduleData() {
+            try {
+                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_SCHEDULE_CSV_URL + '&t=' + Date.now()));
+                if (!response.ok) throw new Error('Network response was not ok');
+                let csvText = await response.text();
+
+                // Remove BOM
+                if (csvText.charCodeAt(0) === 0xFEFF) {
+                    csvText = csvText.slice(1);
                 }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用內建備份名單';
+
+                const rows = csvText.split(/\r?\n/);
+                const newSchedule = [];
+                
+                let startIndex = 0;
+                const firstRowDate = rows[0].split(',')[0];
+                if (!/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(firstRowDate)) {
+                    startIndex = 1; 
+                }
+
+                for (let i = startIndex; i < rows.length; i++) {
+                    const row = rows[i].split(',');
+                    if (row.length < 4) continue;
+                    
+                    let dateStr = row[0].trim().replace(/\//g, '-'); 
+                    const parts = dateStr.split('-');
+                    if(parts.length === 3) {
+                         if (parts[0].length === 2 && parts[2].length === 4) {
+                             dateStr = `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
+                        } else {
+                             dateStr = `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
+                        }
+                    }
+
+                    const homeTeam = normalizeTeamName(row[2].trim());
+                    const awayTeam = normalizeTeamName(row[3].trim());
+
+                    newSchedule.push({
+                        id: i - startIndex + 1,
+                        date: dateStr,
+                        time: row[1].trim(),
+                        home: homeTeam,
+                        away: awayTeam,
+                        arena: row[4] ? row[4].trim() : ""
+                    });
+                }
+                
+                if(newSchedule.length > 10 && newSchedule[0].date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                     SEASON_SCHEDULE_DB = newSchedule;
+                } else {
+                    console.warn("Fetched schedule invalid, fallback to default");
+                }
+
+            } catch (e) {
+                console.warn("Schedule fetch failed, using default.", e);
             }
         }
 
@@ -794,7 +836,6 @@
                 }
             });
 
-            // Save dynamic list counts
             const scheduleList = document.getElementById('schedule_list_container');
             if (scheduleList) data._count_schedule = scheduleList.children.length;
 
@@ -805,11 +846,8 @@
             if (statsList) data._count_stats = statsList.children.length;
 
             localStorage.setItem(STORAGE_PREFIX + currentMode, JSON.stringify(data));
-            
-            // Also save current mode
             localStorage.setItem('tpbl_last_mode', currentMode);
 
-            // Show Last Saved Time
             const ind = document.getElementById('last-saved-time');
             if(ind) {
                 const now = new Date();
@@ -823,18 +861,15 @@
             if (!currentMode) return;
             const raw = localStorage.getItem(STORAGE_PREFIX + currentMode);
             
-            // Handle Defaults if no save data found
             if (!raw) {
-                // Initialize default logic based on requirements (Auto-fills)
                 setTimeout(() => {
                     initAutoFillLogic(currentMode);
-                }, 100); 
+                }, 500); 
                 return; 
             }
 
             const data = JSON.parse(raw);
             
-             // Reconstruct Dynamic Lists
             if (data._count_schedule !== undefined) {
                 const list = document.getElementById('schedule_list_container');
                 if (list) { list.innerHTML = ''; for (let i = 0; i < data._count_schedule; i++) addScheduleItem(); }
@@ -848,8 +883,6 @@
                 if (list) { list.innerHTML = ''; for (let i = 0; i < data._count_stats; i++) addStatItem(); }
             }
 
-            // Restore Values in 2 passes:
-            // Pass 1: Team Selects & Checkboxes (triggers population of players)
             Object.keys(data).forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
@@ -857,18 +890,16 @@
                         el.checked = data[id];
                     } else if (el.classList.contains('team-select')) {
                         el.value = data[id];
-                        el.dispatchEvent(new Event('change')); // Trigger player select population
+                        el.dispatchEvent(new Event('change'));
                     }
                 }
             });
 
-            // Pass 2: Everything else (including Player Selects, now populated)
             Object.keys(data).forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
                     if (!el.classList.contains('team-select') && el.type !== 'checkbox') {
                         el.value = data[id];
-                        // Special handle for custom stat type visibility
                         if (id.startsWith('stat_type_')) {
                             const idx = id.split('_')[2];
                             toggleCustomStat(idx);
@@ -880,18 +911,17 @@
         
         // --- SMART AUTO-FILL LOGIC (Requirement 1-11) ---
         function initAutoFillLogic(mode) {
+             if(SEASON_SCHEDULE_DB.length === 0) return; 
+             
              const today = new Date().toISOString().split('T')[0];
              
-             // Req 1 & 2: Game Previews
              if (mode === 'game_preview') {
                  const game = getNearestNextGame(today);
                  if (game) fillGameInfo(game, 'match');
              } else if (mode === 'weekday_preview') {
                  const game = getWeekdayGame(today);
                  if (game) fillGameInfo(game, 'match');
-             } 
-             // Req 7: POTG (Nearest PAST game)
-             else if (mode === 'potg') {
+             } else if (mode === 'potg') {
                  const game = getNearestPastGame(today);
                  if(game) {
                      updateVal('potg_game_num', game.id);
@@ -900,16 +930,13 @@
                      const nextGame = getNextGameAfterId(game.id);
                      if(nextGame) fillNextGameBlock(nextGame);
                  }
-             }
-             // Req 4, 5, 10: Today's Game Default (Matchup Highlight, Final Score)
-             else if (['final_score', 'matchup_highlight'].includes(mode)) {
+             } else if (['final_score', 'matchup_highlight'].includes(mode)) {
                  const game = getNearestNextGame(today); 
                  if (game) {
                      if(mode === 'matchup_highlight') {
-                         fillGameInfo(game, 'next'); // "Today's Game" inputs are at top, named next_*
+                         fillGameInfo(game, 'next'); 
                      } else if (mode === 'final_score') {
-                         updateVal('game_num', game.id); // Triggers listener for next game info
-                         // Manually trigger handleGameNumChange logic
+                         updateVal('game_num', game.id); 
                          const nextGame = getNextGameAfterId(game.id);
                          if(nextGame) fillNextGameBlock(nextGame);
                      }
@@ -917,7 +944,6 @@
              }
         }
         
-        // Generic Filler
         function fillGameInfo(game, prefix) {
             updateVal(`${prefix}_date`, game.date);
             updateVal(`${prefix}_time`, game.time);
@@ -926,12 +952,6 @@
             
             updateSelect(`${prefix}_away`, game.away); 
             updateSelect(`${prefix}_home`, game.home); 
-            
-            // Sync logic for Matchup Highlight
-            if(prefix === 'next' && currentMode === 'matchup_highlight') {
-                updateSelect('mu_away_team', game.away);
-                updateSelect('mu_home_team', game.home);
-            }
         }
         
         function fillNextGameBlock(game) {
@@ -955,14 +975,11 @@
             }
         }
         
-        // --- Event Handlers for Requirements ---
-        
         function handleDateChange(e, prefix) {
             const date = e.target.value;
-            const game = getGameByDateAndTime(date, "14:30"); // Default find first
+            const game = getGameByDateAndTime(date, "14:30"); 
             if(game) {
                 fillGameInfo(game, prefix);
-                // Also trigger Next Game update if applicable
                 const nextGame = getNextGameAfterId(game.id);
                 if(nextGame && document.getElementById('next_date') && prefix !== 'next') fillNextGameBlock(nextGame);
             }
@@ -992,8 +1009,6 @@
                     fillGameInfo(game, prefix);
                     const nextGame = getNextGameAfterId(game.id);
                     if(nextGame && document.getElementById('next_date') && prefix !== 'next') fillNextGameBlock(nextGame);
-                    
-                    // Special case: Final Score needs to update Next Game block (which has IDs starting with next_)
                     if(currentMode === 'final_score' && nextGame) {
                         fillNextGameBlock(nextGame);
                     }
@@ -1012,7 +1027,7 @@
             const container = document.getElementById(containerId);
             if(!container) return;
             
-            container.innerHTML = ''; // Clear
+            container.innerHTML = ''; 
             games.forEach(g => {
                 if(isStandings) addStandingsGameItemWithData(g);
                 else addScheduleItemWithData(g);
@@ -1020,7 +1035,6 @@
         }
         
         function handlePlayerTeamChangeForNextGame(e) {
-            // Req 6, 8, 9, 11: Player/Team select updates Next Game Block
             const team = e.target.value;
             if(!team) return;
             
@@ -1030,10 +1044,21 @@
             if(nextGame) fillNextGameBlock(nextGame);
         }
 
+        function transferToPotg() {
+            const gameNum = document.getElementById('game_num').value;
+            switchMode('potg');
+            setTimeout(() => {
+                const potgInput = document.getElementById('potg_game_num');
+                if(potgInput && gameNum) {
+                    potgInput.value = gameNum;
+                    potgInput.dispatchEvent(new Event('input'));
+                }
+            }, 100);
+        }
+
         // --- Switch Mode Logic ---
         function switchMode(mode) {
             currentMode = mode;
-            // Save mode preference
             localStorage.setItem('tpbl_last_mode', mode);
 
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
@@ -1065,10 +1090,8 @@
                 'season_stats': '數據累計排行'
             };
             
-            // Update Title Text
             document.getElementById('title-text').innerText = titles[mode];
             
-            // Update Link
             const linkBtn = document.getElementById('example-link');
             const url = EXAMPLE_LINKS[mode];
             if (url) {
@@ -1079,8 +1102,8 @@
             }
 
             renderForm(mode);
-            attachFormListeners(); // Re-attach standard listeners
-            bindSmartEvents(mode); // Attach new smart logic
+            attachFormListeners(); 
+            bindSmartEvents(mode); 
             loadFromLocal(); 
         }
 
@@ -1120,8 +1143,6 @@
                     ${createTextarea('promo_link', '贊助商版位 (可換行)', '📍SPORTS NATIONS店點資訊...', 3)}
                 `;
             } else if (mode === 'matchup_highlight') {
-                // Req 10: Today's Game info at top
-                // Req 4: Bi-directional linkage
                 html += `
                      ${createNextGameBlock("今日比賽資訊 (Match Info)")}
                     <div class="p-3 border rounded-md bg-gray-50 mb-3 mt-4">
@@ -1148,12 +1169,14 @@
                    
                 `;
             } else if (mode === 'final_score') {
-                // Req 5: Game Num change triggers next info update
                 html += `
                     ${createInput('game_num', '場次 (GAME)', 'number', '33')}
                     ${createInput('match_title', '標題 (例如：全隊「豹」進13記外線...)', 'text')}
                     ${createTextarea('match_recap', '比賽回顧文案', '', 6)}
                     ${createNextGameBlock("下場賽事資訊 (Next Game)")}
+                    <button onclick="transferToPotg()" class="mt-6 w-full bg-gray-100 hover:bg-brand-gold hover:text-brand-dark text-gray-600 font-bold py-3 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2 border border-gray-200">
+                        <span>前往編輯此場的單場最佳球員</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                 `;
             } else if (mode === 'game_highlight') {
                 html += `
@@ -1349,15 +1372,12 @@
 
         // --- Event Binding ---
         function attachFormListeners() {
-            // Re-attach basic team select listener (fill player list)
             document.querySelectorAll('.team-select').forEach(select => {
                 select.addEventListener('change', function() {
                     const teamName = this.value;
                     const playerSelects = document.querySelectorAll(`.player-select[data-team-select="${this.id}"]`);
                     playerSelects.forEach(pSelect => {
                         pSelect.innerHTML = '<option value="">請選擇球員</option>';
-                        pSelect.disabled = true;
-                        pSelect.classList.add('disabled-input');
                         pSelect.value = "";
                         const numInputId = pSelect.dataset.numInput;
                         if(numInputId) { const ni = document.getElementById(numInputId); if(ni) ni.value = ""; }
@@ -1372,6 +1392,9 @@
                                 option.dataset.num = player.num;
                                 pSelect.appendChild(option);
                             });
+                        } else {
+                            pSelect.disabled = true;
+                            pSelect.classList.add('disabled-input');
                         }
                     });
                 });
@@ -1392,8 +1415,6 @@
         }
         
         function bindSmartEvents(mode) {
-             // ... smart events binding ...
-             // Add debounce save listener
              const debouncedSave = debounce(saveToLocal, 1000);
              const form = document.getElementById('dynamic-form');
              if(form) {
@@ -1401,7 +1422,6 @@
                  form.addEventListener('change', saveToLocal);
              }
 
-             // Game Preview Smart Logic
              if (mode === 'game_preview' || mode === 'weekday_preview') {
                  const d = document.getElementById('match_date');
                  const t = document.getElementById('match_time');
@@ -1413,7 +1433,6 @@
                  }
              }
              
-             // Matchup Highlight Smart Logic
              if (mode === 'matchup_highlight') {
                  const d = document.getElementById('next_date');
                  const t = document.getElementById('next_time');
@@ -1428,7 +1447,6 @@
                  if(nh) nh.addEventListener('change', () => updateSelect('mu_home_team', nh.value));
              }
              
-             // Final Score / POTG Smart Logic
              if(mode === 'final_score' || mode === 'potg') {
                  const nd = document.getElementById('next_date');
                  const nt = document.getElementById('next_time');
@@ -1445,7 +1463,6 @@
                  }
              }
              
-             // Weekly Lists
              if(mode === 'weekly_schedule') {
                  const w = document.getElementById('week_num');
                  if(w) w.addEventListener('input', (e) => handleWeekChange(e, false));
@@ -1455,7 +1472,6 @@
                  if(w) w.addEventListener('input', (e) => handleWeekChange(e, true));
              }
              
-             // Local Player / Press Conf / POTW
              if(mode === 'local_player_highlight') {
                  const t = document.getElementById('lp_team');
                  if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
@@ -1470,8 +1486,7 @@
              }
         }
 
-        // --- Helper Helpers ---
-        // ... (unchanged helpers) ...
+        // ... (helpers unchanged) ...
         function debounce(func, wait) {
             let timeout;
             return function(...args) {
@@ -1486,6 +1501,8 @@
             const div = document.createElement('div');
             div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
             const timeOptions = GAME_TIMES.map(t => `<option value="${t}" ${t===game.time?'selected':''}>${t}</option>`).join('');
+            
+            const arena = game.arena || TEAMS[game.home]?.arena || "";
 
             div.innerHTML = `
                 <div class="flex gap-2 mb-2">
@@ -1580,7 +1597,13 @@
                 const time = getValue('next_time');
                 const home = getValue('next_home');
                 const away = getValue('next_away');
-                const arena = TEAMS[home].arena;
+                const num = getValue('next_game_num');
+                
+                // Get arena logic: Try to find match in schedule first
+                let arena = TEAMS[home]?.arena || "";
+                const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
                 return `📌 下場比賽，一起迎風而上。\n▌${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
             };
             
@@ -1614,15 +1637,20 @@
                 const time = getValue('match_time');
                 const homeKey = getValue('match_home');
                 const awayKey = getValue('match_away');
+                const num = getValue('game_num');
                 const home = TEAMS[homeKey];
                 const away = TEAMS[awayKey];
+                
+                let arena = home?.arena || "";
+                const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
                 
                 const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
                 
                 output = `#${toMathBoldSerif('GAMEDAY')}& #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
                 output += `例行賽${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))}✦${time}${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
                 output += `${getValue('highlight_text')}\n\n—\n\n`;
-                output += `👉🏻賽事地點📍${home.arena}\n${BROADCAST_INFO}\n`;
+                output += `👉🏻賽事地點📍${arena}\n${BROADCAST_INFO}\n`;
                 output += `👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
                 output += `${COMMON_TAGS} #TPBL例行賽 #moltentaiwan`;
 
@@ -1635,10 +1663,16 @@
                 const dayChi = getDayChi(date); 
                 const title = getValue('promo_title');
                 
+                // Find arena logic
+                let arena = home?.arena || "";
+                // Try to match game by date/time
+                const gameInDb = getGameByDateAndTime(date, getValue('match_time'));
+                if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+                
                 output = `🏀${toMathBoldSerif(title)}\n\n`;
                 output += `${getValue('promo_text')}\n\n-\n\n`;
                 output += `📌 小週末就看籃球：\n`;
-                output += `▌${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}\n\n-\n\n`;
+                output += `▌${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${arena}\n\n-\n\n`;
                 if(getValue('promo_link')) output += `${getValue('promo_link')}\n\n`;
                 output += `${COMMON_TAGS}`;
 
@@ -1659,8 +1693,13 @@
                      const h = TEAMS[getValue('next_home')];
                      const a = TEAMS[getValue('next_away')];
                      const num = getValue('next_game_num');
+                     
+                     let arena = h?.arena || "";
+                     const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                     if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
                      output += `📌 今天晚上看頂尖對決：\n`;
-                     output += `▌${mmdd}（${day}）｜${time}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n\n`;
+                     output += `▌${mmdd}（${day}）｜${time}｜${a.full}（客） vs. ${h.full}（主）｜${arena}\n\n`;
                  }
                  output += `${COMMON_TAGS}`;
 
@@ -1738,7 +1777,13 @@
                     if(d) {
                          const mmdd = formatMMDD(d);
                          const day = getDayChi(d);
-                         output += `▌${mmdd}（${day}）｜${t}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n`;
+                         
+                         // Try to find arena from schedule DB
+                         let arena = h.arena;
+                         const gameInDb = getGameByDateAndTime(d, t);
+                         if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
+                         output += `▌${mmdd}（${day}）｜${t}｜${a.full}（客） vs. ${h.full}（主）｜${arena}\n`;
                     }
                 });
                 output += `\n${COMMON_TAGS}`;
@@ -1763,7 +1808,12 @@
                              const day = getDayChi(d);
                              const aTeam = TEAMS[a];
                              const hTeam = TEAMS[h];
-                             output += `▌${mmdd}（${day}）｜${t}｜${aTeam.full}（客） vs. ${hTeam.full}（主）｜${hTeam.arena}\n`;
+                             
+                             let arena = hTeam.arena;
+                             const gameInDb = getGameByDateAndTime(d, t);
+                             if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
+                             output += `▌${mmdd}（${day}）｜${t}｜${aTeam.full}（客） vs. ${hTeam.full}（主）｜${arena}\n`;
                         }
                     });
                      output += `\n${COMMON_TAGS}`;
@@ -1824,8 +1874,13 @@
                     const time = getValue('next_time');
                     const nameOnly = getValue('player_name_select').split(' ')[0] || "";
                     
+                    const num = getValue('next_game_num');
+                    let arena = home?.arena || "";
+                    const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                    if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
                     output += `📌 休息一下回來看${nameOnly}發威👀\n`;
-                    output += `▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${home.arena}`;
+                    output += `▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
                 }
                 output += `\n\n${COMMON_TAGS}`;
                 
@@ -1886,9 +1941,8 @@
         setInterval(saveToLocal, 5000);
         window.addEventListener('beforeunload', () => saveToLocal()); // Safe-guard
 
-        // Initialize Roster Fetch
-        fetchRosterData().then(() => {
-            // After roster loaded, load saved state (so players are populated correctly)
+        // Initialize Sync
+        fetchAllData().then(() => {
             const lastMode = localStorage.getItem('tpbl_last_mode') || 'game_preview';
             switchMode(lastMode);
         });
