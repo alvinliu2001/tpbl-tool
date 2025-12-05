@@ -1648,7 +1648,7 @@
                 const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
                 
                 output = `#${toMathBoldSerif('GAMEDAY')}& #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
-                output += `例行賽${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))}✦${time}${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
+                output += `例行賽${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))}✦${time} ${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
                 output += `${getValue('highlight_text')}\n\n—\n\n`;
                 output += `👉🏻賽事地點📍${arena}\n${BROADCAST_INFO}\n`;
                 output += `👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
@@ -1765,7 +1765,7 @@
 
             } else if (currentMode === 'weekly_schedule') {
                 output = `⏰｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程\n\n`;
-                output += `${getValue('week_intro')}\n\n-\n\n📌本週賽事預告：\n`;
+                output += `${getValue('week_intro')}\n\n-\n\n📌 本週賽事預告：\n`;
                 
                 const listContainer = document.getElementById('schedule_list_container');
                 Array.from(listContainer.children).forEach(div => {
