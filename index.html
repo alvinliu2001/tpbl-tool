@@ -1615,7 +1615,7 @@
                 const home = getValue('next_home');
                 const away = getValue('next_away');
                 const num = getValue('next_game_num');
-                return `📺 NEXT GAME\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
+                return `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
             }
             
             const getLocalPlayerNextGame = () => {
