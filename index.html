@@ -1669,7 +1669,7 @@
                 const gameInDb = getGameByDateAndTime(date, getValue('match_time'));
                 if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
                 
-                output = `🏀${toMathBoldSerif(title)}\n\n`;
+                output = `🏀 ${toMathBoldSerif(title)}\n\n`;
                 output += `${getValue('promo_text')}\n\n-\n\n`;
                 output += `📌 小週末就看籃球：\n`;
                 output += `▌${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${arena}\n\n-\n\n`;
