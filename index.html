@@ -1615,7 +1615,7 @@
                 const home = getValue('next_home');
                 const away = getValue('next_away');
                 const num = getValue('next_game_num');
-                return `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
+                return `📺 ${toMathBoldSerif('NEXT GAME')}\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
             }
             
             const getLocalPlayerNextGame = () => {
@@ -1712,7 +1712,7 @@
                     const monthDay = formatMonthDay(date);
                     const home = TEAMS[getValue('next_home')];
                     const away = TEAMS[getValue('next_away')];
-                    output += `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
+                    output += `📺 ${toMathBoldSerif('NEXT GAME')}\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
                 }
                 output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
 
