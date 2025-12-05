@@ -1704,7 +1704,7 @@
                  output += `${COMMON_TAGS}`;
 
             } else if (currentMode === 'final_score') {
-                output = `🔙${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n`;
+                output = `🔙 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n`;
                 output += `${getValue('match_recap')}\n\n`;
                 
                 const date = getValue('next_date');
@@ -1712,7 +1712,7 @@
                     const monthDay = formatMonthDay(date);
                     const home = TEAMS[getValue('next_home')];
                     const away = TEAMS[getValue('next_away')];
-                    output += `📺 NEXT GAME\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
+                    output += `📺 ${toMathBoldSerif('NEXT GAME')}\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
                 }
                 output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
 
