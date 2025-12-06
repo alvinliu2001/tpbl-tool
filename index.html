@@ -153,7 +153,8 @@
     <div id="app-container" class="hidden w-full h-full flex flex-col md:flex-row overflow-hidden fixed inset-0 z-0">
         <!-- Sidebar -->
         <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-50 relative shadow-lg md:shadow-none">
-            <div class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative">
+            <!-- Sidebar Header: Logo & Toggle -->
+            <div id="sidebar-header" class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative">
                 <div class="flex items-center gap-3">
                     <div id="logo-container" onclick="location.reload()" class="cursor-pointer" title="返回首頁">
                         <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-6 md:h-7 w-auto">
@@ -196,9 +197,9 @@
             </nav>
             
             <!-- Sync Status in Sidebar -->
-            <div class="p-4 mt-auto">
+            <div class="p-4 mt-auto border-t border-gray-800 md:border-0">
                 <div id="sync-status" class="bg-gray-800 text-gray-400">
-                    <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 準備同步名單與賽程...
+                    <i class="fa-solid fa-check mr-1"></i> 系統就緒 (本地資料庫)
                 </div>
             </div>
         </aside>
@@ -267,10 +268,14 @@
             }, 500);
         }
 
-        // --- Mobile Sidebar Toggle ---
+        // --- Mobile Sidebar Toggle (Fixed for scrolling issue) ---
         function toggleSidebar() {
             const nav = document.getElementById('sidebar-nav');
-            const availableHeight = window.innerHeight - 70;
+            const header = document.getElementById('sidebar-header');
+            
+            // Calculate height dynamically based on the header height
+            const headerHeight = header.offsetHeight;
+            const availableHeight = window.innerHeight - headerHeight;
             
             if (nav.classList.contains('max-h-0')) {
                 nav.classList.remove('max-h-0', 'opacity-0', 'overflow-hidden');
@@ -435,13 +440,52 @@
         
         let SEASON_SCHEDULE_DB = [...DEFAULT_SCHEDULE];
 
-        // Roster Data - Fallback
+        // Roster Data - Fallback (Full DB for Local First)
         let ROSTERS = {
             "攻城獅": [
-                {num: "0", name: "李漢昇"}, {num: "2", name: "德魯"}, {num: "3", name: "克雷格"}, {num: "4", name: "高國豪"},
-                {num: "7", name: "曾柏喻"}, {num: "8", name: "朱雲豪"}, {num: "9", name: "田浩"}, {num: "10", name: "劉丞勳"},
-                {num: "11", name: "蕭順議"}, {num: "12", name: "李家瑞"}, {num: "17", name: "蔡宸綱"}, {num: "18", name: "帕塞獅"},
-                {num: "22", name: "提傑"}, {num: "25", name: "梁瀚"}, {num: "42", name: "盧冠軒"}, {num: "75", name: "李啓瑋"}
+                {name: "梁瀚", num: "25"}, {name: "李家瑞", num: "12"}, {name: "朱雲豪", num: "8"}, {name: "田浩", num: "9"},
+                {name: "李漢昇", num: "0"}, {name: "蕭順議", num: "11"}, {name: "蔡宸綱", num: "17"}, {name: "盧冠軒", num: "42"},
+                {name: "克雷格", num: "3"}, {name: "帕塞獅", num: "18"}, {name: "李啓瑋", num: "75"}, {name: "高國豪", num: "4"},
+                {name: "提傑", num: "22"}, {name: "劉丞勳", num: "10"}, {name: "曾柏喻", num: "7"}, {name: "德魯", num: "2"}
+            ],
+            "夢想家": [
+                {name: "史承平", num: "27"}, {name: "吳家駿", num: "9"}, {name: "簡偉儒", num: "20"}, {name: "陳振傑", num: "0"},
+                {name: "李德威", num: "26"}, {name: "周柏臣", num: "88"}, {name: "湯普金斯", num: "33"}, {name: "盧冠良", num: "28"},
+                {name: "張宗憲", num: "3"}, {name: "高柏鎧", num: "34"}, {name: "林俊吉", num: "11"}, {name: "馬建豪", num: "2"},
+                {name: "恩尼斯", num: "23"}, {name: "忻沃克", num: "24"}, {name: "蔣淯安", num: "41"}, {name: "霍爾曼", num: "35"}
+            ],
+            "雲豹": [
+                {name: "汪哲宇", num: "8"}, {name: "黃鎮", num: "27"}, {name: "劉元凱", num: "82"}, {name: "丁冠皓", num: "10"},
+                {name: "董永全", num: "31"}, {name: "徐宏瑋", num: "6"}, {name: "迪亞洛", num: "33"}, {name: "曹薰襄", num: "57"},
+                {name: "王皓吉", num: "21"}, {name: "麥卡洛", num: "7"}, {name: "莊博元", num: "11"}, {name: "克羅馬", num: "24"},
+                {name: "林信寬", num: "12"}, {name: "米勒", num: "13"}, {name: "高錦瑋", num: "5"}
+            ],
+            "海神": [
+                {name: "廖偉皓", num: "30"}, {name: "魏莨哲", num: "0"}, {name: "呂威霆", num: "21"}, {name: "余純安", num: "28"},
+                {name: "布里茲克", num: "32"}, {name: "勤明慶", num: "85"}, {name: "崔維斯", num: "22"}, {name: "詹姆斯", num: "2"},
+                {name: "吳曉謹", num: "57"}, {name: "陳懷安", num: "66"}, {name: "歐提斯", num: "6"}, {name: "于煥亞", num: "7"},
+                {name: "施晉堯", num: "11"}, {name: "胡瓏貿", num: "10"}, {name: "凱帝", num: "92"}, {name: "蘇文儒", num: "24"}
+            ],
+            "特攻": [
+                {name: "林安龍", num: "3"}, {name: "曾信武", num: "14"}, {name: "余維豪", num: "5"}, {name: "李睿麒", num: "1"},
+                {name: "李沛澄", num: "77"}, {name: "曾文鼎", num: "76"}, {name: "黃泓瀚", num: "22"}, {name: "霸夫", num: "28"},
+                {name: "林任鴻", num: "12"}, {name: "林韋翰", num: "16"}, {name: "簡廷兆", num: "24"}, {name: "魏嘉豪", num: "7"},
+                {name: "馬可", num: "19"}, {name: "內馬", num: "11"}, {name: "阿巴西", num: "0"}, {name: "飛克", num: "18"},
+                {name: "謝亞軒", num: "10"}
+            ],
+            "國王": [
+                {name: "蘇培凱", num: "2"}, {name: "喬納森", num: "26"}, {name: "鍾理翔", num: "8"}, {name: "王柏智", num: "11"},
+                {name: "呂政儒", num: "13"}, {name: "洪志善", num: "24"}, {name: "奧帝", num: "25"}, {name: "林金榜", num: "19"},
+                {name: "熊祥泰", num: "20"}, {name: "蘇士軒", num: "17"}, {name: "沃許本", num: "42"}, {name: "簡祐哲", num: "10"},
+                {name: "尚迪", num: "16"}, {name: "桑尼", num: "31"}, {name: "林書緯", num: "1"}, {name: "林彥廷", num: "12"},
+                {name: "傑登", num: "5"}, {name: "李愷諺", num: "9"}
+            ],
+            "戰神": [
+                {name: "劉彥廷", num: "7"}, {name: "孫思堯", num: "20"}, {name: "蘇奕晉", num: "41"}, {name: "江均", num: "6"},
+                {name: "魏芃禾", num: "5"}, {name: "陳冠全", num: "62"}, {name: "陳文宏", num: "8"}, {name: "丁聖儒", num: "3"},
+                {name: "黃聰翰", num: "11"}, {name: "威力斯", num: "21"}, {name: "張兆辰", num: "9"}, {name: "謝銘駿", num: "15"},
+                {name: "基德", num: "10"}, {name: "齊曼加", num: "32"}, {name: "錢肯尼", num: "23"}, {name: "雷蒙恩", num: "33"},
+                {name: "洛夫頓", num: "1"}
             ]
         };
 
@@ -653,23 +697,29 @@
         }
 
         // --- Fetch Data (Roster & Schedule) ---
-        async function fetchAllData() {
+        // Modified for Local First strategy
+        function fetchAllData() {
             const statusDiv = document.getElementById('sync-status');
-            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 同步資料中...';
             
-            try {
-                await Promise.all([fetchRosterData(), fetchScheduleData()]);
-                statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 雲端資料同步完成';
-                
-                const teamSelects = document.querySelectorAll('.team-select');
-                teamSelects.forEach(s => { if(s.value) s.dispatchEvent(new Event('change')); });
-                
-                if(currentMode) initAutoFillLogic(currentMode);
+            // Initial Check (Local data is already there!)
+            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 檢查更新中...';
+            
+            // Init autofill immediately with local data
+            if(currentMode) initAutoFillLogic(currentMode);
 
-            } catch (error) {
-                console.error("Sync Error", error);
-                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用內建備份資料庫';
-            }
+            // Fetch in background
+            Promise.all([fetchRosterData(), fetchScheduleData()])
+                .then(() => {
+                    statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 資料庫已同步';
+                    // Re-trigger selects to update if data changed
+                    const teamSelects = document.querySelectorAll('.team-select');
+                    teamSelects.forEach(s => { if(s.value) s.dispatchEvent(new Event('change')); });
+                })
+                .catch((error) => {
+                    console.error("Sync Error", error);
+                    // Fallback to local is automatic since variables are already populated
+                    statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用離線資料庫';
+                });
         }
 
         async function fetchRosterData() {
@@ -702,7 +752,8 @@
                 }
                 if(Object.keys(newRosters).length > 0) ROSTERS = newRosters;
             } catch (e) {
-                console.warn("Roster fetch failed, using default.", e);
+                console.warn("Roster fetch failed, keeping local data.", e);
+                // Do not throw, just keep local
             }
         }
 
@@ -756,11 +807,12 @@
                 if(newSchedule.length > 10 && newSchedule[0].date.match(/^\d{4}-\d{2}-\d{2}$/)) {
                      SEASON_SCHEDULE_DB = newSchedule;
                 } else {
-                    console.warn("Fetched schedule invalid, fallback to default");
+                    console.warn("Fetched schedule invalid, keeping local data");
                 }
 
             } catch (e) {
-                console.warn("Schedule fetch failed, using default.", e);
+                console.warn("Schedule fetch failed, keeping local data.", e);
+                // Do not throw
             }
         }
 
