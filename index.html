@@ -93,6 +93,11 @@
             border-radius: 4px;
             transition: all 0.3s;
         }
+
+        /* Prevent body scroll when menu is bouncing */
+        #sidebar-nav {
+            overscroll-behavior: contain;
+        }
     </style>
     <script>
         tailwind.config = {
@@ -154,7 +159,7 @@
         <!-- Sidebar -->
         <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-50 relative shadow-lg md:shadow-none">
             <!-- Sidebar Header: Logo & Toggle -->
-            <div id="sidebar-header" class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative">
+            <div id="sidebar-header" class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative flex-shrink-0">
                 <div class="flex items-center gap-3">
                     <div id="logo-container" onclick="location.reload()" class="cursor-pointer" title="返回首頁">
                         <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-6 md:h-7 w-auto">
@@ -169,39 +174,43 @@
                 </button>
             </div>
             
-            <!-- Sidebar Nav -->
-            <nav id="sidebar-nav" class="flex flex-col flex-1 py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none transition-all duration-500 ease-in-out z-40 origin-top max-h-0 opacity-0 overflow-hidden md:max-h-full md:opacity-100 md:overflow-y-auto">
-                <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
-                <button onclick="switchMode('weekday_preview')" id="btn-weekday_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-calendar-day w-6 text-center"></i> 平日賽事預告</button>
-                <button onclick="switchMode('game_preview')" id="btn-game_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-fire w-6 text-center"></i> 單場賽程預告</button>
-                <button onclick="switchMode('weekly_schedule')" id="btn-weekly_schedule" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-calendar-week w-6 text-center"></i> 每週賽程表</button>
-                <button onclick="switchMode('matchup_highlight')" id="btn-matchup_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-bullseye w-6 text-center"></i> 賽前對戰亮點</button>
+            <!-- Sidebar Nav (Contains Buttons AND Status now) -->
+            <nav id="sidebar-nav" class="flex flex-col py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none transition-all duration-500 ease-in-out z-40 origin-top max-h-0 opacity-0 overflow-hidden md:max-h-full md:opacity-100 md:h-full">
+                
+                <!-- Scrollable Menu Items -->
+                <div class="flex-1 overflow-y-auto w-full">
+                    <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
+                    <button onclick="switchMode('weekday_preview')" id="btn-weekday_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-calendar-day w-6 text-center"></i> 平日賽事預告</button>
+                    <button onclick="switchMode('game_preview')" id="btn-game_preview" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-fire w-6 text-center"></i> 單場賽程預告</button>
+                    <button onclick="switchMode('weekly_schedule')" id="btn-weekly_schedule" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-calendar-week w-6 text-center"></i> 每週賽程表</button>
+                    <button onclick="switchMode('matchup_highlight')" id="btn-matchup_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-bullseye w-6 text-center"></i> 賽前對戰亮點</button>
 
-                <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">賽事進行 / 賽後</div>
-                <button onclick="switchMode('final_score')" id="btn-final_score" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-flag-checkered w-6 text-center"></i> 終場比分</button>
-                <button onclick="switchMode('game_highlight')" id="btn-game_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-film w-6 text-center"></i> 本場賽事精華</button>
-                <button onclick="switchMode('press_conf')" id="btn-press_conf" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-microphone w-6 text-center"></i> 賽後記者會</button>
-                <button onclick="switchMode('potg')" id="btn-potg" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-bolt w-6 text-center"></i> 單場最佳球員</button>
-                <button onclick="switchMode('local_player_highlight')" id="btn-local_player_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-star w-6 text-center"></i> 本土球員單場傑出表現</button>
-                <button onclick="switchMode('career_milestone')" id="btn-career_milestone" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-crown w-6 text-center"></i> 球員生涯紀錄</button>
+                    <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">賽事進行 / 賽後</div>
+                    <button onclick="switchMode('final_score')" id="btn-final_score" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-flag-checkered w-6 text-center"></i> 終場比分</button>
+                    <button onclick="switchMode('game_highlight')" id="btn-game_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-film w-6 text-center"></i> 本場賽事精華</button>
+                    <button onclick="switchMode('press_conf')" id="btn-press_conf" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-microphone w-6 text-center"></i> 賽後記者會</button>
+                    <button onclick="switchMode('potg')" id="btn-potg" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-bolt w-6 text-center"></i> 單場最佳球員</button>
+                    <button onclick="switchMode('local_player_highlight')" id="btn-local_player_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-star w-6 text-center"></i> 本土球員單場傑出表現</button>
+                    <button onclick="switchMode('career_milestone')" id="btn-career_milestone" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-crown w-6 text-center"></i> 球員生涯紀錄</button>
 
-                <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">每週總結</div>
-                <button onclick="switchMode('weekly_standings')" id="btn-weekly_standings" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-list-ol w-6 text-center"></i> 每週戰績排行</button>
-                <button onclick="switchMode('top5')" id="btn-top5" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-video w-6 text-center"></i> 本週五大好球</button>
-                <button onclick="switchMode('potw')" id="btn-potw" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-trophy w-6 text-center"></i> 單週最佳球員</button>
-                <button onclick="switchMode('weekly_local_eff')" id="btn-weekly_local_eff" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-line w-6 text-center"></i> 每週本土效率值排行</button>
+                    <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">每週總結</div>
+                    <button onclick="switchMode('weekly_standings')" id="btn-weekly_standings" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-list-ol w-6 text-center"></i> 每週戰績排行</button>
+                    <button onclick="switchMode('top5')" id="btn-top5" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-video w-6 text-center"></i> 本週五大好球</button>
+                    <button onclick="switchMode('potw')" id="btn-potw" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-trophy w-6 text-center"></i> 單週最佳球員</button>
+                    <button onclick="switchMode('weekly_local_eff')" id="btn-weekly_local_eff" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-line w-6 text-center"></i> 每週本土效率值排行</button>
 
-                <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">專題 / 其他</div>
-                <button onclick="switchMode('monthly_kicks')" id="btn-monthly_kicks" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-shoe-prints w-6 text-center"></i> 每月精選實戰球鞋</button>
-                <button onclick="switchMode('season_stats')" id="btn-season_stats" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-simple w-6 text-center"></i> 數據累計排行</button>
-            </nav>
-            
-            <!-- Sync Status in Sidebar -->
-            <div class="p-4 mt-auto border-t border-gray-800 md:border-0">
-                <div id="sync-status" class="bg-gray-800 text-gray-400">
-                    <i class="fa-solid fa-check mr-1"></i> 系統就緒 (本地資料庫)
+                    <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">專題 / 其他</div>
+                    <button onclick="switchMode('monthly_kicks')" id="btn-monthly_kicks" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-shoe-prints w-6 text-center"></i> 每月精選實戰球鞋</button>
+                    <button onclick="switchMode('season_stats')" id="btn-season_stats" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-simple w-6 text-center"></i> 數據累計排行</button>
                 </div>
-            </div>
+
+                <!-- Sync Status (Inside Nav now) -->
+                <div class="p-4 mt-auto border-t border-gray-800 md:border-0 flex-shrink-0">
+                    <div id="sync-status" class="bg-gray-800 text-gray-400">
+                        <i class="fa-solid fa-check mr-1"></i> 系統就緒 (本地資料庫)
+                    </div>
+                </div>
+            </nav>
         </aside>
 
         <!-- Main Content -->
@@ -1133,7 +1142,9 @@
                 const nav = document.getElementById('sidebar-nav');
                 nav.style.maxHeight = '0px';
                 nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
-                nav.classList.remove('opacity-100', 'overflow-y-auto');
+                nav.classList.remove('opacity-100');
+                // Remove h-full on close to prevent layout issues
+                nav.classList.remove('h-full');
             }
 
             const titles = {
