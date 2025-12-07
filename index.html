@@ -552,7 +552,7 @@
                 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
                 'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
                 'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
-                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝗿', 's': '𝐬', 't': '𝐭',
+                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
                 'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
             };
             return String(text).split('').map(char => map[char] || char).join('');
@@ -1693,33 +1693,25 @@
                 // Safe Team Getter (Crucial Fix)
                 const getTeam = (key) => TEAMS[key] || { full: key || "球隊", emoji: "", arena: "" };
 
-                const getNextGameText = () => {
+                // New Helper for Bold Formatting of Next Game (Matches User Request)
+                const getNextGameFormatted = () => {
                     const date = getValue('next_date');
                     if(!date) return "";
-                    const mmdd = formatMMDD(date);
-                    const day = getDayChi(date);
+                    const dObj = parseDateLocal(date);
+                    const mStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][dObj.getMonth()];
+                    const dNum = dObj.getDate(); 
                     const time = getValue('next_time');
                     const home = getTeam(getValue('next_home'));
                     const away = getTeam(getValue('next_away'));
                     const num = getValue('next_game_num');
-                    
-                    let arena = home.arena || "";
-                    const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
-                    if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
 
-                    return `📌 下場比賽，一起迎風而上。\n▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
+                    // 𝐃𝐄𝐂. 𝟔｜ 𝐆𝐚𝐦𝐞𝟑𝟑｜𝟏𝟒:𝟑𝟎 (Example)
+                    const datePart = `${toMathBoldSerif(mStr)}. ${toMathBoldSerif(dNum)}`;
+                    const gamePart = `${toMathBoldSerif('Game')}${toMathBoldSerif(num)}`;
+                    const timePart = toMathBoldSerif(time);
+
+                    return `${datePart}｜ ${gamePart}｜${timePart} ${away.full}（客） vs.${home.full}（主）`;
                 };
-                
-                const getNextGameTextShort = () => {
-                    const date = getValue('next_date');
-                    if(!date) return "";
-                    const monthDay = formatMonthDay(date); 
-                    const time = getValue('next_time'); 
-                    const home = getTeam(getValue('next_home'));
-                    const away = getTeam(getValue('next_away'));
-                    const num = getValue('next_game_num');
-                    return `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜Game${num}｜${time}｜${away.full}（客） vs. ${home.full}（主）`;
-                }
                 
                 const getLocalPlayerNextGame = () => {
                     const date = getValue('next_date');
@@ -1751,7 +1743,8 @@
                     const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
                     
                     output = `#${toMathBoldSerif('GAMEDAY')}& #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
-                    output += `例行賽${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))}✦${time} ${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
+                    // Updated Format: Game (space) Num, Time bolded
+                    output += `例行賽 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ✦ ${toMathBoldSerif(time)} ${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
                     output += `${getValue('highlight_text')}\n\n—\n\n`;
                     output += `👉🏻賽事地點📍${arena}\n${BROADCAST_INFO}\n`;
                     output += `👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
@@ -1810,10 +1803,7 @@
                     
                     const date = getValue('next_date');
                     if(date) {
-                        const monthDay = formatMonthDay(date);
-                        const home = getTeam(getValue('next_home'));
-                        const away = getTeam(getValue('next_away'));
-                        output += `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
+                        output += getNextGameFormatted();
                     }
                     output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
 
@@ -1826,7 +1816,21 @@
                     output = `🗣️${toMathBoldSerif(getValue('pc_title'))}\n\n`;
                     output += `💬「${getValue('pc_quote')}」\n\n`;
                     output += `${getValue('pc_content')}\n\n`;
-                    output += getNextGameText();
+                    // Note: User didn't specify next game format change for Press Conf, but usually it matches final score. 
+                    // Keeping standard format for now unless requested.
+                    const date = getValue('next_date');
+                    if(date) {
+                        const mmdd = formatMMDD(date);
+                        const day = getDayChi(date);
+                        const time = getValue('next_time');
+                        const home = getTeam(getValue('next_home'));
+                        const away = getTeam(getValue('next_away'));
+                        const num = getValue('next_game_num');
+                        let arena = home.arena || "";
+                        const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                        if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+                        output += `📌 下場比賽，一起迎風而上。\n▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
+                    }
                     output += `\n\n${COMMON_TAGS}`;
 
                 } else if (currentMode === 'potg') {
@@ -1834,7 +1838,11 @@
                     const away = getTeam(getValue('potg_away'));
                     output = `❤️${toMathBoldSerif('NOTHING BUT HIM')}\n\n`;
                     output += `${away.emoji}/${home.emoji} #${toMathBoldSerif('單場最佳球員')}\n\n`;
-                    output += getNextGameTextShort();
+                    
+                    const date = getValue('next_date');
+                    if(date) {
+                        output += getNextGameFormatted();
+                    }
                     output += `\n\n-\n\n${getValue('promo_text')}\n\n${COMMON_TAGS} #TPBL例行賽`;
 
                 } else if (currentMode === 'local_player_highlight') {
@@ -1967,13 +1975,16 @@
                     
                     const date = getValue('next_date');
                     if(date) {
+                        // Standardize next game format for potw too? User asked for potg specifically.
+                        // But kept old format for consistency with user request unless specified.
+                        // Reverting to old format here for safety, or using new if desired.
+                        // User request: "終場比分、單場最佳球員 (potg)". Not "potw" (Player of the Week).
                         const mmdd = formatMMDD(date);
                         const day = getDayChi(date);
                         const home = getTeam(getValue('next_home'));
                         const away = getTeam(getValue('next_away'));
                         const time = getValue('next_time');
                         const nameOnly = getValue('player_name_select').split(' ')[0] || "";
-                        
                         const num = getValue('next_game_num');
                         let arena = home.arena || "";
                         const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
@@ -2006,9 +2017,14 @@
                     output += `${COMMON_TAGS}`;
 
                 } else if (currentMode === 'monthly_kicks') {
-                    output = `👟${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(getValue('kicks_month'))}\n\n`;
+                    const mVal = getValue('kicks_month');
+                    const mIndex = MONTHS.indexOf(mVal);
+                    const mNum = mIndex + 1; // 0-based index to 1-12
+                    
+                    output = `👟${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(mVal)}\n\n`;
                     output += `${getValue('kicks_intro')}\n\n`;
-                    output += `${getValue('kicks_month').replace('.','')}月精選實戰球鞋一次看👀👟\n\n`;
+                    // Updated Format: "1 月..."
+                    output += `${mNum} 月精選實戰球鞋一次看 👀👟\n\n`;
                     output += `Presented by @momentum.tw\n\n`;
                     output += `${COMMON_TAGS} #momentum`;
 
