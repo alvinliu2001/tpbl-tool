@@ -118,20 +118,16 @@
 
     <!-- LANDING PAGE -->
     <div id="landing-page" class="fixed inset-0 z-50 bg-brand-dark flex flex-col md:flex-row overflow-hidden">
-        
         <!-- Left Side: Content -->
         <div class="w-full md:w-1/2 h-full flex flex-col justify-center px-8 md:px-24 relative z-10 bg-brand-dark overflow-y-auto">
-            
             <div class="flex-1 flex flex-col justify-center min-h-[400px]">
                 <!-- Logo -->
                 <div class="mb-6 flex justify-start">
                     <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-10 md:h-12 w-auto">
                 </div>
-                
                 <!-- Title -->
                 <h1 class="text-3xl md:text-4xl font-semibold text-white mb-3 tracking-wide text-left">社群文案生成工具</h1>
                 <p class="text-gray-400 text-lg md:text-xl mb-10 font-extralight text-left">一個簡單實用的工具，幫助團隊高效產出文案。</p>
-                
                 <!-- Button -->
                 <div class="flex justify-start">
                     <button onclick="enterApp()" class="bg-brand-gold text-brand-dark text-lg font-bold py-3 px-12 rounded-full hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-2">
@@ -139,14 +135,12 @@
                     </button>
                 </div>
             </div>
-
             <!-- Footer -->
             <div class="py-6 w-full flex flex-col items-center justify-center text-gray-600 text-xs md:text-sm flex-shrink-0">
                 <p>powered by Alvin LIU</p>
                 <p class="mt-1">© TPBL 2025 All rights reserved.</p>
             </div>
         </div>
-
         <!-- Right Side: Image -->
         <div class="hidden md:block w-1/2 h-full relative">
              <img src="https://assets.tpbl.basketball/production/banners/kl3My9saHVdhrTmoezJC3Am9KyBrMzgES3lVQYm2.jpg?20250930145249" alt="TPBL Season Visual" class="w-full h-full object-cover opacity-90">
@@ -158,14 +152,13 @@
     <div id="app-container" class="hidden w-full h-full flex flex-col md:flex-row overflow-hidden fixed inset-0 z-0">
         <!-- Sidebar -->
         <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-50 relative shadow-lg md:shadow-none">
-            <!-- Sidebar Header: Logo & Toggle -->
+            <!-- Sidebar Header -->
             <div id="sidebar-header" class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative flex-shrink-0">
                 <div class="flex items-center gap-3">
                     <div id="logo-container" onclick="location.reload()" class="cursor-pointer" title="返回首頁">
                         <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-6 md:h-7 w-auto">
                     </div>
                 </div>
-                
                 <!-- Mobile Menu Button -->
                 <button onclick="toggleSidebar()" class="md:hidden bg-white text-black rounded-full w-8 h-8 flex items-center justify-center focus:outline-none hover:bg-gray-100 transition shadow-sm z-50">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -559,7 +552,7 @@
                 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
                 'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
                 'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
-                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
+                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝗿', 's': '𝐬', 't': '𝐭',
                 'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
             };
             return String(text).split('').map(char => map[char] || char).join('');
@@ -1118,348 +1111,954 @@
         ];
 
         function switchMode(mode) {
-            // Safety check: if mode is invalid or undefined, default to game_preview
-            if (!mode || !VALID_MODES.includes(mode)) {
-                mode = 'game_preview';
+            try {
+                // Safety check: if mode is invalid or undefined, default to game_preview
+                if (!mode || !VALID_MODES.includes(mode)) {
+                    mode = 'game_preview';
+                }
+
+                currentMode = mode;
+                localStorage.setItem('tpbl_last_mode', mode);
+
+                // Update Sidebar UI safely
+                document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+                const activeBtn = document.getElementById(`btn-${mode}`);
+                if (activeBtn) activeBtn.classList.add('active');
+                
+                // Mobile Menu handling
+                if (window.innerWidth < 768) {
+                    const nav = document.getElementById('sidebar-nav');
+                    nav.style.maxHeight = '0px';
+                    nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
+                    nav.classList.remove('opacity-100');
+                    nav.classList.remove('h-full');
+                }
+
+                const titles = {
+                    'weekday_preview': '平日賽事預告',
+                    'game_preview': '單場賽程預告',
+                    'weekly_schedule': '每週賽程表',
+                    'matchup_highlight': '賽前對戰亮點',
+                    'final_score': '終場比分',
+                    'game_highlight': '本場賽事精華',
+                    'press_conf': '賽後記者會精華',
+                    'potg': '單場最佳球員',
+                    'local_player_highlight': '本土球員單場傑出表現',
+                    'career_milestone': '球員生涯紀錄',
+                    'weekly_standings': '每週戰績排行',
+                    'top5': '本週五大好球',
+                    'potw': '單週最佳球員',
+                    'weekly_local_eff': '每週本土效率值排行',
+                    'monthly_kicks': '每月精選實戰球鞋',
+                    'season_stats': '數據累計排行',
+                    '100_reasons': '一百種喜歡籃球的原因'
+                };
+                
+                const titleEl = document.getElementById('title-text');
+                if(titleEl) titleEl.innerText = titles[mode] || '生成文案';
+                
+                const linkBtn = document.getElementById('example-link');
+                const url = EXAMPLE_LINKS[mode];
+                if (url) {
+                    linkBtn.href = url;
+                    linkBtn.classList.remove('hidden');
+                } else {
+                    linkBtn.classList.add('hidden');
+                }
+
+                // IMPORTANT: Render the form FIRST
+                renderForm(mode);
+                
+                // Then attach logic
+                attachFormListeners(); 
+                bindSmartEvents(mode); 
+                loadFromLocal(); 
+                
+                // Finally generate copy (with safety)
+                generateCopy();
+            } catch(e) {
+                console.error("Switch Mode Error", e);
+                // Fallback to avoid dead UI
+                renderForm('game_preview');
             }
-
-            currentMode = mode;
-            localStorage.setItem('tpbl_last_mode', mode);
-
-            // Update Sidebar UI safely
-            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-            const activeBtn = document.getElementById(`btn-${mode}`);
-            if (activeBtn) activeBtn.classList.add('active');
-            
-            // Mobile Menu handling
-            if (window.innerWidth < 768) {
-                const nav = document.getElementById('sidebar-nav');
-                nav.style.maxHeight = '0px';
-                nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
-                nav.classList.remove('opacity-100');
-                nav.classList.remove('h-full');
-            }
-
-            const titles = {
-                'weekday_preview': '平日賽事預告',
-                'game_preview': '單場賽程預告',
-                'weekly_schedule': '每週賽程表',
-                'matchup_highlight': '賽前對戰亮點',
-                'final_score': '終場比分',
-                'game_highlight': '本場賽事精華',
-                'press_conf': '賽後記者會精華',
-                'potg': '單場最佳球員',
-                'local_player_highlight': '本土球員單場傑出表現',
-                'career_milestone': '球員生涯紀錄',
-                'weekly_standings': '每週戰績排行',
-                'top5': '本週五大好球',
-                'potw': '單週最佳球員',
-                'weekly_local_eff': '每週本土效率值排行',
-                'monthly_kicks': '每月精選實戰球鞋',
-                'season_stats': '數據累計排行',
-                '100_reasons': '一百種喜歡籃球的原因'
-            };
-            
-            const titleEl = document.getElementById('title-text');
-            if(titleEl) titleEl.innerText = titles[mode] || '生成文案';
-            
-            const linkBtn = document.getElementById('example-link');
-            const url = EXAMPLE_LINKS[mode];
-            if (url) {
-                linkBtn.href = url;
-                linkBtn.classList.remove('hidden');
-            } else {
-                linkBtn.classList.add('hidden');
-            }
-
-            renderForm(mode);
-            attachFormListeners(); 
-            bindSmartEvents(mode); 
-            loadFromLocal(); 
         }
 
         function renderForm(mode) {
-            const container = document.getElementById('dynamic-form');
-            let html = '';
-            const today = new Date().toISOString().split('T')[0];
-
-            if (mode === 'game_preview') {
-                html += `
-                    <div class="flex items-end gap-2 mb-4">
-                        <div class="flex-1">
-                             <label class="block text-sm font-medium text-gray-700 mb-1">場次 (GAME)</label>
-                             <input type="number" id="game_num" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="33" value="33">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        ${createInput('match_date', '比賽日期', 'date', '', today)}
-                        ${createTimeSelect('match_time', '比賽時間', '19:00')}
-                        ${createTeamSelect('match_away', '客隊 (Away)')}
-                        ${createTeamSelect('match_home', '主隊 (Home)')}
-                    </div>
-                    ${createTextarea('highlight_text', '觀賽亮點', '輸入本場看點文案...', 6)}
-                    ${createInput('yt_link', 'YouTube 轉播連結', 'text')}
-                `;
-            } else if (mode === 'weekday_preview') {
-                html += `
-                      <div class="grid grid-cols-2 gap-4">
-                        ${createInput('match_date', '比賽日期', 'date', '', today)}
-                        ${createTimeSelect('match_time', '比賽時間', '19:00')}
-                        ${createTeamSelect('match_away', '客隊 (Away)')}
-                        ${createTeamSelect('match_home', '主隊 (Home)')}
-                    </div>
-                    ${createInput('promo_title', '預告標題 (如：WEDNESDAY NIGHT...)', 'text', 'WEDNESDAY NIGHT, GAME ONNNN')}
-                    ${createTextarea('promo_text', '預告文案', '本季首次交手的...', 4)}
-                    ${createTextarea('promo_link', '贊助商版位 (可換行)', '📍SPORTS NATIONS店點資訊...', 3)}
-                `;
-            } else if (mode === 'matchup_highlight') {
-                html += `
-                     ${createNextGameBlock("今日比賽資訊 (Match Info)")}
-                    <div class="p-3 border rounded-md bg-gray-50 mb-3 mt-4">
-                        <p class="text-sm font-bold text-gray-700 mb-2">對戰組合</p>
-                        <div class="grid grid-cols-12 gap-2 items-center">
-                            <div class="col-span-4">
-                                ${createTeamSelect('mu_home_team', '主隊')}
-                            </div>
-                            <div class="col-span-8">
-                                ${createPlayerSelect('mu_home_player', '主隊球員', 'mu_home_team')}
-                            </div>
-                            
-                            <div class="col-span-12 text-center text-gray-400 text-xs font-bold my-1">VS</div>
-                            
-                            <div class="col-span-4">
-                                ${createTeamSelect('mu_away_team', '客隊')}
-                            </div>
-                            <div class="col-span-8">
-                                ${createPlayerSelect('mu_away_player', '客隊球員', 'mu_away_team')}
-                            </div>
-                        </div>
-                    </div>
-                    ${createTextarea('matchup_content', '對戰分析/亮點文案', '', 6)}
-                   
-                `;
-            } else if (mode === 'final_score') {
-                html += `
-                    ${createInput('game_num', '場次 (GAME)', 'number', '33')}
-                    ${createInput('match_title', '標題 (例如：全隊「豹」進13記外線...)', 'text')}
-                    ${createTextarea('match_recap', '比賽回顧文案', '', 6)}
-                    ${createNextGameBlock("下場賽事資訊 (Next Game)")}
-                    <button onclick="transferToPotg()" class="mt-6 w-full bg-gray-100 hover:bg-brand-gold hover:text-brand-dark text-gray-600 font-bold py-3 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2 border border-gray-200">
-                        <span>前往編輯此場的單場最佳球員</span> <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                `;
-            } else if (mode === 'game_highlight') {
-                html += `
-                    ${createInput('hl_title', '精華標題 (不需輸入開頭符號)', 'text', '戰神陪你提前過聖誕！Merry ChristMARS 🎄')}
-                `;
-            } else if (mode === 'press_conf') {
-                html += `
-                     <div class="mb-4">
-                         ${createTeamSelect('pc_team_select', '受訪球隊 (選擇以帶入下場賽事)')}
-                     </div>
-                    ${createInput('pc_title', '標題 (英文/中文)', 'text', '🗣️ FACING THE STORM...')}
-                    ${createTextarea('pc_quote', '語錄 (不需要打引號)', '', 3)}
-                    ${createTextarea('pc_content', '內容', '', 6)}
-                    ${createNextGameBlock("下場賽事資訊 (Next Game)")}
-                `;
-            } else if (mode === 'potg') {
-                html += `
-                    <div class="mb-4">
-                         <label class="block text-sm font-medium text-gray-700 mb-1">場次 (GAME)</label>
-                         <input type="number" id="potg_game_num" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="33">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        ${createTeamSelect('potg_away', '客隊 (Away)')}
-                        ${createTeamSelect('potg_home', '主隊 (Home)')}
-                    </div>
-                    ${createNextGameBlock("下場賽事資訊 (Next Game)")}
-                    ${createInput('promo_text', '底部活動文案', 'text', '🀄拚競技，超帶勁...')}
-                `;
-            } else if (mode === 'local_player_highlight') {
-                 html += `
-                    <div class="mb-4 p-3 bg-gray-50 border rounded-md">
-                         <p class="text-sm font-bold text-gray-700 mb-2">選擇球員 (自動帶入背號)</p>
-                         <div class="grid grid-cols-12 gap-2">
-                             <div class="col-span-4">${createTeamSelect('lp_team', '球隊')}</div>
-                             <div class="col-span-5">${createPlayerSelect('lp_name', '球員', 'lp_team', 'lp_num')}</div>
-                             <div class="col-span-3">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">背號</label>
-                                <input type="text" id="lp_num" readonly class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
-                             </div>
-                         </div>
-                         ${createInput('lp_title', '標題文案 (自動加上 Emoji 與 姓名)', 'text', '全面控衛視野...')}
-                    </div>
-                    ${createTextarea('lp_content', '球員表現描述', '', 4)}
-                    ${createNextGameBlock("下場賽事資訊 (Next Game)")}
-                `;
-            } else if (mode === 'career_milestone') {
-                html += `
-                    ${createInput('ms_title', '紀錄標題 (例如：防線上的盜球高手，百抄達成！👌)', 'text')}
-                    
-                    <div class="p-3 bg-gray-50 border rounded-md mb-4">
-                        <p class="text-sm font-bold text-gray-700 mb-2">達成球員</p>
-                        <div class="grid grid-cols-12 gap-2">
-                            <div class="col-span-4">${createTeamSelect('ms_team', '球隊')}</div>
-                            <div class="col-span-5">${createPlayerSelect('ms_name', '球員', 'ms_team', 'ms_num')}</div>
-                            <div class="col-span-3">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">背號</label>
-                                <input type="text" id="ms_num" readonly class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
-                            </div>
-                        </div>
-                        <div class="mt-2">
-                            ${createInput('ms_eng_name', '英文名 (選填)', 'text', 'Lasannah Kromah')}
-                        </div>
-                    </div>
-
-                    ${createInput('ms_achievement', '達成成就 (例如：正式成為 TPBL 首位達成100次抄截的男人🔥)', 'text')}
-                    ${createTextarea('ms_content', '內容描述', '', 5)}
-                `;
-            } else if (mode === 'weekly_schedule') {
-                html += `
-                    ${createInput('week_num', '第幾週 (Week)', 'number', '8')}
-                    ${createTextarea('week_intro', '本週賽程引言', '', 4)}
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                        <p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入)</p>
-                        <div id="schedule_list_container" class="space-y-3"></div>
-                        <button onclick="addScheduleItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增場次</button>
-                    </div>
-                `;
-            } else if (mode === 'weekly_standings') {
-                html += `
-                    ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
-                    ${createTextarea('standings_content', '戰績分析文案', '', 8)}
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
-                        <p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入下週)</p>
-                        <div id="standings_schedule_list_container" class="space-y-3"></div>
-                        <button onclick="addStandingsGameItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增預告場次</button>
-                    </div>
-                `;
-            } else if (mode === 'top5') {
-                 html += `
-                    ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
-                    ${createTextarea('top5_intro', '引言文案', '', 3)}
-                    <div class="space-y-3 mt-4">
-                        <p class="text-sm font-bold text-gray-500">五大好球排行</p>
-                        ${[1,2,3,4,5].map(i => `
-                            <div class="p-3 border rounded-md bg-gray-50">
-                                <span class="font-bold text-gray-700 block mb-1">第 ${i} 名</span>
-                                <div class="grid grid-cols-3 gap-2">
-                                    ${createTeamSelect(`top${i}_team`, '')}
-                                    ${createPlayerSelect(`top${i}_name`, '', `top${i}_team`, `top${i}_num`)}
-                                    <input id="top${i}_num" type="text" readonly placeholder="背號" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100">
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    ${createInput('vote_link', '投票連結', 'text')}
-                `;
-            } else if (mode === 'potw') {
-                html += `
-                    <div class="grid grid-cols-2 gap-4">
-                        ${createTeamSelect('player_team', '所屬隊伍')}
-                        <div>
-                             <label class="block text-sm font-medium text-gray-700 mb-1">球員</label>
-                             <select id="player_name_select" data-team-select="player_team" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold focus:border-brand-gold player-select disabled-input" disabled>
-                                <option>先選擇球隊...</option>
-                             </select>
-                             <input type="hidden" id="player_num_dummy">
-                             <p class="text-xs text-gray-400 mt-1">*請手動補上英文名</p>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-2">
-                        <p class="text-sm font-bold mb-2">本週數據 (STATS)</p>
-                        <div id="stats_list_container" class="space-y-2"></div>
-                        <button onclick="addStatItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增數據</button>
-                    </div>
-                    
-                    ${createTextarea('player_desc', '球員表現描述', '', 6)}
-                    ${createNextGameBlock("下場賽事資訊 (Next Game)")}
-                `;
-            } else if (mode === 'weekly_local_eff') {
-                html += `
-                    ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
-                    ${createTextarea('eff_intro', '引言文案', '', 3)}
-                    <div class="space-y-3 mt-4">
-                         <p class="text-sm font-bold text-gray-500">本土效率值排行</p>
-                         ${[1,2,3,4,5].map(i => `
-                            <div class="p-3 border rounded-md bg-gray-50">
-                                <div class="grid grid-cols-12 gap-2 mb-2 items-center">
-                                    <div class="col-span-1 flex items-center justify-center font-bold text-gray-500">#${i}</div>
-                                    <div class="col-span-4">
-                                        ${createTeamSelect(`eff${i}_team`, '')}
-                                    </div>
-                                    <div class="col-span-2">
-                                        <input id="eff${i}_num" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
-                                    </div>
-                                    <div class="col-span-3">
-                                        ${createPlayerSelect(`eff${i}_name`, '', `eff${i}_team`, `eff${i}_num`)}
-                                    </div>
-                                    <div class="col-span-2"><input id="eff${i}_val" type="text" placeholder="EFF" class="w-full p-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-brand-gold focus:border-brand-gold"></div>
-                                </div>
-                                <textarea id="eff${i}_desc" rows="2" class="w-full p-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="球員表現描述..."></textarea>
-                            </div>
-                         `).join('')}
-                    </div>
-                `;
-            } else if (mode === 'monthly_kicks') {
-                html += `
-                    ${createSelect('kicks_month', '月份', MONTHS)}
-                    ${createTextarea('kicks_intro', '引言文案', '', 4)}
-                `;
-            } else if (mode === 'season_stats') {
-                html += `
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">標題後綴</label>
-                        <select id="stats_title_suffix" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold">
-                            <option value="TEAM">TEAM</option>
-                            <option value="PLAYER">PLAYER</option>
-                        </select>
-                    </div>
-                    ${createTextarea('stats_content', '數據分析文案', '', 8)}
-                    
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
-                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">統計區間</p>
-                        <div class="mb-3">
-                             ${createInput('stats_cutoff_date', '統計截止日', 'date', '', today)}
-                        </div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">包含賽季</label>
-                        <div class="flex gap-4 items-center">
-                            <label class="flex items-center gap-2"><input type="checkbox" id="season_2425" checked class="w-4 h-4 text-brand-gold focus:ring-brand-gold border-gray-300 rounded"> 24-25賽季</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" id="season_2526" class="w-4 h-4 text-brand-gold focus:ring-brand-gold border-gray-300 rounded"> 25-26賽季</label>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">投票資訊</p>
-                        ${createInput('stats_vote_month', '投票月份/區間 (例如：10-11)', 'text', '10-11')}
-                    </div>
-                `;
-            } else if (mode === '100_reasons') {
-                const vol = getValue('reasons_vol');
-                const teamKey = getValue('reasons_team');
-                const team = TEAMS[teamKey];
-                const name = getValue('reasons_name');
-                const quote = getValue('reasons_quote');
-                const content = getValue('reasons_content');
-                const link = getValue('reasons_link');
-
-                output = `【💭一百種喜歡籃球的原因 Vol.${vol}】\n\n`;
-                output += `${toMathBoldSerif('Q')}：你喜歡籃球嗎？\n`;
+            try {
+                const container = document.getElementById('dynamic-form');
+                if (!container) return; // Critical safety check
                 
-                if (team && name) {
-                    output += `${toMathBoldSerif('A')}：${quote} — ${team.emoji} ${team.full} ${name}\n\n`;
-                } else {
-                    output += `${toMathBoldSerif('A')}：${quote}\n\n`;
+                let html = '';
+                const today = new Date().toISOString().split('T')[0];
+
+                if (mode === 'game_preview') {
+                    html += `
+                        <div class="flex items-end gap-2 mb-4">
+                            <div class="flex-1">
+                                 <label class="block text-sm font-medium text-gray-700 mb-1">場次 (GAME)</label>
+                                 <input type="number" id="game_num" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="33" value="33">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            ${createInput('match_date', '比賽日期', 'date', '', today)}
+                            ${createTimeSelect('match_time', '比賽時間', '19:00')}
+                            ${createTeamSelect('match_away', '客隊 (Away)')}
+                            ${createTeamSelect('match_home', '主隊 (Home)')}
+                        </div>
+                        ${createTextarea('highlight_text', '觀賽亮點', '輸入本場看點文案...', 6)}
+                        ${createInput('yt_link', 'YouTube 轉播連結', 'text')}
+                    `;
+                } else if (mode === 'weekday_preview') {
+                    html += `
+                          <div class="grid grid-cols-2 gap-4">
+                            ${createInput('match_date', '比賽日期', 'date', '', today)}
+                            ${createTimeSelect('match_time', '比賽時間', '19:00')}
+                            ${createTeamSelect('match_away', '客隊 (Away)')}
+                            ${createTeamSelect('match_home', '主隊 (Home)')}
+                        </div>
+                        ${createInput('promo_title', '預告標題 (如：WEDNESDAY NIGHT...)', 'text', 'WEDNESDAY NIGHT, GAME ONNNN')}
+                        ${createTextarea('promo_text', '預告文案', '本季首次交手的...', 4)}
+                        ${createTextarea('promo_link', '贊助商版位 (可換行)', '📍SPORTS NATIONS店點資訊...', 3)}
+                    `;
+                } else if (mode === 'matchup_highlight') {
+                    html += `
+                         ${createNextGameBlock("今日比賽資訊 (Match Info)")}
+                        <div class="p-3 border rounded-md bg-gray-50 mb-3 mt-4">
+                            <p class="text-sm font-bold text-gray-700 mb-2">對戰組合</p>
+                            <div class="grid grid-cols-12 gap-2 items-center">
+                                <div class="col-span-4">
+                                    ${createTeamSelect('mu_home_team', '主隊')}
+                                </div>
+                                <div class="col-span-8">
+                                    ${createPlayerSelect('mu_home_player', '主隊球員', 'mu_home_team')}
+                                </div>
+                                
+                                <div class="col-span-12 text-center text-gray-400 text-xs font-bold my-1">VS</div>
+                                
+                                <div class="col-span-4">
+                                    ${createTeamSelect('mu_away_team', '客隊')}
+                                </div>
+                                <div class="col-span-8">
+                                    ${createPlayerSelect('mu_away_player', '客隊球員', 'mu_away_team')}
+                                </div>
+                            </div>
+                        </div>
+                        ${createTextarea('matchup_content', '對戰分析/亮點文案', '', 6)}
+                       
+                    `;
+                } else if (mode === 'final_score') {
+                    html += `
+                        ${createInput('game_num', '場次 (GAME)', 'number', '33')}
+                        ${createInput('match_title', '標題 (例如：全隊「豹」進13記外線...)', 'text')}
+                        ${createTextarea('match_recap', '比賽回顧文案', '', 6)}
+                        ${createNextGameBlock("下場賽事資訊 (Next Game)")}
+                        <button onclick="transferToPotg()" class="mt-6 w-full bg-gray-100 hover:bg-brand-gold hover:text-brand-dark text-gray-600 font-bold py-3 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2 border border-gray-200">
+                            <span>前往編輯此場的單場最佳球員</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    `;
+                } else if (mode === 'game_highlight') {
+                    html += `
+                        ${createInput('hl_title', '精華標題 (不需輸入開頭符號)', 'text', '戰神陪你提前過聖誕！Merry ChristMARS 🎄')}
+                    `;
+                } else if (mode === 'press_conf') {
+                    html += `
+                         <div class="mb-4">
+                             ${createTeamSelect('pc_team_select', '受訪球隊 (選擇以帶入下場賽事)')}
+                         </div>
+                        ${createInput('pc_title', '標題 (英文/中文)', 'text', '🗣️ FACING THE STORM...')}
+                        ${createTextarea('pc_quote', '語錄 (不需要打引號)', '', 3)}
+                        ${createTextarea('pc_content', '內容', '', 6)}
+                        ${createNextGameBlock("下場賽事資訊 (Next Game)")}
+                    `;
+                } else if (mode === 'potg') {
+                    html += `
+                        <div class="mb-4">
+                             <label class="block text-sm font-medium text-gray-700 mb-1">場次 (GAME)</label>
+                             <input type="number" id="potg_game_num" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="33">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            ${createTeamSelect('potg_away', '客隊 (Away)')}
+                            ${createTeamSelect('potg_home', '主隊 (Home)')}
+                        </div>
+                        ${createNextGameBlock("下場賽事資訊 (Next Game)")}
+                        ${createInput('promo_text', '底部活動文案', 'text', '🀄拚競技，超帶勁...')}
+                    `;
+                } else if (mode === 'local_player_highlight') {
+                     html += `
+                        <div class="mb-4 p-3 bg-gray-50 border rounded-md">
+                             <p class="text-sm font-bold text-gray-700 mb-2">選擇球員 (自動帶入背號)</p>
+                             <div class="grid grid-cols-12 gap-2">
+                                 <div class="col-span-4">${createTeamSelect('lp_team', '球隊')}</div>
+                                 <div class="col-span-5">${createPlayerSelect('lp_name', '球員', 'lp_team', 'lp_num')}</div>
+                                 <div class="col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">背號</label>
+                                    <input type="text" id="lp_num" readonly class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
+                                 </div>
+                             </div>
+                             ${createInput('lp_title', '標題文案 (自動加上 Emoji 與 姓名)', 'text', '全面控衛視野...')}
+                        </div>
+                        ${createTextarea('lp_content', '球員表現描述', '', 4)}
+                        ${createNextGameBlock("下場賽事資訊 (Next Game)")}
+                    `;
+                } else if (mode === 'career_milestone') {
+                    html += `
+                        ${createInput('ms_title', '紀錄標題 (例如：防線上的盜球高手，百抄達成！👌)', 'text')}
+                        
+                        <div class="p-3 bg-gray-50 border rounded-md mb-4">
+                            <p class="text-sm font-bold text-gray-700 mb-2">達成球員</p>
+                            <div class="grid grid-cols-12 gap-2">
+                                <div class="col-span-4">${createTeamSelect('ms_team', '球隊')}</div>
+                                <div class="col-span-5">${createPlayerSelect('ms_name', '球員', 'ms_team', 'ms_num')}</div>
+                                <div class="col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">背號</label>
+                                    <input type="text" id="ms_num" readonly class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                ${createInput('ms_eng_name', '英文名 (選填)', 'text', 'Lasannah Kromah')}
+                            </div>
+                        </div>
+
+                        ${createInput('ms_achievement', '達成成就 (例如：正式成為 TPBL 首位達成100次抄截的男人🔥)', 'text')}
+                        ${createTextarea('ms_content', '內容描述', '', 5)}
+                    `;
+                } else if (mode === 'weekly_schedule') {
+                    html += `
+                        ${createInput('week_num', '第幾週 (Week)', 'number', '8')}
+                        ${createTextarea('week_intro', '本週賽程引言', '', 4)}
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入)</p>
+                            <div id="schedule_list_container" class="space-y-3"></div>
+                            <button onclick="addScheduleItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增場次</button>
+                        </div>
+                    `;
+                } else if (mode === 'weekly_standings') {
+                    html += `
+                        ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
+                        ${createTextarea('standings_content', '戰績分析文案', '', 8)}
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
+                            <p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入下週)</p>
+                            <div id="standings_schedule_list_container" class="space-y-3"></div>
+                            <button onclick="addStandingsGameItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增預告場次</button>
+                        </div>
+                    `;
+                } else if (mode === 'top5') {
+                     html += `
+                        ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
+                        ${createTextarea('top5_intro', '引言文案', '', 3)}
+                        <div class="space-y-3 mt-4">
+                            <p class="text-sm font-bold text-gray-500">五大好球排行</p>
+                            ${[1,2,3,4,5].map(i => `
+                                <div class="p-3 border rounded-md bg-gray-50">
+                                    <span class="font-bold text-gray-700 block mb-1">第 ${i} 名</span>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        ${createTeamSelect(`top${i}_team`, '')}
+                                        ${createPlayerSelect(`top${i}_name`, '', `top${i}_team`, `top${i}_num`)}
+                                        <input id="top${i}_num" type="text" readonly placeholder="背號" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100">
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${createInput('vote_link', '投票連結', 'text')}
+                    `;
+                } else if (mode === 'potw') {
+                    html += `
+                        <div class="grid grid-cols-2 gap-4">
+                            ${createTeamSelect('player_team', '所屬隊伍')}
+                            <div>
+                                 <label class="block text-sm font-medium text-gray-700 mb-1">球員</label>
+                                 <select id="player_name_select" data-team-select="player_team" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold focus:border-brand-gold player-select disabled-input" disabled>
+                                    <option>先選擇球隊...</option>
+                                 </select>
+                                 <input type="hidden" id="player_num_dummy">
+                                 <p class="text-xs text-gray-400 mt-1">*請手動補上英文名</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-2">
+                            <p class="text-sm font-bold mb-2">本週數據 (STATS)</p>
+                            <div id="stats_list_container" class="space-y-2"></div>
+                            <button onclick="addStatItem()" class="mt-2 text-sm font-bold text-brand-gold hover:text-yellow-600">+ 新增數據</button>
+                        </div>
+                        
+                        ${createTextarea('player_desc', '球員表現描述', '', 6)}
+                        ${createNextGameBlock("下場賽事資訊 (Next Game)")}
+                    `;
+                } else if (mode === 'weekly_local_eff') {
+                    html += `
+                        ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
+                        ${createTextarea('eff_intro', '引言文案', '', 3)}
+                        <div class="space-y-3 mt-4">
+                             <p class="text-sm font-bold text-gray-500">本土效率值排行</p>
+                             ${[1,2,3,4,5].map(i => `
+                                <div class="p-3 border rounded-md bg-gray-50">
+                                    <div class="grid grid-cols-12 gap-2 mb-2 items-center">
+                                        <div class="col-span-1 flex items-center justify-center font-bold text-gray-500">#${i}</div>
+                                        <div class="col-span-4">
+                                            ${createTeamSelect(`eff${i}_team`, '')}
+                                        </div>
+                                        <div class="col-span-2">
+                                            <input id="eff${i}_num" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
+                                        </div>
+                                        <div class="col-span-3">
+                                            ${createPlayerSelect(`eff${i}_name`, '', `eff${i}_team`, `eff${i}_num`)}
+                                        </div>
+                                        <div class="col-span-2"><input id="eff${i}_val" type="text" placeholder="EFF" class="w-full p-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-brand-gold focus:border-brand-gold"></div>
+                                    </div>
+                                    <textarea id="eff${i}_desc" rows="2" class="w-full p-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="球員表現描述..."></textarea>
+                                </div>
+                             `).join('')}
+                        </div>
+                    `;
+                } else if (mode === 'monthly_kicks') {
+                    html += `
+                        ${createSelect('kicks_month', '月份', MONTHS)}
+                        ${createTextarea('kicks_intro', '引言文案', '', 4)}
+                    `;
+                } else if (mode === 'season_stats') {
+                    html += `
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">標題後綴</label>
+                            <select id="stats_title_suffix" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold">
+                                <option value="TEAM">TEAM</option>
+                                <option value="PLAYER">PLAYER</option>
+                            </select>
+                        </div>
+                        ${createTextarea('stats_content', '數據分析文案', '', 8)}
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
+                            <p class="text-xs font-bold text-gray-500 mb-2 uppercase">統計區間</p>
+                            <div class="mb-3">
+                                 ${createInput('stats_cutoff_date', '統計截止日', 'date', '', today)}
+                            </div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">包含賽季</label>
+                            <div class="flex gap-4 items-center">
+                                <label class="flex items-center gap-2"><input type="checkbox" id="season_2425" checked class="w-4 h-4 text-brand-gold focus:ring-brand-gold border-gray-300 rounded"> 24-25賽季</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" id="season_2526" class="w-4 h-4 text-brand-gold focus:ring-brand-gold border-gray-300 rounded"> 25-26賽季</label>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <p class="text-xs font-bold text-gray-500 mb-2 uppercase">投票資訊</p>
+                            ${createInput('stats_vote_month', '投票月份/區間 (例如：10-11)', 'text', '10-11')}
+                        </div>
+                    `;
+                } else if (mode === '100_reasons') {
+                    html += `
+                        ${createInput('reasons_vol', 'Vol. 編號', 'text', '014')}
+                        
+                        <div class="p-3 bg-gray-50 border rounded-md mb-4 mt-4">
+                            <p class="text-sm font-bold text-gray-700 mb-2">受訪球員</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                ${createTeamSelect('reasons_team', '球隊')}
+                                ${createPlayerSelect('reasons_name', '球員', 'reasons_team', 'reasons_num')}
+                                <input type="hidden" id="reasons_num">
+                            </div>
+                        </div>
+
+                        ${createTextarea('reasons_quote', '金句 (A: ... 的內容)', '籃球帶給我許多挑戰...', 4)}
+                        ${createTextarea('reasons_content', '專題內文', '國中三年從未登錄上場...', 8)}
+                        ${createInput('reasons_link', '官網連結', 'text', 'https://tpbl.basketball/news/...')}
+                    `;
+                }
+
+                container.innerHTML = html;
+            } catch (e) {
+                console.error("Render Form Error", e);
+            }
+        }
+
+        // --- Event Binding ---
+        function attachFormListeners() {
+            try {
+                document.querySelectorAll('.team-select').forEach(select => {
+                    select.addEventListener('change', function() {
+                        const teamName = this.value;
+                        const playerSelects = document.querySelectorAll(`.player-select[data-team-select="${this.id}"]`);
+                        playerSelects.forEach(pSelect => {
+                            pSelect.innerHTML = '<option value="">請選擇球員</option>';
+                            pSelect.value = "";
+                            const numInputId = pSelect.dataset.numInput;
+                            if(numInputId) { const ni = document.getElementById(numInputId); if(ni) ni.value = ""; }
+
+                            if (teamName && ROSTERS[teamName]) {
+                                pSelect.disabled = false;
+                                pSelect.classList.remove('disabled-input');
+                                ROSTERS[teamName].forEach(player => {
+                                    const option = document.createElement('option');
+                                    option.value = player.name;
+                                    option.text = player.name; 
+                                    option.dataset.num = player.num;
+                                    pSelect.appendChild(option);
+                                });
+                            } else {
+                                pSelect.disabled = true;
+                                pSelect.classList.add('disabled-input');
+                            }
+                        });
+                    });
+                });
+
+                document.querySelectorAll('.player-select').forEach(select => {
+                    select.addEventListener('change', function() {
+                        const numInputId = this.dataset.numInput;
+                        if (numInputId) {
+                            const numInput = document.getElementById(numInputId);
+                            if (numInput) {
+                                const selectedOption = this.options[this.selectedIndex];
+                                numInput.value = selectedOption.dataset.num || "";
+                            }
+                        }
+                    });
+                });
+            } catch (e) { console.error("Event Binding Error", e); }
+        }
+        
+        function bindSmartEvents(mode) {
+             const debouncedSave = debounce(saveToLocal, 1000);
+             const form = document.getElementById('dynamic-form');
+             if(form) {
+                 form.addEventListener('input', () => { debouncedSave(); generateCopy(); });
+                 form.addEventListener('change', () => { saveToLocal(); generateCopy(); });
+             }
+
+             if (mode === 'game_preview' || mode === 'weekday_preview') {
+                 const d = document.getElementById('match_date');
+                 const t = document.getElementById('match_time');
+                 if(d) d.addEventListener('change', (e) => handleDateChange(e, 'match'));
+                 if(t) t.addEventListener('change', (e) => handleTimeChange(e, 'match'));
+                 if(mode === 'game_preview') {
+                     const gn = document.getElementById('game_num');
+                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'match'));
+                 }
+             }
+             
+             if (mode === 'matchup_highlight') {
+                 const d = document.getElementById('next_date');
+                 const t = document.getElementById('next_time');
+                 const g = document.getElementById('next_game_num');
+                 if(d) d.addEventListener('change', (e) => handleDateChange(e, 'next')); 
+                 if(t) t.addEventListener('change', (e) => handleTimeChange(e, 'next'));
+                 if(g) g.addEventListener('input', (e) => handleGameNumChange(e, 'next'));
+                 
+                 const na = document.getElementById('next_away');
+                 const nh = document.getElementById('next_home');
+                 if(na) na.addEventListener('change', () => updateSelect('mu_away_team', na.value));
+                 if(nh) nh.addEventListener('change', () => updateSelect('mu_home_team', nh.value));
+             }
+             
+             if(mode === 'final_score' || mode === 'potg') {
+                 const nd = document.getElementById('next_date');
+                 const nt = document.getElementById('next_time');
+                 if(nd) nd.addEventListener('change', (e) => handleDateChange(e, 'next'));
+                 if(nt) nt.addEventListener('change', (e) => handleTimeChange(e, 'next'));
+                 
+                 if(mode === 'final_score') {
+                     const gn = document.getElementById('game_num');
+                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'next')); 
+                 }
+                 if(mode === 'potg') {
+                     const gn = document.getElementById('potg_game_num');
+                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'potg'));
+                 }
+             }
+             
+             if(mode === 'weekly_schedule') {
+                 const w = document.getElementById('week_num');
+                 if(w) w.addEventListener('input', (e) => handleWeekChange(e, false));
+             }
+             if(mode === 'weekly_standings') {
+                 const w = document.getElementById('week_num');
+                 if(w) w.addEventListener('input', (e) => handleWeekChange(e, true));
+             }
+             
+             if(mode === 'local_player_highlight') {
+                 const t = document.getElementById('lp_team');
+                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
+             }
+             if(mode === 'press_conf') {
+                 const t = document.getElementById('pc_team_select');
+                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
+             }
+             if(mode === 'potw') {
+                 const t = document.getElementById('player_team');
+                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
+             }
+        }
+
+        // ... (helpers unchanged) ...
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        function addScheduleItemWithData(game) {
+            const container = document.getElementById('schedule_list_container');
+            const idx = container.children.length;
+            const div = document.createElement('div');
+            div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
+            const timeOptions = GAME_TIMES.map(t => `<option value="${t}" ${t===game.time?'selected':''}>${t}</option>`).join('');
+            
+            const arena = game.arena || TEAMS[game.home]?.arena || "";
+
+            div.innerHTML = `
+                <div class="flex gap-2 mb-2">
+                    <input type="date" id="sch_date_${idx}" value="${game.date}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
+                    <select id="sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
+                </div>
+                <div class="flex gap-2 items-center">
+                    <select id="sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.away}</option>${TEAM_KEYS.filter(k=>k!=game.away).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <span class="text-gray-400 text-xs font-bold">VS</span>
+                    <select id="sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.home}</option>${TEAM_KEYS.filter(k=>k!=game.home).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded text-xl">&times;</button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+        
+        function addStandingsGameItemWithData(game) {
+             const container = document.getElementById('standings_schedule_list_container');
+            const idx = container.children.length;
+            const div = document.createElement('div');
+            div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
+            const timeOptions = GAME_TIMES.map(t => `<option value="${t}" ${t===game.time?'selected':''}>${t}</option>`).join('');
+
+            div.innerHTML = `
+                <div class="flex gap-2 mb-2">
+                    <input type="date" id="std_sch_date_${idx}" value="${game.date}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
+                    <select id="std_sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
+                </div>
+                <div class="flex gap-2 items-center">
+                    <select id="std_sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.away}</option>${TEAM_KEYS.filter(k=>k!=game.away).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <span class="text-center shrink-0 text-xs font-bold">VS</span>
+                    <select id="std_sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.home}</option>${TEAM_KEYS.filter(k=>k!=game.home).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded text-xl">&times;</button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+        
+        // --- Standard Add Item (Manual) ---
+        function addScheduleItem() { addScheduleItemWithData({date: new Date().toISOString().split('T')[0], time: '14:30', away: '', home: ''}); }
+        function addStandingsGameItem() { addStandingsGameItemWithData({date: new Date().toISOString().split('T')[0], time: '14:30', away: '', home: ''}); }
+        function addStatItem() {
+            const container = document.getElementById('stats_list_container');
+            const idx = container.children.length;
+            const div = document.createElement('div');
+            div.className = "flex gap-2 items-center";
+            const typeOptions = STAT_TYPES.map(t => `<option value="${t.val}">${t.label}</option>`).join('');
+            
+            div.innerHTML = `
+                <input type="text" id="stat_val_${idx}" placeholder="數值 (28)" class="w-20 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold">
+                <select id="stat_type_${idx}" onchange="toggleCustomStat(${idx})" class="w-32 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">
+                    ${typeOptions}
+                </select>
+                <input type="text" id="stat_cust_${idx}" placeholder="自訂單位" class="flex-1 p-2 border rounded text-sm hidden focus:ring-brand-gold focus:border-brand-gold">
+                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2">&times;</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function toggleCustomStat(idx) {
+            const select = document.getElementById(`stat_type_${idx}`);
+            const customInput = document.getElementById(`stat_cust_${idx}`);
+            if (select && customInput) {
+                if (select.value === 'custom') customInput.classList.remove('hidden');
+                else customInput.classList.add('hidden');
+            }
+        }
+
+        // --- Utils ---
+        function copyToClipboard() {
+            const copyText = document.getElementById("output-text");
+            copyText.select();
+            document.execCommand("copy");
+            
+            const btn = document.getElementById("copy-text");
+            const original = btn.innerText;
+            btn.innerText = "已複製！";
+            setTimeout(() => btn.innerText = original, 2000);
+        }
+
+        // --- Generation Logic ---
+        function generateCopy() {
+            try {
+                let output = "";
+                const getValue = (id) => document.getElementById(id)?.value || "";
+                
+                // Safe Team Getter (Crucial Fix)
+                const getTeam = (key) => TEAMS[key] || { full: key || "球隊", emoji: "", arena: "" };
+
+                const getNextGameText = () => {
+                    const date = getValue('next_date');
+                    if(!date) return "";
+                    const mmdd = formatMMDD(date);
+                    const day = getDayChi(date);
+                    const time = getValue('next_time');
+                    const home = getTeam(getValue('next_home'));
+                    const away = getTeam(getValue('next_away'));
+                    const num = getValue('next_game_num');
+                    
+                    let arena = home.arena || "";
+                    const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                    if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
+                    return `📌 下場比賽，一起迎風而上。\n▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
+                };
+                
+                const getNextGameTextShort = () => {
+                    const date = getValue('next_date');
+                    if(!date) return "";
+                    const monthDay = formatMonthDay(date); 
+                    const time = getValue('next_time'); 
+                    const home = getTeam(getValue('next_home'));
+                    const away = getTeam(getValue('next_away'));
+                    const num = getValue('next_game_num');
+                    return `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜Game${num}｜${time}｜${away.full}（客） vs. ${home.full}（主）`;
                 }
                 
-                output += `${content}\n\n`;
-                output += `📝 完整故事請至 TPBL 官方網站\n${link}\n\n`;
-                output += `#籃球怎能不愛 #NothingButLove #BasketballStory #HoopDreams`;
-            }
+                const getLocalPlayerNextGame = () => {
+                    const date = getValue('next_date');
+                    if(!date) return "";
+                    const mmdd = formatMMDD(date);
+                    const day = getDayChi(date);
+                    const time = getValue('next_time');
+                    const home = getTeam(getValue('next_home'));
+                    const away = getTeam(getValue('next_away'));
+                    const arena = home.arena;
+                    const player = getValue('lp_name'); 
+                    return `📌 下場${player}：\n▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
+                };
 
-            document.getElementById('output-text').value = output;
+
+                if (currentMode === 'game_preview') {
+                    const date = getValue('match_date');
+                    const time = getValue('match_time');
+                    const homeKey = getValue('match_home');
+                    const awayKey = getValue('match_away');
+                    const num = getValue('game_num');
+                    const home = getTeam(homeKey);
+                    const away = getTeam(awayKey);
+                    
+                    let arena = home.arena || "";
+                    const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                    if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+                    
+                    const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
+                    
+                    output = `#${toMathBoldSerif('GAMEDAY')}& #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
+                    output += `例行賽${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))}✦${time} ${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
+                    output += `${getValue('highlight_text')}\n\n—\n\n`;
+                    output += `👉🏻賽事地點📍${arena}\n${BROADCAST_INFO}\n`;
+                    output += `👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
+                    output += `${COMMON_TAGS} #TPBL例行賽 #moltentaiwan`;
+
+                } else if (currentMode === 'weekday_preview') {
+                    const date = getValue('match_date');
+                    const home = getTeam(getValue('match_home'));
+                    const away = getTeam(getValue('match_away'));
+                    const dayName = getDayName(date); 
+                    const mmdd = formatMMDD(date); 
+                    const dayChi = getDayChi(date); 
+                    const title = getValue('promo_title');
+                    
+                    let arena = home.arena || "";
+                    const gameInDb = getGameByDateAndTime(date, getValue('match_time'));
+                    if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+                    
+                    output = `🏀 ${toMathBoldSerif(title)}\n\n`;
+                    output += `${getValue('promo_text')}\n\n-\n\n`;
+                    output += `📌 小週末就看籃球：\n`;
+                    output += `▌${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${arena}\n\n-\n\n`;
+                    if(getValue('promo_link')) output += `${getValue('promo_link')}\n\n`;
+                    output += `${COMMON_TAGS}`;
+
+                } else if (currentMode === 'matchup_highlight') {
+                     const home = getTeam(getValue('mu_home_team'));
+                     const away = getTeam(getValue('mu_away_team'));
+                     const homePlayer = getValue('mu_home_player');
+                     const awayPlayer = getValue('mu_away_player');
+                     
+                     output = `⚔️ ${toMathBoldSerif('MATCH UP')}｜${awayPlayer} ${away.emoji} vs. ${homePlayer} ${home.emoji}\n\n`;
+                     output += `${getValue('matchup_content')}\n\n-\n\n`;
+                     
+                     const date = getValue('next_date');
+                     if(date) {
+                         const mmdd = formatMMDD(date);
+                         const day = getDayChi(date);
+                         const time = getValue('next_time');
+                         const h = getTeam(getValue('next_home'));
+                         const a = getTeam(getValue('next_away'));
+                         const num = getValue('next_game_num');
+                         
+                         let arena = h.arena || "";
+                         const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                         if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
+                         output += `📌 今天晚上看頂尖對決：\n`;
+                         output += `▌${mmdd}（${day}）｜${time}｜${a.full}（客） vs. ${h.full}（主）｜${arena}\n\n`;
+                     }
+                     output += `${COMMON_TAGS}`;
+
+                } else if (currentMode === 'final_score') {
+                    output = `🔙 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n`;
+                    output += `${getValue('match_recap')}\n\n`;
+                    
+                    const date = getValue('next_date');
+                    if(date) {
+                        const monthDay = formatMonthDay(date);
+                        const home = getTeam(getValue('next_home'));
+                        const away = getTeam(getValue('next_away'));
+                        output += `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
+                    }
+                    output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
+
+                } else if (currentMode === 'game_highlight') {
+                    output = `❤️‍🔥👉🏻｜${getValue('hl_title')}\n\n`;
+                    output += `📺 緯來電視網｜博斯運動二台｜TPBL官方 YOUTUBE\n\n`;
+                    output += `${COMMON_TAGS} #TPBL例行賽`;
+
+                } else if (currentMode === 'press_conf') {
+                    output = `🗣️${toMathBoldSerif(getValue('pc_title'))}\n\n`;
+                    output += `💬「${getValue('pc_quote')}」\n\n`;
+                    output += `${getValue('pc_content')}\n\n`;
+                    output += getNextGameText();
+                    output += `\n\n${COMMON_TAGS}`;
+
+                } else if (currentMode === 'potg') {
+                    const home = getTeam(getValue('potg_home'));
+                    const away = getTeam(getValue('potg_away'));
+                    output = `❤️${toMathBoldSerif('NOTHING BUT HIM')}\n\n`;
+                    output += `${away.emoji}/${home.emoji} #${toMathBoldSerif('單場最佳球員')}\n\n`;
+                    output += getNextGameTextShort();
+                    output += `\n\n-\n\n${getValue('promo_text')}\n\n${COMMON_TAGS} #TPBL例行賽`;
+
+                } else if (currentMode === 'local_player_highlight') {
+                    const team = getTeam(getValue('lp_team'));
+                    const name = getValue('lp_name');
+                    const titleSuffix = getValue('lp_title');
+                    
+                    output = `${team.emoji}${name}${titleSuffix}\n\n`;
+                    output += `${getValue('lp_content')}\n\n-\n\n`;
+                    output += getLocalPlayerNextGame();
+                    output += `\n\n${COMMON_TAGS}`;
+
+                } else if (currentMode === 'career_milestone') {
+                    output = `${getValue('ms_title')}\n\n`;
+                    
+                    const msNum = getValue('ms_num');
+                    const msName = getValue('ms_name');
+                    const msEng = getValue('ms_eng_name');
+                    let playerInfo = '';
+                    if(msName) {
+                        playerInfo = `#${msNum} ${msName}`;
+                        if(msEng) playerInfo += ` ${msEng}`;
+                    }
+                    
+                    output += `${playerInfo}\n`;
+                    output += `${getValue('ms_achievement')}\n`;
+                    output += `${getValue('ms_content')}\n\n`;
+                    output += `${COMMON_TAGS}`;
+
+                } else if (currentMode === 'weekly_schedule') {
+                    output = `⏰｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程\n\n`;
+                    output += `${getValue('week_intro')}\n\n-\n\n📌 本週賽事預告：\n`;
+                    
+                    const listContainer = document.getElementById('schedule_list_container');
+                    Array.from(listContainer.children).forEach(div => {
+                        const inputs = div.querySelectorAll('input, select');
+                        const d = inputs[0].value;
+                        const t = inputs[1].value;
+                        const a = getTeam(inputs[2].value);
+                        const h = getTeam(inputs[3].value);
+                        if(d) {
+                             const mmdd = formatMMDD(d);
+                             const day = getDayChi(d);
+                             
+                             let arena = h.arena;
+                             const gameInDb = getGameByDateAndTime(d, t);
+                             if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
+                             output += `▌${mmdd}（${day}）｜${t}｜${a.full}（客） vs. ${h.full}（主）｜${arena}\n`;
+                        }
+                    });
+                    output += `\n${COMMON_TAGS}`;
+
+                } else if (currentMode === 'weekly_standings') {
+                    output = `📊｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} #球隊戰績排行\n\n`;
+                    output += `${getValue('standings_content')}\n\n`;
+                    
+                    const listContainer = document.getElementById('standings_schedule_list_container');
+                    const hasChildren = listContainer && listContainer.children.length > 0;
+                    
+                    if (hasChildren) {
+                        output += `📌 本週賽事預告：\n`;
+                        Array.from(listContainer.children).forEach(div => {
+                            const inputs = div.querySelectorAll('input, select');
+                            const d = inputs[0].value;
+                            const t = inputs[1].value;
+                            const a = inputs[2].value;
+                            const h = inputs[3].value;
+                            if(d) {
+                                 const mmdd = formatMMDD(d);
+                                 const day = getDayChi(d);
+                                 const aTeam = getTeam(a);
+                                 const hTeam = getTeam(h);
+                                 
+                                 let arena = hTeam.arena;
+                                 const gameInDb = getGameByDateAndTime(d, t);
+                                 if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
+                                 output += `▌${mmdd}（${day}）｜${t}｜${aTeam.full}（客） vs. ${hTeam.full}（主）｜${arena}\n`;
+                            }
+                        });
+                         output += `\n${COMMON_TAGS}`;
+                    } else {
+                        output += `\n${COMMON_TAGS}`;
+                    }
+
+                } else if (currentMode === 'top5') {
+                    output = `💣｜${toMathBoldSerif('TOP')}𝟓✦${toMathBoldSerif('Week')}${toMathBoldSerif(getValue('week_num'))}📢\n\n`;
+                    output += `${getValue('top5_intro')}\n\n`;
+                    
+                    for (let i = 5; i >= 1; i--) {
+                        const teamKey = document.getElementById(`top${i}_team`)?.value;
+                        const num = document.getElementById(`top${i}_num`)?.value;
+                        const name = document.getElementById(`top${i}_name`)?.value;
+                        
+                        if (name) { 
+                            const team = getTeam(teamKey);
+                            const circledNum = ['①', '②', '③', '④', '⑤'][i-1];
+                            output += `${circledNum}${team.emoji}${team.full} | #${num} ${name}\n`;
+                        }
+                    }
+
+                    output += `\n${getValue('vote_link')}\n\n${COMMON_TAGS}`;
+
+                } else if (currentMode === 'potw') {
+                    const team = getTeam(getValue('player_team'));
+                    const name = getValue('player_name_select');
+                    
+                    output = `🥇 ${toMathBoldSerif('PLAYER OF THE WEEK')}｜#單週表現最佳球員\n\n`;
+                    output += `🫶🏻 ${toMathBoldSerif('NOTHING BUT')}${team.emoji}${getValue('player_name')}\n\n`;
+                    
+                    const statContainer = document.getElementById('stats_list_container');
+                    let statsArr = [];
+                    Array.from(statContainer.children).forEach(div => {
+                        const val = div.querySelector('input[type="text"]').value;
+                        const select = div.querySelector('select');
+                        let unit = select.value;
+                        
+                        if (unit === 'custom') {
+                            unit = div.querySelectorAll('input[type="text"]')[1].value;
+                        }
+                        
+                        if (val) {
+                            statsArr.push(`${val} ${unit}`);
+                        }
+                    });
+                    
+                    output += `${toMathBoldSerif('STATS')}｜${statsArr.join(' / ')}\n\n`;
+                    output += `${getValue('player_desc')}\n\n-\n\n`;
+                    
+                    const date = getValue('next_date');
+                    if(date) {
+                        const mmdd = formatMMDD(date);
+                        const day = getDayChi(date);
+                        const home = getTeam(getValue('next_home'));
+                        const away = getTeam(getValue('next_away'));
+                        const time = getValue('next_time');
+                        const nameOnly = getValue('player_name_select').split(' ')[0] || "";
+                        
+                        const num = getValue('next_game_num');
+                        let arena = home.arena || "";
+                        const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
+                        if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
+
+                        output += `📌 休息一下回來看${nameOnly}發威👀\n`;
+                        output += `▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
+                    }
+                    output += `\n\n${COMMON_TAGS}`;
+                    
+                } else if (currentMode === 'weekly_local_eff') {
+                    output = `🔥${toMathBoldSerif('POWERFUL LOCALS')}｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行✨\n\n`;
+                    output += `${getValue('eff_intro')}\n\n`;
+                    
+                    for (let i = 1; i <= 5; i++) { 
+                        const name = getValue(`eff${i}_name`);
+                        if(name) {
+                            const teamKey = getValue(`eff${i}_team`);
+                            const team = getTeam(teamKey);
+                            const num = getValue(`eff${i}_num`);
+                            const val = getValue(`eff${i}_val`);
+                            const desc = getValue(`eff${i}_desc`);
+                            
+                            output += `${team.emoji} #${num} ${name} | EFF ${val}\n`;
+                            if(desc) output += `${desc}\n\n`;
+                            else output += `\n`;
+                        }
+                    }
+                    
+                    output += `${COMMON_TAGS}`;
+
+                } else if (currentMode === 'monthly_kicks') {
+                    output = `👟${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(getValue('kicks_month'))}\n\n`;
+                    output += `${getValue('kicks_intro')}\n\n`;
+                    output += `${getValue('kicks_month').replace('.','')}月精選實戰球鞋一次看👀👟\n\n`;
+                    output += `Presented by @momentum.tw\n\n`;
+                    output += `${COMMON_TAGS} #momentum`;
+
+                } else if (currentMode === 'season_stats') {
+                    output = `📊${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n`;
+                    output += `${getValue('stats_content')}\n\n`;
+                    
+                    const cutoff = getValue('stats_cutoff_date');
+                    const s2425 = document.getElementById('season_2425').checked;
+                    const s2526 = document.getElementById('season_2526').checked;
+                    let seasons = [];
+                    if(s2425) seasons.push('24-25');
+                    if(s2526) seasons.push('25-26');
+                    
+                    if(cutoff) {
+                       output += `*數據統計至${formatDateFull(cutoff)}，包含${seasons.join('、')}賽季\n\n-\n\n`;
+                    }
+                    
+                    const month = getValue('stats_vote_month');
+                    output += `📌 ${month}月MVP投票進行中 :\n`;
+                    output += `🔗投票連結｜${FIXED_VOTE_LINK}\n\n`;
+                    
+                    output += `${COMMON_TAGS}`;
+                } else if (currentMode === '100_reasons') {
+                    const vol = getValue('reasons_vol');
+                    const teamKey = getValue('reasons_team');
+                    const team = getTeam(teamKey);
+                    const name = getValue('reasons_name');
+                    const quote = getValue('reasons_quote');
+                    const content = getValue('reasons_content');
+                    const link = getValue('reasons_link');
+
+                    output = `【💭一百種喜歡籃球的原因 Vol.${vol}】\n\n`;
+                    output += `${toMathBoldSerif('Q')}：你喜歡籃球嗎？\n`;
+                    
+                    if (teamKey && name) {
+                        output += `${toMathBoldSerif('A')}：${quote} — ${team.emoji} ${team.full} ${name}\n\n`;
+                    } else {
+                        output += `${toMathBoldSerif('A')}：${quote}\n\n`;
+                    }
+                    
+                    output += `${content}\n\n`;
+                    output += `📝 完整故事請至 TPBL 官方網站\n${link}\n\n`;
+                    output += `#籃球怎能不愛 #NothingButLove #BasketballStory #HoopDreams`;
+                }
+
+                document.getElementById('output-text').value = output;
+            } catch (e) {
+                console.error("Generate Copy Error", e);
+            }
         }
 
         // Initialize with Smart Save
