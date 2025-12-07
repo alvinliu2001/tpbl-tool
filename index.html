@@ -198,6 +198,7 @@
                     <button onclick="switchMode('weekly_local_eff')" id="btn-weekly_local_eff" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-line w-6 text-center"></i> 每週本土效率值排行</button>
 
                     <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">專題 / 其他</div>
+                    <button onclick="switchMode('100_reasons')" id="btn-100_reasons" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-heart w-6 text-center"></i> 一百種喜歡籃球的原因</button>
                     <button onclick="switchMode('monthly_kicks')" id="btn-monthly_kicks" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-shoe-prints w-6 text-center"></i> 每月精選實戰球鞋</button>
                     <button onclick="switchMode('season_stats')" id="btn-season_stats" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-simple w-6 text-center"></i> 數據累計排行</button>
                 </div>
@@ -320,7 +321,6 @@
         // --- BUILT-IN FALLBACK DATA ---
         const DEFAULT_SCHEDULE = [
             { id: 1, date: "2025-10-11", time: "17:00", home: "國王", away: "海神", arena: "新莊體育館" },
-            // ... (Full schedule is preserved but truncated here for brevity in response block, fully functional in logic)
             { id: 126, date: "2026-05-03", time: "17:00", home: "國王", away: "特攻", arena: "新莊體育館" }
         ];
         
@@ -541,7 +541,8 @@
             'potw': 'https://www.instagram.com/p/DReOCyEk6JJ/',
             'weekly_local_eff': 'https://www.instagram.com/p/DRwY7KAk3yy/',
             'monthly_kicks': 'https://www.instagram.com/p/DRoMizOk3t5/',
-            'season_stats': 'https://www.instagram.com/p/DRjEhUdEz81/'
+            'season_stats': 'https://www.instagram.com/p/DRjEhUdEz81/',
+            '100_reasons': 'https://www.instagram.com/p/DR1tPClkziM/'
         };
 
         const COMMON_TAGS = "#TPBL #NothingButLove #籃球怎能不愛";
@@ -1113,7 +1114,7 @@
             'weekday_preview', 'game_preview', 'weekly_schedule', 'matchup_highlight',
             'final_score', 'game_highlight', 'press_conf', 'potg', 'local_player_highlight',
             'career_milestone', 'weekly_standings', 'top5', 'potw', 'weekly_local_eff',
-            'monthly_kicks', 'season_stats'
+            'monthly_kicks', 'season_stats', '100_reasons'
         ];
 
         function switchMode(mode) {
@@ -1155,7 +1156,8 @@
                 'potw': '單週最佳球員',
                 'weekly_local_eff': '每週本土效率值排行',
                 'monthly_kicks': '每月精選實戰球鞋',
-                'season_stats': '數據累計排行'
+                'season_stats': '數據累計排行',
+                '100_reasons': '一百種喜歡籃球的原因'
             };
             
             const titleEl = document.getElementById('title-text');
@@ -1389,7 +1391,7 @@
                                         ${createTeamSelect(`eff${i}_team`, '')}
                                     </div>
                                     <div class="col-span-2">
-                                        <input id="eff${i}_num" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100">
+                                        <input id="eff${i}_num" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100">
                                     </div>
                                     <div class="col-span-3">
                                         ${createPlayerSelect(`eff${i}_name`, '', `eff${i}_team`, `eff${i}_num`)}
@@ -1434,572 +1436,27 @@
                         ${createInput('stats_vote_month', '投票月份/區間 (例如：10-11)', 'text', '10-11')}
                     </div>
                 `;
-            }
+            } else if (mode === '100_reasons') {
+                const vol = getValue('reasons_vol');
+                const teamKey = getValue('reasons_team');
+                const team = TEAMS[teamKey];
+                const name = getValue('reasons_name');
+                const quote = getValue('reasons_quote');
+                const content = getValue('reasons_content');
+                const link = getValue('reasons_link');
 
-            container.innerHTML = html;
-        }
-
-        // --- Event Binding ---
-        function attachFormListeners() {
-            document.querySelectorAll('.team-select').forEach(select => {
-                select.addEventListener('change', function() {
-                    const teamName = this.value;
-                    const playerSelects = document.querySelectorAll(`.player-select[data-team-select="${this.id}"]`);
-                    playerSelects.forEach(pSelect => {
-                        pSelect.innerHTML = '<option value="">請選擇球員</option>';
-                        pSelect.value = "";
-                        const numInputId = pSelect.dataset.numInput;
-                        if(numInputId) { const ni = document.getElementById(numInputId); if(ni) ni.value = ""; }
-
-                        if (teamName && ROSTERS[teamName]) {
-                            pSelect.disabled = false;
-                            pSelect.classList.remove('disabled-input');
-                            ROSTERS[teamName].forEach(player => {
-                                const option = document.createElement('option');
-                                option.value = player.name;
-                                option.text = player.name; 
-                                option.dataset.num = player.num;
-                                pSelect.appendChild(option);
-                            });
-                        } else {
-                            pSelect.disabled = true;
-                            pSelect.classList.add('disabled-input');
-                        }
-                    });
-                });
-            });
-
-            document.querySelectorAll('.player-select').forEach(select => {
-                select.addEventListener('change', function() {
-                    const numInputId = this.dataset.numInput;
-                    if (numInputId) {
-                        const numInput = document.getElementById(numInputId);
-                        if (numInput) {
-                            const selectedOption = this.options[this.selectedIndex];
-                            numInput.value = selectedOption.dataset.num || "";
-                        }
-                    }
-                });
-            });
-        }
-        
-        function bindSmartEvents(mode) {
-             const debouncedSave = debounce(saveToLocal, 1000);
-             const form = document.getElementById('dynamic-form');
-             if(form) {
-                 form.addEventListener('input', debouncedSave);
-                 form.addEventListener('change', saveToLocal);
-             }
-
-             if (mode === 'game_preview' || mode === 'weekday_preview') {
-                 const d = document.getElementById('match_date');
-                 const t = document.getElementById('match_time');
-                 if(d) d.addEventListener('change', (e) => handleDateChange(e, 'match'));
-                 if(t) t.addEventListener('change', (e) => handleTimeChange(e, 'match'));
-                 if(mode === 'game_preview') {
-                     const gn = document.getElementById('game_num');
-                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'match'));
-                 }
-             }
-             
-             if (mode === 'matchup_highlight') {
-                 const d = document.getElementById('next_date');
-                 const t = document.getElementById('next_time');
-                 const g = document.getElementById('next_game_num');
-                 if(d) d.addEventListener('change', (e) => handleDateChange(e, 'next')); 
-                 if(t) t.addEventListener('change', (e) => handleTimeChange(e, 'next'));
-                 if(g) g.addEventListener('input', (e) => handleGameNumChange(e, 'next'));
-                 
-                 const na = document.getElementById('next_away');
-                 const nh = document.getElementById('next_home');
-                 if(na) na.addEventListener('change', () => updateSelect('mu_away_team', na.value));
-                 if(nh) nh.addEventListener('change', () => updateSelect('mu_home_team', nh.value));
-             }
-             
-             if(mode === 'final_score' || mode === 'potg') {
-                 const nd = document.getElementById('next_date');
-                 const nt = document.getElementById('next_time');
-                 if(nd) nd.addEventListener('change', (e) => handleDateChange(e, 'next'));
-                 if(nt) nt.addEventListener('change', (e) => handleTimeChange(e, 'next'));
-                 
-                 if(mode === 'final_score') {
-                     const gn = document.getElementById('game_num');
-                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'next')); 
-                 }
-                 if(mode === 'potg') {
-                     const gn = document.getElementById('potg_game_num');
-                     if(gn) gn.addEventListener('input', (e) => handleGameNumChange(e, 'potg'));
-                 }
-             }
-             
-             if(mode === 'weekly_schedule') {
-                 const w = document.getElementById('week_num');
-                 if(w) w.addEventListener('input', (e) => handleWeekChange(e, false));
-             }
-             if(mode === 'weekly_standings') {
-                 const w = document.getElementById('week_num');
-                 if(w) w.addEventListener('input', (e) => handleWeekChange(e, true));
-             }
-             
-             if(mode === 'local_player_highlight') {
-                 const t = document.getElementById('lp_team');
-                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
-             }
-             if(mode === 'press_conf') {
-                 const t = document.getElementById('pc_team_select');
-                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
-             }
-             if(mode === 'potw') {
-                 const t = document.getElementById('player_team');
-                 if(t) t.addEventListener('change', handlePlayerTeamChangeForNextGame);
-             }
-        }
-
-        // ... (helpers unchanged) ...
-        function debounce(func, wait) {
-            let timeout;
-            return function(...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), wait);
-            };
-        }
-
-        function addScheduleItemWithData(game) {
-            const container = document.getElementById('schedule_list_container');
-            const idx = container.children.length;
-            const div = document.createElement('div');
-            div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
-            const timeOptions = GAME_TIMES.map(t => `<option value="${t}" ${t===game.time?'selected':''}>${t}</option>`).join('');
-            
-            const arena = game.arena || TEAMS[game.home]?.arena || "";
-
-            div.innerHTML = `
-                <div class="flex gap-2 mb-2">
-                    <input type="date" id="sch_date_${idx}" value="${game.date}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
-                    <select id="sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
-                </div>
-                <div class="flex gap-2 items-center">
-                    <select id="sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.away}</option>${TEAM_KEYS.filter(k=>k!=game.away).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    <span class="text-gray-400 text-xs font-bold">VS</span>
-                    <select id="sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.home}</option>${TEAM_KEYS.filter(k=>k!=game.home).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded text-xl">&times;</button>
-                </div>
-            `;
-            container.appendChild(div);
-        }
-        
-        function addStandingsGameItemWithData(game) {
-             const container = document.getElementById('standings_schedule_list_container');
-            const idx = container.children.length;
-            const div = document.createElement('div');
-            div.className = "p-3 bg-white border rounded-lg shadow-sm mb-3";
-            const timeOptions = GAME_TIMES.map(t => `<option value="${t}" ${t===game.time?'selected':''}>${t}</option>`).join('');
-
-            div.innerHTML = `
-                <div class="flex gap-2 mb-2">
-                    <input type="date" id="std_sch_date_${idx}" value="${game.date}" class="flex-1 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold bg-white text-left">
-                    <select id="std_sch_time_${idx}" class="w-24 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">${timeOptions}</select>
-                </div>
-                <div class="flex gap-2 items-center">
-                    <select id="std_sch_away_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.away}</option>${TEAM_KEYS.filter(k=>k!=game.away).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    <span class="text-center shrink-0 text-xs font-bold">VS</span>
-                    <select id="std_sch_home_${idx}" class="flex-1 min-w-0 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold team-select"><option selected>${game.home}</option>${TEAM_KEYS.filter(k=>k!=game.home).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-1 rounded text-xl">&times;</button>
-                </div>
-            `;
-            container.appendChild(div);
-        }
-        
-        // --- Standard Add Item (Manual) ---
-        function addScheduleItem() { addScheduleItemWithData({date: new Date().toISOString().split('T')[0], time: '14:30', away: '', home: ''}); }
-        function addStandingsGameItem() { addStandingsGameItemWithData({date: new Date().toISOString().split('T')[0], time: '14:30', away: '', home: ''}); }
-        function addStatItem() {
-            const container = document.getElementById('stats_list_container');
-            const idx = container.children.length;
-            const div = document.createElement('div');
-            div.className = "flex gap-2 items-center";
-            const typeOptions = STAT_TYPES.map(t => `<option value="${t.val}">${t.label}</option>`).join('');
-            
-            div.innerHTML = `
-                <input type="text" id="stat_val_${idx}" placeholder="數值 (28)" class="w-20 p-2 border rounded text-sm focus:ring-brand-gold focus:border-brand-gold">
-                <select id="stat_type_${idx}" onchange="toggleCustomStat(${idx})" class="w-32 p-2 border rounded text-sm bg-white focus:ring-brand-gold focus:border-brand-gold">
-                    ${typeOptions}
-                </select>
-                <input type="text" id="stat_cust_${idx}" placeholder="自訂單位" class="flex-1 p-2 border rounded text-sm hidden focus:ring-brand-gold focus:border-brand-gold">
-                <button onclick="this.parentElement.remove()" class="text-red-500 font-bold px-2">&times;</button>
-            `;
-            container.appendChild(div);
-        }
-
-        function toggleCustomStat(idx) {
-            const select = document.getElementById(`stat_type_${idx}`);
-            const customInput = document.getElementById(`stat_cust_${idx}`);
-            if (select && customInput) {
-                if (select.value === 'custom') customInput.classList.remove('hidden');
-                else customInput.classList.add('hidden');
-            }
-        }
-
-        // --- Utils ---
-        function copyToClipboard() {
-            const copyText = document.getElementById("output-text");
-            copyText.select();
-            document.execCommand("copy");
-            
-            const btn = document.getElementById("copy-text");
-            const original = btn.innerText;
-            btn.innerText = "已複製！";
-            setTimeout(() => btn.innerText = original, 2000);
-        }
-
-        // --- Generation Logic ---
-        function generateCopy() {
-            let output = "";
-            const getValue = (id) => document.getElementById(id)?.value || "";
-            const getTeam = (key) => TEAMS[key];
-
-            const getNextGameText = () => {
-                const date = getValue('next_date');
-                if(!date) return "";
-                const mmdd = formatMMDD(date);
-                const day = getDayChi(date);
-                const time = getValue('next_time');
-                const home = getValue('next_home');
-                const away = getValue('next_away');
-                const num = getValue('next_game_num');
+                output = `【💭一百種喜歡籃球的原因 Vol.${vol}】\n\n`;
+                output += `${toMathBoldSerif('Q')}：你喜歡籃球嗎？\n`;
                 
-                let arena = TEAMS[home]?.arena || "";
-                const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
-                if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-
-                return `📌 下場比賽，一起迎風而上。\n▌${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
-            };
-            
-            const getNextGameTextShort = () => {
-                const date = getValue('next_date');
-                if(!date) return "";
-                const monthDay = formatMonthDay(date); 
-                const time = getValue('next_time'); 
-                const home = getValue('next_home');
-                const away = getValue('next_away');
-                const num = getValue('next_game_num');
-                return `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜Game${num}｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）`;
-            }
-            
-            const getLocalPlayerNextGame = () => {
-                const date = getValue('next_date');
-                if(!date) return "";
-                const mmdd = formatMMDD(date);
-                const day = getDayChi(date);
-                const time = getValue('next_time');
-                const home = getValue('next_home');
-                const away = getValue('next_away');
-                const arena = TEAMS[home].arena;
-                const player = getValue('lp_name'); 
-                return `📌 下場${player}：\n▌${mmdd}（${day}）｜${time}｜${TEAMS[away].full}（客） vs. ${TEAMS[home].full}（主）｜${arena}`;
-            };
-
-
-            if (currentMode === 'game_preview') {
-                const date = getValue('match_date');
-                const time = getValue('match_time');
-                const homeKey = getValue('match_home');
-                const awayKey = getValue('match_away');
-                const num = getValue('game_num');
-                const home = TEAMS[homeKey];
-                const away = TEAMS[awayKey];
-                
-                let arena = home?.arena || "";
-                const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
-                if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-                
-                const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
-                
-                output = `#${toMathBoldSerif('GAMEDAY')}& #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
-                output += `例行賽${toMathBoldSerif('GAME')}${toMathBoldSerif(getValue('game_num'))}✦${time} ${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
-                output += `${getValue('highlight_text')}\n\n—\n\n`;
-                output += `👉🏻賽事地點📍${arena}\n${BROADCAST_INFO}\n`;
-                output += `👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
-                output += `${COMMON_TAGS} #TPBL例行賽 #moltentaiwan`;
-
-            } else if (currentMode === 'weekday_preview') {
-                const date = getValue('match_date');
-                const home = TEAMS[getValue('match_home')];
-                const away = TEAMS[getValue('match_away')];
-                const dayName = getDayName(date); 
-                const mmdd = formatMMDD(date); 
-                const dayChi = getDayChi(date); 
-                const title = getValue('promo_title');
-                
-                // Find arena logic
-                let arena = home?.arena || "";
-                // Try to match game by date/time
-                const gameInDb = getGameByDateAndTime(date, getValue('match_time'));
-                if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-                
-                output = `🏀 ${toMathBoldSerif(title)}\n\n`;
-                output += `${getValue('promo_text')}\n\n-\n\n`;
-                output += `📌 小週末就看籃球：\n`;
-                output += `▌${mmdd}（${dayChi}）｜${getValue('match_time')}｜${away.full}（客） vs. ${home.full}（主）｜${arena}\n\n-\n\n`;
-                if(getValue('promo_link')) output += `${getValue('promo_link')}\n\n`;
-                output += `${COMMON_TAGS}`;
-
-            } else if (currentMode === 'matchup_highlight') {
-                 const home = TEAMS[getValue('mu_home_team')];
-                 const away = TEAMS[getValue('mu_away_team')];
-                 const homePlayer = getValue('mu_home_player');
-                 const awayPlayer = getValue('mu_away_player');
-                 
-                 output = `⚔️ ${toMathBoldSerif('MATCH UP')}｜${awayPlayer} ${away.emoji} vs. ${homePlayer} ${home.emoji}\n\n`;
-                 output += `${getValue('matchup_content')}\n\n-\n\n`;
-                 
-                 const date = getValue('next_date');
-                 if(date) {
-                     const mmdd = formatMMDD(date);
-                     const day = getDayChi(date);
-                     const time = getValue('next_time');
-                     const h = TEAMS[getValue('next_home')];
-                     const a = TEAMS[getValue('next_away')];
-                     const num = getValue('next_game_num');
-                     
-                     let arena = h?.arena || "";
-                     const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
-                     if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-
-                     output += `📌 今天晚上看頂尖對決：\n`;
-                     output += `▌${mmdd}（${day}）｜${time}｜${a.full}（客） vs. ${h.full}（主）｜${arena}\n\n`;
-                 }
-                 output += `${COMMON_TAGS}`;
-
-            } else if (currentMode === 'final_score') {
-                output = `🔙 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n`;
-                output += `${getValue('match_recap')}\n\n`;
-                
-                const date = getValue('next_date');
-                if(date) {
-                    const monthDay = formatMonthDay(date);
-                    const home = TEAMS[getValue('next_home')];
-                    const away = TEAMS[getValue('next_away')];
-                    output += `📺 ${toMathBoldSans('NEXT GAME')}\n${monthDay}｜${getValue('next_time')}｜${away.full}（客） vs. ${home.full}（主）`;
-                }
-                output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
-
-            } else if (currentMode === 'game_highlight') {
-                output = `❤️‍🔥👉🏻｜${getValue('hl_title')}\n\n`;
-                output += `📺 緯來電視網｜博斯運動二台｜TPBL官方 YOUTUBE\n\n`;
-                output += `${COMMON_TAGS} #TPBL例行賽`;
-
-            } else if (currentMode === 'press_conf') {
-                output = `🗣️${toMathBoldSerif(getValue('pc_title'))}\n\n`;
-                output += `💬「${getValue('pc_quote')}」\n\n`;
-                output += `${getValue('pc_content')}\n\n`;
-                output += getNextGameText();
-                output += `\n\n${COMMON_TAGS}`;
-
-            } else if (currentMode === 'potg') {
-                const home = TEAMS[getValue('potg_home')];
-                const away = TEAMS[getValue('potg_away')];
-                output = `❤️${toMathBoldSerif('NOTHING BUT HIM')}\n\n`;
-                output += `${away.emoji}/${home.emoji} #${toMathBoldSerif('單場最佳球員')}\n\n`;
-                output += getNextGameTextShort();
-                output += `\n\n-\n\n${getValue('promo_text')}\n\n${COMMON_TAGS} #TPBL例行賽`;
-
-            } else if (currentMode === 'local_player_highlight') {
-                const team = TEAMS[getValue('lp_team')];
-                const name = getValue('lp_name');
-                const titleSuffix = getValue('lp_title');
-                
-                output = `${team.emoji}${name}${titleSuffix}\n\n`;
-                output += `${getValue('lp_content')}\n\n-\n\n`;
-                output += getLocalPlayerNextGame();
-                output += `\n\n${COMMON_TAGS}`;
-
-            } else if (currentMode === 'career_milestone') {
-                output = `${getValue('ms_title')}\n\n`;
-                
-                const msNum = getValue('ms_num');
-                const msName = getValue('ms_name');
-                const msEng = getValue('ms_eng_name');
-                let playerInfo = '';
-                if(msName) {
-                    playerInfo = `#${msNum} ${msName}`;
-                    if(msEng) playerInfo += ` ${msEng}`;
-                }
-                
-                output += `${playerInfo}\n`;
-                output += `${getValue('ms_achievement')}\n`;
-                output += `${getValue('ms_content')}\n\n`;
-                output += `${COMMON_TAGS}`;
-
-            } else if (currentMode === 'weekly_schedule') {
-                output = `⏰｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程\n\n`;
-                output += `${getValue('week_intro')}\n\n-\n\n📌 本週賽事預告：\n`;
-                
-                const listContainer = document.getElementById('schedule_list_container');
-                Array.from(listContainer.children).forEach(div => {
-                    const inputs = div.querySelectorAll('input, select');
-                    const d = inputs[0].value;
-                    const t = inputs[1].value;
-                    const a = TEAMS[inputs[2].value];
-                    const h = TEAMS[inputs[3].value];
-                    if(d) {
-                         const mmdd = formatMMDD(d);
-                         const day = getDayChi(d);
-                         
-                         // Try to find arena from schedule DB
-                         let arena = h.arena;
-                         const gameInDb = getGameByDateAndTime(d, t);
-                         if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-
-                         output += `▌${mmdd}（${day}）｜${t}｜${a.full}（客） vs. ${h.full}（主）｜${arena}\n`;
-                    }
-                });
-                output += `\n${COMMON_TAGS}`;
-
-            } else if (currentMode === 'weekly_standings') {
-                output = `📊｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} #球隊戰績排行\n\n`;
-                output += `${getValue('standings_content')}\n\n`;
-                
-                const listContainer = document.getElementById('standings_schedule_list_container');
-                const hasChildren = listContainer && listContainer.children.length > 0;
-                
-                if (hasChildren) {
-                    output += `📌 本週賽事預告：\n`;
-                    Array.from(listContainer.children).forEach(div => {
-                        const inputs = div.querySelectorAll('input, select');
-                        const d = inputs[0].value;
-                        const t = inputs[1].value;
-                        const a = inputs[2].value;
-                        const h = inputs[3].value;
-                        if(d) {
-                             const mmdd = formatMMDD(d);
-                             const day = getDayChi(d);
-                             const aTeam = TEAMS[a];
-                             const hTeam = TEAMS[h];
-                             
-                             let arena = hTeam.arena;
-                             const gameInDb = getGameByDateAndTime(d, t);
-                             if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-
-                             output += `▌${mmdd}（${day}）｜${t}｜${aTeam.full}（客） vs. ${hTeam.full}（主）｜${arena}\n`;
-                        }
-                    });
-                     output += `\n${COMMON_TAGS}`;
+                if (team && name) {
+                    output += `${toMathBoldSerif('A')}：${quote} — ${team.emoji} ${team.full} ${name}\n\n`;
                 } else {
-                    output += `\n${COMMON_TAGS}`;
-                }
-
-            } else if (currentMode === 'top5') {
-                output = `💣｜${toMathBoldSerif('TOP')}𝟓✦${toMathBoldSerif('Week')}${toMathBoldSerif(getValue('week_num'))}📢\n\n`;
-                output += `${getValue('top5_intro')}\n\n`;
-                
-                for (let i = 5; i >= 1; i--) {
-                    const teamKey = document.getElementById(`top${i}_team`)?.value;
-                    const num = document.getElementById(`top${i}_num`)?.value;
-                    const name = document.getElementById(`top${i}_name`)?.value;
-                    
-                    if (name) { 
-                        const team = TEAMS[teamKey];
-                        const circledNum = ['①', '②', '③', '④', '⑤'][i-1];
-                        output += `${circledNum}${team.emoji}${team.full} | #${num} ${name}\n`;
-                    }
-                }
-
-                output += `\n${getValue('vote_link')}\n\n${COMMON_TAGS}`;
-
-            } else if (currentMode === 'potw') {
-                const team = TEAMS[getValue('player_team')];
-                const name = getValue('player_name_select');
-                
-                output = `🥇 ${toMathBoldSerif('PLAYER OF THE WEEK')}｜#單週表現最佳球員\n\n`;
-                output += `🫶🏻 ${toMathBoldSerif('NOTHING BUT')}${team.emoji}${getValue('player_name')}\n\n`;
-                
-                const statContainer = document.getElementById('stats_list_container');
-                let statsArr = [];
-                Array.from(statContainer.children).forEach(div => {
-                    const val = div.querySelector('input[type="text"]').value;
-                    const select = div.querySelector('select');
-                    let unit = select.value;
-                    
-                    if (unit === 'custom') {
-                        unit = div.querySelectorAll('input[type="text"]')[1].value;
-                    }
-                    
-                    if (val) {
-                        statsArr.push(`${val} ${unit}`);
-                    }
-                });
-                
-                output += `${toMathBoldSerif('STATS')}｜${statsArr.join(' / ')}\n\n`;
-                output += `${getValue('player_desc')}\n\n-\n\n`;
-                
-                const date = getValue('next_date');
-                if(date) {
-                    const mmdd = formatMMDD(date);
-                    const day = getDayChi(date);
-                    const home = TEAMS[getValue('next_home')];
-                    const away = TEAMS[getValue('next_away')];
-                    const time = getValue('next_time');
-                    const nameOnly = getValue('player_name_select').split(' ')[0] || "";
-                    
-                    const num = getValue('next_game_num');
-                    let arena = home?.arena || "";
-                    const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
-                    if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-
-                    output += `📌 休息一下回來看${nameOnly}發威👀\n`;
-                    output += `▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
-                }
-                output += `\n\n${COMMON_TAGS}`;
-                
-            } else if (currentMode === 'weekly_local_eff') {
-                output = `🔥${toMathBoldSerif('POWERFUL LOCALS')}｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行✨\n\n`;
-                output += `${getValue('eff_intro')}\n\n`;
-                
-                for (let i = 1; i <= 5; i++) { 
-                    const name = getValue(`eff${i}_name`);
-                    if(name) {
-                        const teamKey = getValue(`eff${i}_team`);
-                        const team = TEAMS[teamKey];
-                        const num = getValue(`eff${i}_num`);
-                        const val = getValue(`eff${i}_val`);
-                        const desc = getValue(`eff${i}_desc`);
-                        
-                        output += `${team.emoji} #${num} ${name} | EFF ${val}\n`;
-                        if(desc) output += `${desc}\n\n`;
-                        else output += `\n`;
-                    }
+                    output += `${toMathBoldSerif('A')}：${quote}\n\n`;
                 }
                 
-                output += `${COMMON_TAGS}`;
-
-            } else if (currentMode === 'monthly_kicks') {
-                output = `👟${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(getValue('kicks_month'))}\n\n`;
-                output += `${getValue('kicks_intro')}\n\n`;
-                output += `${getValue('kicks_month').replace('.','')}月精選實戰球鞋一次看👀👟\n\n`;
-                output += `Presented by @momentum.tw\n\n`;
-                output += `${COMMON_TAGS} #momentum`;
-
-            } else if (currentMode === 'season_stats') {
-                output = `📊${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n`;
-                output += `${getValue('stats_content')}\n\n`;
-                
-                const cutoff = getValue('stats_cutoff_date');
-                const s2425 = document.getElementById('season_2425').checked;
-                const s2526 = document.getElementById('season_2526').checked;
-                let seasons = [];
-                if(s2425) seasons.push('24-25');
-                if(s2526) seasons.push('25-26');
-                
-                if(cutoff) {
-                   output += `*數據統計至${formatDateFull(cutoff)}，包含${seasons.join('、')}賽季\n\n-\n\n`;
-                }
-                
-                const month = getValue('stats_vote_month');
-                output += `📌 ${month}月MVP投票進行中 :\n`;
-                output += `🔗投票連結｜${FIXED_VOTE_LINK}\n\n`;
-                
-                output += `${COMMON_TAGS}`;
+                output += `${content}\n\n`;
+                output += `📝 完整故事請至 TPBL 官方網站\n${link}\n\n`;
+                output += `#籃球怎能不愛 #NothingButLove #BasketballStory #HoopDreams`;
             }
 
             document.getElementById('output-text').value = output;
