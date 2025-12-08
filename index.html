@@ -191,6 +191,7 @@
                     <button onclick="switchMode('weekly_local_eff')" id="btn-weekly_local_eff" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-line w-6 text-center"></i> 每週本土效率值排行</button>
 
                     <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">專題 / 其他</div>
+                    <button onclick="switchMode('nb_moments')" id="btn-nb_moments" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-camera w-6 text-center"></i> Nothing But Moments</button>
                     <button onclick="switchMode('100_reasons')" id="btn-100_reasons" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-heart w-6 text-center"></i> 一百種喜歡籃球的原因</button>
                     <button onclick="switchMode('monthly_kicks')" id="btn-monthly_kicks" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-shoe-prints w-6 text-center"></i> 每月精選實戰球鞋</button>
                     <button onclick="switchMode('season_stats')" id="btn-season_stats" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-simple w-6 text-center"></i> 數據累計排行</button>
@@ -307,7 +308,7 @@
             "國王": { full: "新北國王", emoji: "👑", arena: "新莊體育館" },
             "夢想家": { full: "福爾摩沙夢想家", emoji: "🦄", arena: "洲際迷你蛋" },
             "海神": { full: "高雄全家海神", emoji: "🔱", arena: "高雄巨蛋" },
-            "雲豹": { full: "桃園台啤永豐雲豹", emoji: "🐆", arena: "桃園巨蛋" }
+            "雲豹": { full: "台啤永豐雲豹", emoji: "🐆", arena: "桃園巨蛋" }
         };
         const TEAM_KEYS = Object.keys(TEAMS);
         
@@ -535,7 +536,8 @@
             'weekly_local_eff': 'https://www.instagram.com/p/DRwY7KAk3yy/',
             'monthly_kicks': 'https://www.instagram.com/p/DRoMizOk3t5/',
             'season_stats': 'https://www.instagram.com/p/DRjEhUdEz81/',
-            '100_reasons': 'https://www.instagram.com/p/DR1tPClkziM/'
+            '100_reasons': 'https://www.instagram.com/p/DR1tPClkziM/',
+            'nb_moments': 'https://www.instagram.com/p/DR_9bRik0bq'
         };
 
         const COMMON_TAGS = "#TPBL #NothingButLove #籃球怎能不愛";
@@ -1107,7 +1109,7 @@
             'weekday_preview', 'game_preview', 'weekly_schedule', 'matchup_highlight',
             'final_score', 'game_highlight', 'press_conf', 'potg', 'local_player_highlight',
             'career_milestone', 'weekly_standings', 'top5', 'potw', 'weekly_local_eff',
-            'monthly_kicks', 'season_stats', '100_reasons'
+            'monthly_kicks', 'season_stats', '100_reasons', 'nb_moments'
         ];
 
         function switchMode(mode) {
@@ -1151,7 +1153,8 @@
                     'weekly_local_eff': '每週本土效率值排行',
                     'monthly_kicks': '每月精選實戰球鞋',
                     'season_stats': '數據累計排行',
-                    '100_reasons': '一百種喜歡籃球的原因'
+                    '100_reasons': '一百種喜歡籃球的原因',
+                    'nb_moments': 'Nothing But Moments'
                 };
                 
                 const titleEl = document.getElementById('title-text');
@@ -1412,10 +1415,17 @@
                         </div>
                     `;
                 } else if (mode === 'monthly_kicks') {
-                    html += `
-                        ${createSelect('kicks_month', '月份', MONTHS)}
-                        ${createTextarea('kicks_intro', '引言文案', '', 4)}
-                    `;
+                    const mVal = getValue('kicks_month');
+                    const mIndex = MONTHS.indexOf(mVal);
+                    const mNum = mIndex + 1; // 0-based index to 1-12
+                    
+                    output = `👟${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(mVal)}\n\n`;
+                    output += `${getValue('kicks_intro')}\n\n`;
+                    // Updated Format: "1 月..."
+                    output += `${mNum} 月精選實戰球鞋一次看 👀👟\n\n`;
+                    output += `Presented by @momentum.tw\n\n`;
+                    output += `${COMMON_TAGS} #momentum`;
+
                 } else if (mode === 'season_stats') {
                     html += `
                         <div>
@@ -1460,6 +1470,11 @@
                         ${createTextarea('reasons_quote', '金句 (A: ... 的內容)', '籃球帶給我許多挑戰...', 4)}
                         ${createTextarea('reasons_content', '專題內文', '國中三年從未登錄上場...', 8)}
                         ${createInput('reasons_link', '官網連結', 'text', 'https://tpbl.basketball/news/...')}
+                    `;
+                } else if (mode === 'nb_moments') {
+                    html += `
+                        ${createInput('nb_title', '標題 (｜後面的文字)', 'text', '12月的天氣雖然冷颼颼...')}
+                        ${createTextarea('nb_content', '內文', '中華隊賽事結束後...', 8)}
                     `;
                 }
 
@@ -1873,7 +1888,7 @@
                     output += `${COMMON_TAGS}`;
 
                 } else if (currentMode === 'weekly_schedule') {
-                    output = `⏰｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程\n\n`;
+                    output = `⏰｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程\n\n`;
                     output += `${getValue('week_intro')}\n\n-\n\n📌 本週賽事預告：\n`;
                     
                     const listContainer = document.getElementById('schedule_list_container');
@@ -1897,7 +1912,7 @@
                     output += `\n${COMMON_TAGS}`;
 
                 } else if (currentMode === 'weekly_standings') {
-                    output = `📊｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(getValue('week_num'))} #球隊戰績排行\n\n`;
+                    output = `📊｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} #球隊戰績排行\n\n`;
                     output += `${getValue('standings_content')}\n\n`;
                     
                     const listContainer = document.getElementById('standings_schedule_list_container');
@@ -1930,7 +1945,7 @@
                     }
 
                 } else if (currentMode === 'top5') {
-                    output = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(getValue('week_num'))}📢\n\n`;
+                    output = `💣｜${toMathBoldSerif('TOP')}𝟓✦${toMathBoldSerif('Week')}${toMathBoldSerif(getValue('week_num'))}📢\n\n`;
                     output += `${getValue('top5_intro')}\n\n`;
                     
                     for (let i = 5; i >= 1; i--) {
@@ -1996,7 +2011,7 @@
                     output += `\n\n${COMMON_TAGS}`;
                     
                 } else if (currentMode === 'weekly_local_eff') {
-                    output = `🔥${toMathBoldSerif('POWERFUL LOCALS')}｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行✨\n\n`;
+                    output = `🔥${toMathBoldSerif('POWERFUL LOCALS')}｜${toMathBoldSerif('WEEK')}${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行✨\n\n`;
                     output += `${getValue('eff_intro')}\n\n`;
                     
                     for (let i = 1; i <= 5; i++) { 
@@ -2069,6 +2084,13 @@
                     output += `${content}\n\n`;
                     output += `📝 完整故事請至 TPBL 官方網站\n${link}\n\n`;
                     output += `#籃球怎能不愛 #NothingButLove #BasketballStory #HoopDreams`;
+                } else if (currentMode === 'nb_moments') {
+                    const title = getValue('nb_title');
+                    const content = getValue('nb_content');
+                    output = `👀📸 ${toMathBoldSerif('Nothing But Moments')}｜${title}\n\n`;
+                    output += `${content}\n\n`;
+                    output += `鎖定每週賽事，繼續帶給你最熱血、最動人的瞬間 🙌🏽\n\n`;
+                    output += `#TPBL #NOTHINGBUTLOVE #NOTHINGBUTMOMENTS #籃球怎能不愛`;
                 }
 
                 document.getElementById('output-text').value = output;
