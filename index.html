@@ -1757,7 +1757,7 @@
                     
                     const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
                     
-                    output = `#${toMathBoldSerif('GAMEDAY')}& #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
+                    output = `#${toMathBoldSerif('GAMEDAY')} & #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
                     // Updated Format: Game (space) Num, Time bolded
                     output += `例行賽 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ✦ ${toMathBoldSerif(time)} ${away.emoji}${awayKey} vs ${homeKey}${home.emoji}✦\n\n`;
                     output += `${getValue('highlight_text')}\n\n—\n\n`;
