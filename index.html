@@ -431,9 +431,9 @@
             { id: 115, date: "2026-04-19", time: "14:30", home: "夢想家", away: "攻城獅", arena: "臺中洲際迷你蛋" },
             { id: 116, date: "2026-04-19", time: "17:00", home: "特攻", away: "海神", arena: "新莊體育館" },
             { id: 117, date: "2026-04-24", time: "19:00", home: "國王", away: "夢想家", arena: "新莊體育館" },
-            { id: 118, date: "2026-04-25", time: "14:30", home: "雲豹", away: "海神", arena: "健行科大體育館" },
+            { id: 118, date: "2026-04-25", time: "14:30", home: "雲豹", away: "海神", arena: "中壢運動中心" },
             { id: 119, date: "2026-04-25", time: "17:00", home: "戰神", away: "攻城獅", arena: "和平籃球館" },
-            { id: 120, date: "2026-04-26", time: "14:30", home: "雲豹", away: "夢想家", arena: "健行科大體育館" },
+            { id: 120, date: "2026-04-26", time: "14:30", home: "雲豹", away: "夢想家", arena: "中壢運動中心" },
             { id: 121, date: "2026-04-26", time: "17:00", home: "戰神", away: "特攻", arena: "和平籃球館" },
             { id: 122, date: "2026-04-29", time: "19:00", home: "攻城獅", away: "國王", arena: "新竹縣體育館" },
             { id: 123, date: "2026-05-02", time: "14:30", home: "攻城獅", away: "戰神", arena: "新竹縣體育館" },
@@ -535,7 +535,7 @@
         };
 
         const COMMON_TAGS = "#TPBL #NothingButLove #籃球怎能不愛";
-        const BROADCAST_INFO = "👉🏻轉播平台 📺 緯來電視網｜博斯運動二台｜TPBL官方YOUTUBE";
+        const BROADCAST_FIXED = "｜博斯運動二台｜TPBL官方YOUTUBE"; // Removed specific channel from here
 
         let currentMode = '';
         const STORAGE_PREFIX = 'tpbl_v3_';
@@ -548,8 +548,8 @@
                 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
                 'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
                 'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
-                'k': '𝐤', 'l': '𝐥', 'm': '𝗺', 'n': '𝐧', 'o': '𝐨', 'p': '𝗽', 'q': '𝐪', 'r': '𝐫', 's': '𝘀', 't': '𝐭',
-                'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
+                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁',
+                'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇'
             };
             return String(text).split('').map(char => map[char] || char).join('');
         };
@@ -1203,6 +1203,8 @@
                             ${createTeamSelect('match_away', '客隊 (Away)')}
                             ${createTeamSelect('match_home', '主隊 (Home)')}
                         </div>
+                        
+                        ${createSelect('broadcast_channel', '電視轉播', ['緯來電視網', 'MOMOTV'])}
                         ${createTextarea('highlight_text', '觀賽亮點', '輸入本場看點文案...', 6)}
                         ${createInput('yt_link', 'YouTube 轉播連結', 'text')}
                     `;
@@ -1257,6 +1259,7 @@
                 } else if (mode === 'game_highlight') {
                     html += `
                         ${createInput('hl_title', '精華標題 (不需輸入開頭符號)', 'text', '戰神陪你提前過聖誕！Merry ChristMARS 🎄')}
+                        ${createSelect('broadcast_channel', '電視轉播', ['緯來電視網', 'MOMOTV'])}
                     `;
                 } else if (mode === 'press_conf') {
                     html += `
@@ -1747,11 +1750,15 @@
                     
                     const headerDate = `${toMathBoldSerif(formatMonthDay(date))}（${toMathBoldSerif(getDayName(date))}）`; 
                     
+                    // NEW: Dynamic Broadcast Logic
+                    const channel = getValue('broadcast_channel') || '緯來電視網';
+                    const broadcastText = `👉🏻轉播平台 📺 ${channel}${BROADCAST_FIXED}`;
+
                     output = `#${toMathBoldSerif('GAMEDAY')} & #${toMathBoldSerif('ROSTER')}｜${headerDate}\n\n`;
                     // Updated Format: Game (space) Num, Time bolded
                     output += `例行賽 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ✦ ${toMathBoldSerif(time)} ${away.emoji} ${awayKey} vs ${homeKey} ${home.emoji} ✦\n\n`;
                     output += `${getValue('highlight_text')}\n\n—\n\n`;
-                    output += `👉🏻賽事地點📍${arena}\n${BROADCAST_INFO}\n`;
+                    output += `👉🏻賽事地點📍${arena}\n${broadcastText}\n`;
                     output += `👉🏻YT轉播連結｜${getValue('yt_link')}\n\n`;
                     output += `${COMMON_TAGS} #TPBL例行賽 #moltentaiwan`;
 
@@ -1813,8 +1820,11 @@
                     output += `\n\n${COMMON_TAGS} #TPBL例行賽`;
 
                 } else if (currentMode === 'game_highlight') {
+                    // NEW: Dynamic Broadcast Logic for Highlight
+                    const channel = getValue('broadcast_channel') || '緯來電視網';
+
                     output = `❤️‍🔥👉🏻｜${getValue('hl_title')}\n\n`;
-                    output += `📺 緯來電視網｜博斯運動二台｜TPBL官方 YOUTUBE\n\n`;
+                    output += `👉🏻轉播平台 📺 ${channel}${BROADCAST_FIXED}\n\n`;
                     output += `${COMMON_TAGS} #TPBL例行賽`;
 
                 } else if (currentMode === 'press_conf') {
