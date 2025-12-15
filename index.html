@@ -1218,7 +1218,7 @@
                         </div>
                         ${createInput('promo_title', '預告標題 (如：WEDNESDAY NIGHT...)', 'text', 'WEDNESDAY NIGHT, GAME ONNNN')}
                         ${createTextarea('promo_text', '預告文案', '本季首次交手的...', 4)}
-                        ${createTextarea('promo_link', '贊助商版位 (可換行)', '📍SPORTS NATIONS店點資訊...', 3)}
+                        ${createTextarea('promo_link', '贊助商版位 (可換行)', '📍 SPORTS NATIONS 店點資訊...', 3)}
                     `;
                 } else if (mode === 'matchup_highlight') {
                     html += `
@@ -1758,7 +1758,7 @@
                     // Updated Format: Game (space) Num, Time bolded
                     output += `例行賽 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ✦ ${toMathBoldSerif(time)} ${away.emoji} ${awayKey} vs ${homeKey} ${home.emoji} ✦\n\n`;
                     output += `${getValue('highlight_text')}\n\n—\n\n`;
-                    output += `👉🏻 賽事地點📍${arena}\n${broadcastText}\n`;
+                    output += `👉🏻 賽事地點 📍 ${arena}\n${broadcastText}\n`;
                     output += `👉🏻 YT轉播連結｜${getValue('yt_link')}\n\n`;
                     output += `${COMMON_TAGS} #TPBL例行賽 #moltentaiwan`;
 
