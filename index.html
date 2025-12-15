@@ -313,12 +313,6 @@
         const TEAM_KEYS = Object.keys(TEAMS);
         
         // --- BUILT-IN FALLBACK DATA ---
-        const DEFAULT_SCHEDULE = [
-            { id: 1, date: "2025-10-11", time: "17:00", home: "國王", away: "海神", arena: "新莊體育館" },
-            { id: 126, date: "2026-05-03", time: "17:00", home: "國王", away: "特攻", arena: "新莊體育館" }
-        ];
-        
-        // Re-injecting full schedule for robustness
         let SEASON_SCHEDULE_DB = [
             { id: 1, date: "2025-10-11", time: "17:00", home: "國王", away: "海神", arena: "新莊體育館" },
             { id: 2, date: "2025-10-12", time: "17:00", home: "國王", away: "夢想家", arena: "新莊體育館" },
@@ -437,9 +431,9 @@
             { id: 115, date: "2026-04-19", time: "14:30", home: "夢想家", away: "攻城獅", arena: "臺中洲際迷你蛋" },
             { id: 116, date: "2026-04-19", time: "17:00", home: "特攻", away: "海神", arena: "新莊體育館" },
             { id: 117, date: "2026-04-24", time: "19:00", home: "國王", away: "夢想家", arena: "新莊體育館" },
-            { id: 118, date: "2026-04-25", time: "14:30", home: "雲豹", away: "海神", arena: "中壢運動中心" },
+            { id: 118, date: "2026-04-25", time: "14:30", home: "雲豹", away: "海神", arena: "健行科大體育館" },
             { id: 119, date: "2026-04-25", time: "17:00", home: "戰神", away: "攻城獅", arena: "和平籃球館" },
-            { id: 120, date: "2026-04-26", time: "14:30", home: "雲豹", away: "夢想家", arena: "中壢運動中心" },
+            { id: 120, date: "2026-04-26", time: "14:30", home: "雲豹", away: "夢想家", arena: "健行科大體育館" },
             { id: 121, date: "2026-04-26", time: "17:00", home: "戰神", away: "特攻", arena: "和平籃球館" },
             { id: 122, date: "2026-04-29", time: "19:00", home: "攻城獅", away: "國王", arena: "新竹縣體育館" },
             { id: 123, date: "2026-05-02", time: "14:30", home: "攻城獅", away: "戰神", arena: "新竹縣體育館" },
@@ -554,8 +548,8 @@
                 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
                 'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
                 'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
-                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
-                'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
+                'k': '𝐤', 'l': '𝐥', 'm': '𝗺', 'n': '𝐧', 'o': '𝐨', 'p': '𝗽', 'q': '𝐪', 'r': '𝐫', 's': '𝘀', 't': '𝐭',
+                'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
             };
             return String(text).split('').map(char => map[char] || char).join('');
         };
@@ -1415,17 +1409,10 @@
                         </div>
                     `;
                 } else if (mode === 'monthly_kicks') {
-                    const mVal = getValue('kicks_month');
-                    const mIndex = MONTHS.indexOf(mVal);
-                    const mNum = mIndex + 1; // 0-based index to 1-12
-                    
-                    output = `👟${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(mVal)}\n\n`;
-                    output += `${getValue('kicks_intro')}\n\n`;
-                    // Updated Format: "1 月..."
-                    output += `${mNum} 月精選實戰球鞋一次看 👀👟\n\n`;
-                    output += `Presented by @momentum.tw\n\n`;
-                    output += `${COMMON_TAGS} #momentum`;
-
+                    html += `
+                        ${createSelect('kicks_month', '月份', MONTHS)}
+                        ${createTextarea('kicks_intro', '引言文案', '', 4)}
+                    `;
                 } else if (mode === 'season_stats') {
                     html += `
                         <div>
@@ -1724,8 +1711,11 @@
                     const datePart = `${toMathBoldSerif(mStr)}. ${toMathBoldSerif(dNum)}`;
                     const gamePart = `${toMathBoldSerif('Game')}${toMathBoldSerif(num)}`;
                     const timePart = toMathBoldSerif(time);
-
-                    return `${datePart}｜ ${gamePart}｜${timePart} ${away.full}（客） vs.${home.full}（主）`;
+                    
+                    // Added "NEXT GAME" header as requested
+                    let res = `📺 ${toMathBoldSans('NEXT GAME')}\n`;
+                    res += `${datePart}｜ ${gamePart}｜${timePart} ${away.full}（客） vs.${home.full}（主）`;
+                    return res;
                 };
                 
                 const getLocalPlayerNextGame = () => {
@@ -1813,7 +1803,7 @@
                      output += `${COMMON_TAGS}`;
 
                 } else if (currentMode === 'final_score') {
-                    output = `🔚 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n`;
+                    output = `🔙 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n`;
                     output += `${getValue('match_recap')}\n\n`;
                     
                     const date = getValue('next_date');
