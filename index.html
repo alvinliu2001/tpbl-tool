@@ -2049,7 +2049,7 @@
                         const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
                         if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
 
-                        output += `📌 休息一下回來看${nameOnly}發威👀\n`;
+                        output += `📌 休息一下回來看${nameOnly}發威 👀\n`;
                         output += `▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
                     }
                     output += `\n\n${COMMON_TAGS}`;
@@ -2099,12 +2099,12 @@
                     if(s2526) seasons.push('25-26');
                     
                     if(cutoff) {
-                       output += `*數據統計至${formatDateFull(cutoff)}，包含${seasons.join('、')}賽季\n\n-\n\n`;
+                       output += `*數據統計至 ${formatDateFull(cutoff)}，包含 ${seasons.join('、')} 賽季\n\n-\n\n`;
                     }
                     
                     const month = getValue('stats_vote_month');
                     output += `📌 ${month}月MVP投票進行中 :\n`;
-                    output += `🔗投票連結｜${FIXED_VOTE_LINK}\n\n`;
+                    output += `🔗 投票連結｜${FIXED_VOTE_LINK}\n\n`;
                     
                     output += `${COMMON_TAGS}`;
                 } else if (currentMode === '100_reasons') {
