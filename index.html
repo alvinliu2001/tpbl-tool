@@ -544,9 +544,9 @@
         const toMathBoldSerif = (text) => {
             const map = {
                 '0': '𝟎', '1': '𝟏', '2': '𝟐', '3': '𝟑', '4': '𝟒', '5': '𝟓', '6': '𝟔', '7': '𝟕', '8': '𝟖', '9': '𝟗',
-                'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉',
+                'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝗛', 'I': '𝗜', 'J': '𝐉',
                 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
-                'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
+                'U': '𝗨', 'V': '𝗩', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
                 'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
                 'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
                 'u': '𝘂', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
@@ -1352,26 +1352,14 @@
                             ${[1,2,3,4,5].map(i => `
                                 <div class="p-3 border rounded-md bg-gray-50">
                                     <span class="font-bold text-gray-700 block mb-1">第 ${i} 名</span>
-                                    <div class="grid grid-cols-12 gap-2 mb-2">
-                                        <div class="col-span-12">${createTeamSelect(`top${i}_team`, '')}</div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <p class="text-xs text-gray-500 mb-1">球員 1 (主要)</p>
-                                            ${createPlayerSelect(`top${i}_name_1`, '', `top${i}_team`, `top${i}_num_1`)}
-                                            <input type="hidden" id="top${i}_num_1">
-                                        </div>
-                                        <div>
-                                            <p class="text-xs text-gray-500 mb-1">球員 2 (次要/選填)</p>
-                                            ${createPlayerSelect(`top${i}_name_2`, '', `top${i}_team`, `top${i}_num_2`)}
-                                            <input type="hidden" id="top${i}_num_2">
-                                        </div>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        ${createTeamSelect(`top${i}_team`, '')}
+                                        ${createPlayerSelect(`top${i}_name`, '', `top${i}_team`, `top${i}_num`)}
+                                        <input id="top${i}_num" type="text" readonly placeholder="背號" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100">
                                     </div>
                                 </div>
                             `).join('')}
                         </div>
-                        ${createInput('vote_link', '投票連結', 'text')}
-                        
                         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
                             <p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入下週)</p>
                             <div id="standings_schedule_list_container" class="space-y-3"></div>
@@ -1592,7 +1580,7 @@
                  const w = document.getElementById('week_num');
                  if(w) w.addEventListener('input', (e) => handleWeekChange(e, true));
              }
-             if (mode === 'top5') { // NEW: Bind week change for Top 5 schedule
+             if (mode === 'top5') { 
                  const w = document.getElementById('week_num');
                  if(w) w.addEventListener('input', (e) => handleWeekChange(e, true));
              }
@@ -1967,6 +1955,8 @@
                     output = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(getValue('week_num'))} 📢\n\n`;
                     output += `${getValue('top5_intro')}\n\n`;
                     
+                    const formatNum = (n) => n.toString().includes('#') ? n : '#' + n;
+
                     for (let i = 5; i >= 1; i--) {
                         const teamKey = document.getElementById(`top${i}_team`)?.value;
                         const team = getTeam(teamKey);
@@ -1978,15 +1968,15 @@
                         
                         if (name1) { 
                             const circledNum = ['①', '②', '③', '④', '⑤'][i-1];
-                            let playerStr = `#${num1} ${name1}`;
+                            let playerStr = `${formatNum(num1)} ${name1}`;
                             if(name2) {
-                                playerStr += ` & #${num2} ${name2}`;
+                                playerStr += ` & ${formatNum(num2)} ${name2}`;
                             }
                             output += `${circledNum} ${team.emoji} ${team.full}｜${playerStr}\n`;
                         }
                     }
 
-                    output += `\n${getValue('vote_link')}\n\n-\n\n`;
+                    output += `\n\n-\n\n`;
 
                     const listContainer = document.getElementById('standings_schedule_list_container');
                     const hasChildren = listContainer && listContainer.children.length > 0;
@@ -2002,8 +1992,8 @@
                             if(d) {
                                  const mmdd = formatMMDD(d);
                                  const day = getDayChi(d);
-                                 const aTeam = getTeam(a);
-                                 const hTeam = getTeam(h);
+                                 const aTeam = getTeam(TEAMS[a] ? a : Object.keys(TEAMS).find(k => TEAMS[k].full === a) || a);
+                                 const hTeam = getTeam(TEAMS[h] ? h : Object.keys(TEAMS).find(k => TEAMS[k].full === h) || h);
                                  
                                  let arena = hTeam.arena;
                                  const gameInDb = getGameByDateAndTime(d, t);
@@ -2044,6 +2034,10 @@
                     
                     const date = getValue('next_date');
                     if(date) {
+                        // Standardize next game format for potw too? User asked for potg specifically.
+                        // But kept old format for consistency with user request unless specified.
+                        // Reverting to old format here for safety, or using new if desired.
+                        // User request: "終場比分、單場最佳球員 (potg)". Not "potw" (Player of the Week).
                         const mmdd = formatMMDD(date);
                         const day = getDayChi(date);
                         const home = getTeam(getValue('next_home'));
