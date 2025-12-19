@@ -491,10 +491,17 @@
             ]
         };
 
-        // Use CORS Proxy for better reliability
+        // Use GVIZ API for faster updates
+        // Original: https://docs.google.com/spreadsheets/d/1wcKacc8kQqyiqm9sUdStN4W7fB7FzXcCLL6UpySBE9g/edit
+        const SHEET_ID = "1wcKacc8kQqyiqm9sUdStN4W7fB7FzXcCLL6UpySBE9g";
         const CORS_PROXY = "https://api.allorigins.win/raw?url=";
-        const GOOGLE_ROSTER_CSV_URL = "https://docs.google.com/spreadsheets/d/1wcKacc8kQqyiqm9sUdStN4W7fB7FzXcCLL6UpySBE9g/export?format=csv";
-        const GOOGLE_SCHEDULE_CSV_URL = "https://docs.google.com/spreadsheets/d/1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc/export?format=csv";
+        
+        // Use GVIZ endpoint (returns CSV)
+        const GOOGLE_ROSTER_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
+        // Schedule is on another sheet or another ID? Assuming same ID for now based on user context, or keeping original logic if it was a different sheet. 
+        // Note: In previous code, schedule URL was different: 1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc
+        const SCHEDULE_SHEET_ID = "1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc";
+        const GOOGLE_SCHEDULE_CSV_URL = `https://docs.google.com/spreadsheets/d/${SCHEDULE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
 
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
         const MONTHS = ["JAN.", "FEB.", "MAR.", "APR.", "MAY", "JUN.", "JUL.", "AUG.", "SEP.", "OCT.", "NOV.", "DEC."];
@@ -535,21 +542,24 @@
         };
 
         const COMMON_TAGS = "#TPBL #NothingButLove #籃球怎能不愛";
-        const BROADCAST_FIXED = "｜博斯運動二台｜TPBL 官方 YOUTUBE"; // Removed specific channel from here
+        const BROADCAST_FIXED = "｜博斯運動二台｜TPBL 官方 YOUTUBE"; 
 
         let currentMode = '';
         const STORAGE_PREFIX = 'tpbl_v3_';
 
+        // ... [Utils: toMathBoldSerif, toMathBoldSans, parseDateLocal, getDayName, getDayChi, formatMonthDay, formatMMDD, formatDateFull, normalizeTeamName, getNearestNextGame, getNearestPastGame, getGameByDateAndTime, getGameById, getNextGameAfterId, getNextGameForTeam, getNextGameForTeamByDate, getWeekdayGame, getDatesForWeek, getGamesInDateRange] ...
+        // (Keeping these utility functions as is, compacted for brevity in logic description but full in file)
+        
         // --- Utils ---
         const toMathBoldSerif = (text) => {
             const map = {
                 '0': '𝟎', '1': '𝟏', '2': '𝟐', '3': '𝟑', '4': '𝟒', '5': '𝟓', '6': '𝟔', '7': '𝟕', '8': '𝟖', '9': '𝟗',
-                'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝗛', 'I': '𝗜', 'J': '𝐉',
+                'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉',
                 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
-                'U': '𝗨', 'V': '𝗩', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
+                'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
                 'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
                 'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
-                'u': '𝘂', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
+                'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
             };
             return String(text).split('').map(char => map[char] || char).join('');
         };
@@ -569,7 +579,7 @@
         
         const parseDateLocal = (dateStr) => {
             if (!dateStr) return new Date();
-            const parts = dateStr.replace(/\//g, '-').split('-'); // Handle both / and -
+            const parts = dateStr.replace(/\//g, '-').split('-'); 
             return new Date(parts[0], parts[1] - 1, parts[2]);
         };
 
@@ -601,7 +611,6 @@
              return `${date.getFullYear()}/${String(date.getMonth()+1).padStart(2,'0')}/${String(date.getDate()).padStart(2,'0')}`;
         }
         
-        // --- Helper: Normalization for Team Names ---
         function normalizeTeamName(name) {
             if(!name) return "";
             name = name.trim();
@@ -615,27 +624,21 @@
             return name; 
         }
 
-        // --- Helper: Schedule Logic ---
         function getNearestNextGame(fromDateStr) {
             const fromDate = parseDateLocal(fromDateStr);
             for (const game of SEASON_SCHEDULE_DB) {
                 const gameDate = parseDateLocal(game.date);
-                if (gameDate >= fromDate) {
-                    return game; 
-                }
+                if (gameDate >= fromDate) return game; 
             }
             return SEASON_SCHEDULE_DB[SEASON_SCHEDULE_DB.length-1];
         }
         
         function getNearestPastGame(fromDateStr) {
             const fromDate = parseDateLocal(fromDateStr);
-            // Search backwards
             for (let i = SEASON_SCHEDULE_DB.length - 1; i >= 0; i--) {
                 const game = SEASON_SCHEDULE_DB[i];
                 const gameDate = parseDateLocal(game.date);
-                if (gameDate <= fromDate) {
-                    return game;
-                }
+                if (gameDate <= fromDate) return game;
             }
             return SEASON_SCHEDULE_DB[0];
         }
@@ -686,10 +689,8 @@
             const diffWeeks = weekNum - 8;
             const targetStart = new Date(week8Start);
             targetStart.setDate(week8Start.getDate() + (diffWeeks * 7));
-            
             const targetEnd = new Date(targetStart);
             targetEnd.setDate(targetStart.getDate() + 6);
-            
             return {
                 start: targetStart.toISOString().split('T')[0],
                 end: targetEnd.toISOString().split('T')[0]
@@ -700,7 +701,7 @@
             return SEASON_SCHEDULE_DB.filter(g => g.date >= startStr && g.date <= endStr);
         }
 
-        // --- Fetch Data (Roster & Schedule) ---
+        // --- Fetch Data (Roster & Schedule) with GVIZ ---
         function fetchAllData() {
             const statusDiv = document.getElementById('sync-status');
             statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 檢查更新中...';
@@ -723,19 +724,35 @@
 
         async function fetchRosterData() {
             try {
+                // Using GVIZ endpoint
                 const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now()));
                 if (!response.ok) throw new Error('Network response was not ok');
                 let csvText = await response.text();
-                if (csvText.charCodeAt(0) === 0xFEFF) csvText = csvText.slice(1);
+                
+                // Parse CSV - assuming standard GVIZ output (comma separated, quoted values)
+                // However, GVIZ CSV output is usually clean. We'll use a simple parser but robust enough for this data.
+                // Standard row.split(',') works if no commas in fields.
                 
                 const rows = csvText.split(/\r?\n/);
                 const newRosters = {};
+                
                 for (let i = 1; i < rows.length; i++) {
-                    const row = rows[i].split(',');
-                    if (row.length < 3) continue;
-                    const team = normalizeTeamName(row[0].trim());
-                    const name = row[1].trim();
-                    const num = row[2].trim();
+                    // Remove quotes if present from GVIZ
+                    const rowRaw = rows[i];
+                    if(!rowRaw) continue;
+                    
+                    // Simple split by comma, ignoring quotes for now as player data is simple
+                    // If GVIZ adds quotes "Team","Name" etc.
+                    let parts = rowRaw.split(',');
+                    // Clean quotes
+                    parts = parts.map(p => p.replace(/^"|"$/g, ''));
+                    
+                    if (parts.length < 3) continue;
+                    
+                    const team = normalizeTeamName(parts[0].trim());
+                    const name = parts[1].trim();
+                    const num = parts[2].trim();
+
                     if (team && name && num) {
                         if (!newRosters[team]) newRosters[team] = [];
                         newRosters[team].push({ name, num });
@@ -750,29 +767,39 @@
                 const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_SCHEDULE_CSV_URL + '&t=' + Date.now()));
                 if (!response.ok) throw new Error('Network response was not ok');
                 let csvText = await response.text();
-                if (csvText.charCodeAt(0) === 0xFEFF) csvText = csvText.slice(1);
-
+                
                 const rows = csvText.split(/\r?\n/);
                 const newSchedule = [];
                 let startIndex = 0;
-                if (!/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(rows[0].split(',')[0])) startIndex = 1; 
+                
+                // Check header
+                let firstRow = rows[0];
+                if(firstRow) firstRow = firstRow.replace(/^"|"$/g, '');
+                
+                // Simple check if it looks like a date header or not
+                if (!/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(firstRow.split(',')[0].replace(/^"|"$/g, ''))) {
+                    startIndex = 1; 
+                }
 
                 for (let i = startIndex; i < rows.length; i++) {
-                    const row = rows[i].split(',');
-                    if (row.length < 4) continue;
-                    let dateStr = row[0].trim().replace(/\//g, '-'); 
-                    const parts = dateStr.split('-');
-                    if(parts.length === 3) {
-                         if (parts[0].length === 2 && parts[2].length === 4) dateStr = `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
-                         else dateStr = `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
+                    let parts = rows[i].split(',');
+                    parts = parts.map(p => p.replace(/^"|"$/g, ''));
+                    
+                    if (parts.length < 4) continue;
+                    
+                    let dateStr = parts[0].trim().replace(/\//g, '-'); 
+                    const dParts = dateStr.split('-');
+                    if(dParts.length === 3) {
+                         if (dParts[0].length === 2 && dParts[2].length === 4) dateStr = `${dParts[2]}-${dParts[0].padStart(2,'0')}-${dParts[1].padStart(2,'0')}`;
+                         else dateStr = `${dParts[0]}-${dParts[1].padStart(2,'0')}-${dParts[2].padStart(2,'0')}`;
                     }
                     newSchedule.push({
                         id: i - startIndex + 1,
                         date: dateStr,
-                        time: row[1].trim(),
-                        home: normalizeTeamName(row[2].trim()),
-                        away: normalizeTeamName(row[3].trim()),
-                        arena: row[4] ? row[4].trim() : ""
+                        time: parts[1].trim(),
+                        home: normalizeTeamName(parts[2].trim()),
+                        away: normalizeTeamName(parts[3].trim()),
+                        arena: parts[4] ? parts[4].trim() : ""
                     });
                 }
                 if(newSchedule.length > 10) SEASON_SCHEDULE_DB = newSchedule;
