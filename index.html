@@ -1953,7 +1953,7 @@
                     const hasChildren = listContainer && listContainer.children.length > 0;
                     
                     if (hasChildren) {
-                        output += `📌 本週賽事預告：\n`;
+                        output += `\n\n-\n\n📌 本週賽事預告：\n`;
                         Array.from(listContainer.children).forEach(div => {
                             const inputs = div.querySelectorAll('input, select');
                             const d = inputs[0].value;
