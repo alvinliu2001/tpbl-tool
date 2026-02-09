@@ -311,6 +311,14 @@
             "雲豹": { full: "桃園台啤永豐雲豹", emoji: "🐆", arena: "中壢國民運動中心" }
         };
         const TEAM_KEYS = Object.keys(TEAMS);
+
+        // 資料庫 ID 設定
+        const ROSTER_SHEET_ID = "17wpiorwajKYW3i8rBj-QNq8cF_14XlUS72JGh-GoHCw"; // 新的球員表
+        const SCHEDULE_SHEET_ID = "1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc"; // 原本的賽程表
+        
+        const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+        const GOOGLE_ROSTER_CSV_URL = `https://docs.google.com/spreadsheets/d/${ROSTER_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
+        const GOOGLE_SCHEDULE_CSV_URL = `https://docs.google.com/spreadsheets/d/${SCHEDULE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
         
         // --- BUILT-IN FALLBACK DATA ---
         let SEASON_SCHEDULE_DB = [
@@ -705,27 +713,31 @@
             const statusDiv = document.getElementById('sync-status');
             statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 資料同步中...';
             
-            // 加入時間戳記抗緩存
+            // 抗緩存 URL
             const rosterUrl = `${GOOGLE_ROSTER_CSV_URL}&t=${Date.now()}`;
             const scheduleUrl = `${GOOGLE_SCHEDULE_CSV_URL}&t=${Date.now()}`;
 
-            Promise.all([
-                fetch(CORS_PROXY + encodeURIComponent(rosterUrl)).then(r => r.text()),
-                fetch(CORS_PROXY + encodeURIComponent(scheduleUrl)).then(r => r.text())
-            ])
+            // 分開抓取，以便知道是哪個表出錯
+            const fetchRoster = fetch(CORS_PROXY + encodeURIComponent(rosterUrl)).then(r => {
+                if (!r.ok) throw new Error('球員資料讀取失敗');
+                return r.text();
+            });
+            const fetchSchedule = fetch(CORS_PROXY + encodeURIComponent(scheduleUrl)).then(r => {
+                if (!r.ok) throw new Error('賽程資料讀取失敗');
+                return r.text();
+            });
+
+            Promise.all([fetchRoster, fetchSchedule])
             .then(([rosterCsv, scheduleCsv]) => {
-                // 執行解析
                 parseRosterCsv(rosterCsv);
                 parseScheduleCsv(scheduleCsv);
                 
                 statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 資料庫已同步 (最新)';
-                
-                // 同步完成後，觸發一次當前頁面的選單更新
                 refreshPlayerSelects();
             })
             .catch((error) => {
-                console.error("Sync Error", error);
-                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用離線資料庫';
+                console.error("詳細錯誤資訊:", error); // 這會在瀏覽器 F12 顯示錯誤原因
+                statusDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 同步失敗: ${error.message}`;
             });
         }
 
