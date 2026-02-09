@@ -1982,29 +1982,30 @@
                     output = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(getValue('week_num'))} 📢\n\n`;
                     output += `${getValue('top5_intro')}\n\n`;
                     
-                    const formatNum = (n) => n.toString().includes('#') ? n : '#' + n;
+                    // 修正：內部小工具函數，確保號碼前面有 #
+                    const formatNum = (n) => {
+                        if (!n) return "";
+                        return n.toString().includes('#') ? n : '#' + n;
+                    };
 
+                    // 從第 5 名顯示到第 1 名
                     for (let i = 5; i >= 1; i--) {
-                        const teamKey = document.getElementById(`top${i}_team`)?.value;
+                        const teamKey = getValue(`top${i}_team`);
                         const team = getTeam(teamKey);
                         
-                        const name1 = document.getElementById(`top${i}_name_1`)?.value;
-                        const num1 = document.getElementById(`top${i}_num_1`)?.value;
-                        const name2 = document.getElementById(`top${i}_name_2`)?.value;
-                        const num2 = document.getElementById(`top${i}_num_2`)?.value;
+                        // 修正：對應 renderForm 產生的 ID (去掉 _1)
+                        const name = getValue(`top${i}_name`);
+                        const num = getValue(`top${i}_num`);
                         
-                        if (name1) { 
+                        if (name) { 
                             const circledNum = ['①', '②', '③', '④', '⑤'][i-1];
-                            let playerStr = `${formatNum(num1)} ${name1}`;
-                            if(name2) {
-                                playerStr += ` & ${formatNum(num2)} ${name2}`;
-                            }
-                            output += `${circledNum} ${team.emoji} ${team.full}｜${playerStr}\n`;
+                            output += `${circledNum} ${team.emoji} ${team.full}｜${formatNum(num)} ${name}\n`;
                         }
                     }
 
                     output += `\n\n-\n\n`;
 
+                    // 下週賽程預告部分
                     const listContainer = document.getElementById('standings_schedule_list_container');
                     const hasChildren = listContainer && listContainer.children.length > 0;
                     
@@ -2019,8 +2020,8 @@
                             if(d) {
                                  const mmdd = formatMMDD(d);
                                  const day = getDayChi(d);
-                                 const aTeam = getTeam(TEAMS[a] ? a : Object.keys(TEAMS).find(k => TEAMS[k].full === a) || a);
-                                 const hTeam = getTeam(TEAMS[h] ? h : Object.keys(TEAMS).find(k => TEAMS[k].full === h) || h);
+                                 const aTeam = getTeam(a);
+                                 const hTeam = getTeam(h);
                                  
                                  let arena = hTeam.arena;
                                  const gameInDb = getGameByDateAndTime(d, t);
