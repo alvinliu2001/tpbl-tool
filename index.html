@@ -703,104 +703,99 @@
         // --- Fetch Data (Roster & Schedule) with GVIZ ---
         function fetchAllData() {
             const statusDiv = document.getElementById('sync-status');
-            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 檢查更新中...';
+            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 資料同步中...';
             
-            // Note: switchMode is called SEPARATELY on init now, so we don't wait.
+            // 加入時間戳記抗緩存
+            const rosterUrl = `${GOOGLE_ROSTER_CSV_URL}&t=${Date.now()}`;
+            const scheduleUrl = `${GOOGLE_SCHEDULE_CSV_URL}&t=${Date.now()}`;
 
-            // Fetch in background
-            Promise.all([fetchRosterData(), fetchScheduleData()])
-                .then(() => {
-                    statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 資料庫已同步';
-                    // Re-trigger selects to update if data changed
-                    const teamSelects = document.querySelectorAll('.team-select');
-                    teamSelects.forEach(s => { if(s.value) s.dispatchEvent(new Event('change')); });
-                })
-                .catch((error) => {
-                    console.error("Sync Error", error);
-                    statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用離線資料庫';
+            Promise.all([
+                fetch(CORS_PROXY + encodeURIComponent(rosterUrl)).then(r => r.text()),
+                fetch(CORS_PROXY + encodeURIComponent(scheduleUrl)).then(r => r.text())
+            ])
+            .then(([rosterCsv, scheduleCsv]) => {
+                // 執行解析
+                parseRosterCsv(rosterCsv);
+                parseScheduleCsv(scheduleCsv);
+                
+                statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 資料庫已同步 (最新)';
+                
+                // 同步完成後，觸發一次當前頁面的選單更新
+                refreshPlayerSelects();
+            })
+            .catch((error) => {
+                console.error("Sync Error", error);
+                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用離線資料庫';
+            });
+        }
+
+        // 解析球員資料的函數 (解決梅克沒出現的問題)
+        function parseRosterCsv(csvText) {
+            const rows = csvText.split(/\r?\n/);
+            const newRosters = {};
+            
+            for (let i = 1; i < rows.length; i++) {
+                const rowRaw = rows[i];
+                if(!rowRaw || rowRaw.trim() === "") continue;
+                
+                // 處理可能包含引號的 CSV 欄位
+                let parts = rowRaw.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                parts = parts.map(p => p.replace(/^"|"$/g, '').trim());
+                
+                if (parts.length >= 3) {
+                    const teamName = parts[0];
+                    const num = parts[1];
+                    const name = parts[2];
+                    
+                    const teamKey = normalizeTeamName(teamName);
+
+                    // 關鍵判斷：確保隊伍與姓名有效
+                    if (teamKey && name && name !== "" && name !== "姓名") {
+                        if (!newRosters[teamKey]) newRosters[teamKey] = [];
+                        newRosters[teamKey].push({ name, num });
+                    }
+                }
+            }
+            if(Object.keys(newRosters).length > 0) {
+                ROSTERS = newRosters;
+            }
+        }
+
+        // 解析賽程資料的函數
+        function parseScheduleCsv(csvText) {
+            const rows = csvText.split(/\r?\n/);
+            const newSchedule = [];
+            
+            for (let i = 1; i < rows.length; i++) {
+                let parts = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                parts = parts.map(p => p.replace(/^"|"$/g, '').trim());
+                
+                if (parts.length < 4) continue;
+                
+                let dateStr = parts[0].replace(/\//g, '-');
+                newSchedule.push({
+                    id: i,
+                    date: dateStr,
+                    time: parts[1],
+                    home: normalizeTeamName(parts[2]),
+                    away: normalizeTeamName(parts[3]),
+                    arena: parts[4] || ""
                 });
+            }
+            if(newSchedule.length > 0) {
+                SEASON_SCHEDULE_DB = newSchedule;
+            }
         }
 
-        async function fetchRosterData() {
-            try {
-                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now()));
-                if (!response.ok) throw new Error('Network response was not ok');
-                let csvText = await response.text();
-                
-                const rows = csvText.split(/\r?\n/);
-                const newRosters = {};
-                
-                // 跳過標題列，從 i=1 開始
-                for (let i = 1; i < rows.length; i++) {
-                    const rowRaw = rows[i];
-                    if(!rowRaw) continue;
-                    
-                    let parts = rowRaw.split(',');
-                    parts = parts.map(p => p.replace(/^"|"$/g, ''));
-                    
-                    if (parts.length < 3) continue;
-                    
-                    // 新格式對應：
-                    // parts[0] = 隊伍 (簡稱)
-                    // parts[1] = 背號 (No.)
-                    // parts[2] = 姓名 (Name)
-                    const team = normalizeTeamName(parts[0].trim());
-                    const num = parts[1].trim();
-                    const name = parts[2].trim();
-
-                    if (team && name) {
-                        if (!newRosters[team]) newRosters[team] = [];
-                        newRosters[team].push({ name, num });
-                    }
+        // 輔助函數：強制刷新頁面上的球員下拉選單
+        function refreshPlayerSelects() {
+            const teamSelects = document.querySelectorAll('.team-select');
+            teamSelects.forEach(s => {
+                if(s.value) {
+                    s.dispatchEvent(new Event('change'));
                 }
-                if(Object.keys(newRosters).length > 0) ROSTERS = newRosters;
-            } catch (e) { console.warn("Roster fetch failed", e); }
+            });
         }
-
-        async function fetchScheduleData() {
-            try {
-                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_SCHEDULE_CSV_URL + '&t=' + Date.now()));
-                if (!response.ok) throw new Error('Network response was not ok');
-                let csvText = await response.text();
-                
-                const rows = csvText.split(/\r?\n/);
-                const newSchedule = [];
-                let startIndex = 0;
-                
-                // Check header
-                let firstRow = rows[0];
-                if(firstRow) firstRow = firstRow.replace(/^"|"$/g, '');
-                
-                // Simple check if it looks like a date header or not
-                if (!/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(firstRow.split(',')[0].replace(/^"|"$/g, ''))) {
-                    startIndex = 1; 
-                }
-
-                for (let i = startIndex; i < rows.length; i++) {
-                    let parts = rows[i].split(',');
-                    parts = parts.map(p => p.replace(/^"|"$/g, ''));
-                    
-                    if (parts.length < 4) continue;
-                    
-                    let dateStr = parts[0].trim().replace(/\//g, '-'); 
-                    const dParts = dateStr.split('-');
-                    if(dParts.length === 3) {
-                         if (dParts[0].length === 2 && dParts[2].length === 4) dateStr = `${dParts[2]}-${dParts[0].padStart(2,'0')}-${dParts[1].padStart(2,'0')}`;
-                         else dateStr = `${dParts[0]}-${dParts[1].padStart(2,'0')}-${dParts[2].padStart(2,'0')}`;
-                    }
-                    newSchedule.push({
-                        id: i - startIndex + 1,
-                        date: dateStr,
-                        time: parts[1].trim(),
-                        home: normalizeTeamName(parts[2].trim()),
-                        away: normalizeTeamName(parts[3].trim()),
-                        arena: parts[4] ? parts[4].trim() : ""
-                    });
-                }
-                if(newSchedule.length > 10) SEASON_SCHEDULE_DB = newSchedule;
-            } catch (e) { console.warn("Schedule fetch failed", e); }
-        }
-
         // --- UI Builders ---
         const createInput = (id, label, type="text", placeholder="", value="") => `
             <div>
