@@ -1977,14 +1977,14 @@
                     output = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(getValue('week_num'))} 📢\n\n`;
                     output += `${getValue('top5_intro')}\n\n`;
                     
+                    // 修正：將 # 替換為全形 ＃，避免被 IG 判定為 Hashtag
                     const formatNum = (n) => {
                         if (!n) return "";
-                        return n.toString().includes('#') ? n : '#' + n;
+                        let cleanNum = n.toString().replace('#', '').trim();
+                        return '＃' + cleanNum;
                     };
 
-                    // 從第 5 名顯示到第 1 名
                     for (let i = 5; i >= 1; i--) {
-                        // 這裡對應 renderForm 產生的 ID: top5_team, top5_name
                         const teamKey = getValue(`top${i}_team`);
                         const team = getTeam(teamKey);
                         const name = getValue(`top${i}_name`);
@@ -1992,6 +1992,7 @@
                         
                         if (name) { 
                             const circledNum = ['①', '②', '③', '④', '⑤'][i-1];
+                            // 文案產出範例：① 🛡️ 臺北台新戰神｜＃3 丁聖儒
                             output += `${circledNum} ${team.emoji} ${team.full}｜${formatNum(num)} ${name}\n`;
                         }
                     }
@@ -2083,7 +2084,8 @@
                             const val = getValue(`eff${i}_val`);
                             const desc = getValue(`eff${i}_desc`);
                             
-                            output += `${team.emoji} #${num} ${name} | EFF ${val}\n`;
+                            // 修改處：將 # 改為全形 ＃
+                            output += `${team.emoji} ＃${num} ${name} | EFF ${val}\n`;
                             if(desc) output += `${desc}\n\n`;
                             else output += `\n`;
                         }
