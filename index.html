@@ -1386,8 +1386,8 @@
                             ${[1, 2, 3, 4, 5].map(i => `
                                 <div class="p-4 border border-gray-200 rounded-xl bg-white shadow-sm space-y-4">
                                     <!-- 標題與球隊選擇 -->
-                                    <div class="flex items-center gap-4 pb-3 border-b border-gray-50">
-                                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-brand-dark text-white font-bold shrink-0">
+                                    <div class="flex items-center gap-4 pb-3 border-b border-gray-100">
+                                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 text-gray-700 font-bold shrink-0 text-sm">
                                             ${i}
                                         </span>
                                         <div class="flex-1">
@@ -1395,29 +1395,31 @@
                                         </div>
                                     </div>
 
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <!-- 球員 1 欄位組 -->
-                                        <div class="space-y-1">
-                                            <label class="text-[11px] font-bold text-gray-400 ml-1">球員 1 </label>
-                                            <div class="grid grid-cols-4 gap-2">
-                                                <div class="col-span-3">
+                                        <div class="space-y-1.5">
+                                            <label class="text-[11px] font-bold text-gray-400 ml-1">球員 1</label>
+                                            <div class="flex gap-2">
+                                                <div class="flex-1">
                                                     ${createPlayerSelect(`top${i}_name1`, '', `top${i}_team`, `top${i}_num1`)}
                                                 </div>
-                                                <div class="col-span-1">
-                                                    <input id="top${i}_num1" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-50 text-gray-500 font-medium">
+                                                <div class="w-16">
+                                                    <input id="top${i}_num1" type="text" readonly placeholder="#" 
+                                                        class="w-full h-[42px] border border-gray-300 rounded-md text-sm text-center bg-gray-100 text-gray-600 font-bold focus:outline-none">
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- 球員 2 欄位組 -->
-                                        <div class="space-y-1">
-                                            <label class="text-[11px] font-bold text-gray-400 ml-1">球員 2 </label>
-                                            <div class="grid grid-cols-4 gap-2">
-                                                <div class="col-span-3">
+                                        <div class="space-y-1.5">
+                                            <label class="text-[11px] font-bold text-gray-400 ml-1">球員 2</label>
+                                            <div class="flex gap-2">
+                                                <div class="flex-1">
                                                     ${createPlayerSelect(`top${i}_name2`, '', `top${i}_team`, `top${i}_num2`)}
                                                 </div>
-                                                <div class="col-span-1">
-                                                    <input id="top${i}_num2" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-50 text-gray-500 font-medium">
+                                                <div class="w-16">
+                                                    <input id="top${i}_num2" type="text" readonly placeholder="#" 
+                                                        class="w-full h-[42px] border border-gray-300 rounded-md text-sm text-center bg-gray-100 text-gray-600 font-bold focus:outline-none">
                                                 </div>
                                             </div>
                                         </div>
