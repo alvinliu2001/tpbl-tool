@@ -723,38 +723,50 @@
 
         async function fetchRosterData() {
             try {
-                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now()));
-                if (!response.ok) throw new Error('Network response was not ok');
-                let csvText = await response.text();
+                // 加入隨機參數防止快取，並取得資料
+                const rosterUrl = GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now();
+                const response = await fetch(CORS_PROXY + encodeURIComponent(rosterUrl));
+                
+                if (!response.ok) throw new Error('網路回應不正常');
+                const csvText = await response.text();
                 
                 const rows = csvText.split(/\r?\n/);
                 const newRosters = {};
                 
-                // 跳過標題列，從 i=1 開始
+                // 從第 2 行開始抓取 (i=1)，跳過標題列
                 for (let i = 1; i < rows.length; i++) {
                     const rowRaw = rows[i];
-                    if(!rowRaw) continue;
+                    if (!rowRaw.trim()) continue;
                     
-                    let parts = rowRaw.split(',');
-                    parts = parts.map(p => p.replace(/^"|"$/g, ''));
+                    // 專業解析 CSV 格式，處理雙引號與逗號
+                    let parts = rowRaw.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
+                    parts = parts.map(p => p.replace(/^"|"$/g, '').trim());
                     
                     if (parts.length < 3) continue;
                     
-                    // 新格式對應：
-                    // parts[0] = 隊伍 (簡稱)
-                    // parts[1] = 背號 (No.)
-                    // parts[2] = 姓名 (Name)
-                    const team = normalizeTeamName(parts[0].trim());
-                    const num = parts[1].trim();
-                    const name = parts[2].trim();
+                    // 根據試算表欄位：A: 隊伍, B: 背號, C: 姓名
+                    const teamRaw = parts[0];
+                    const num = parts[1];
+                    const name = parts[2];
 
-                    if (team && name) {
-                        if (!newRosters[team]) newRosters[team] = [];
-                        newRosters[team].push({ name, num });
+                    const teamKey = normalizeTeamName(teamRaw);
+
+                    if (teamKey && name) {
+                        if (!newRosters[teamKey]) newRosters[teamKey] = [];
+                        newRosters[teamKey].push({ 
+                            name: name, 
+                            num: num 
+                        });
                     }
                 }
-                if(Object.keys(newRosters).length > 0) ROSTERS = newRosters;
-            } catch (e) { console.warn("Roster fetch failed", e); }
+
+                if (Object.keys(newRosters).length > 0) {
+                    ROSTERS = newRosters;
+                    console.log("球員名單同步成功:", ROSTERS);
+                }
+            } catch (e) { 
+                console.error("Roster 同步失敗:", e); 
+            }
         }
 
         async function fetchScheduleData() {
