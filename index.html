@@ -1878,7 +1878,7 @@
                         let arena = home.arena || "";
                         const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
                         if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-                        output += `📌 下場比賽，一起迎風而上。\n▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
+                        output += `-\n📌 下場比賽，一起迎風而上。\n▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
                     }
                     output += `\n\n${COMMON_TAGS}`;
 
