@@ -311,14 +311,6 @@
             "雲豹": { full: "桃園台啤永豐雲豹", emoji: "🐆", arena: "中壢國民運動中心" }
         };
         const TEAM_KEYS = Object.keys(TEAMS);
-
-        // 資料庫 ID 設定
-        const ROSTER_SHEET_ID = "17wpiorwajKYW3i8rBj-QNq8cF_14XlUS72JGh-GoHCw"; // 新的球員表
-        const SCHEDULE_SHEET_ID = "1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc"; // 原本的賽程表
-        
-        const CORS_PROXY = "https://api.allorigins.win/raw?url=";
-        const GOOGLE_ROSTER_CSV_URL = `https://docs.google.com/spreadsheets/d/${ROSTER_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
-        const GOOGLE_SCHEDULE_CSV_URL = `https://docs.google.com/spreadsheets/d/${SCHEDULE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
         
         // --- BUILT-IN FALLBACK DATA ---
         let SEASON_SCHEDULE_DB = [
@@ -711,103 +703,104 @@
         // --- Fetch Data (Roster & Schedule) with GVIZ ---
         function fetchAllData() {
             const statusDiv = document.getElementById('sync-status');
-            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 資料同步中...';
+            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 檢查更新中...';
             
-            // 抗緩存 URL
-            const rosterUrl = `${GOOGLE_ROSTER_CSV_URL}&t=${Date.now()}`;
-            const scheduleUrl = `${GOOGLE_SCHEDULE_CSV_URL}&t=${Date.now()}`;
+            // Note: switchMode is called SEPARATELY on init now, so we don't wait.
 
-            // 分開抓取，以便知道是哪個表出錯
-            const fetchRoster = fetch(CORS_PROXY + encodeURIComponent(rosterUrl)).then(r => {
-                if (!r.ok) throw new Error('球員資料讀取失敗');
-                return r.text();
-            });
-            const fetchSchedule = fetch(CORS_PROXY + encodeURIComponent(scheduleUrl)).then(r => {
-                if (!r.ok) throw new Error('賽程資料讀取失敗');
-                return r.text();
-            });
-
-            Promise.all([fetchRoster, fetchSchedule])
-            .then(([rosterCsv, scheduleCsv]) => {
-                parseRosterCsv(rosterCsv);
-                parseScheduleCsv(scheduleCsv);
-                
-                statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 資料庫已同步 (最新)';
-                refreshPlayerSelects();
-            })
-            .catch((error) => {
-                console.error("詳細錯誤資訊:", error); // 這會在瀏覽器 F12 顯示錯誤原因
-                statusDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 同步失敗: ${error.message}`;
-            });
+            // Fetch in background
+            Promise.all([fetchRosterData(), fetchScheduleData()])
+                .then(() => {
+                    statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 資料庫已同步';
+                    // Re-trigger selects to update if data changed
+                    const teamSelects = document.querySelectorAll('.team-select');
+                    teamSelects.forEach(s => { if(s.value) s.dispatchEvent(new Event('change')); });
+                })
+                .catch((error) => {
+                    console.error("Sync Error", error);
+                    statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用離線資料庫';
+                });
         }
 
-        // 解析球員資料的函數 (解決梅克沒出現的問題)
-        function parseRosterCsv(csvText) {
-            const rows = csvText.split(/\r?\n/);
-            const newRosters = {};
-            
-            for (let i = 1; i < rows.length; i++) {
-                const rowRaw = rows[i];
-                if(!rowRaw || rowRaw.trim() === "") continue;
+        async function fetchRosterData() {
+            try {
+                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now()));
+                if (!response.ok) throw new Error('Network response was not ok');
+                let csvText = await response.text();
                 
-                // 處理可能包含引號的 CSV 欄位
-                let parts = rowRaw.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                parts = parts.map(p => p.replace(/^"|"$/g, '').trim());
+                const rows = csvText.split(/\r?\n/);
+                const newRosters = {};
                 
-                if (parts.length >= 3) {
-                    const teamName = parts[0];
-                    const num = parts[1];
-                    const name = parts[2];
+                // 跳過標題列，從 i=1 開始
+                for (let i = 1; i < rows.length; i++) {
+                    const rowRaw = rows[i];
+                    if(!rowRaw) continue;
                     
-                    const teamKey = normalizeTeamName(teamName);
+                    let parts = rowRaw.split(',');
+                    parts = parts.map(p => p.replace(/^"|"$/g, ''));
+                    
+                    if (parts.length < 3) continue;
+                    
+                    // 新格式對應：
+                    // parts[0] = 隊伍 (簡稱)
+                    // parts[1] = 背號 (No.)
+                    // parts[2] = 姓名 (Name)
+                    const team = normalizeTeamName(parts[0].trim());
+                    const num = parts[1].trim();
+                    const name = parts[2].trim();
 
-                    // 關鍵判斷：確保隊伍與姓名有效
-                    if (teamKey && name && name !== "" && name !== "姓名") {
-                        if (!newRosters[teamKey]) newRosters[teamKey] = [];
-                        newRosters[teamKey].push({ name, num });
+                    if (team && name) {
+                        if (!newRosters[team]) newRosters[team] = [];
+                        newRosters[team].push({ name, num });
                     }
                 }
-            }
-            if(Object.keys(newRosters).length > 0) {
-                ROSTERS = newRosters;
-            }
+                if(Object.keys(newRosters).length > 0) ROSTERS = newRosters;
+            } catch (e) { console.warn("Roster fetch failed", e); }
         }
 
-        // 解析賽程資料的函數
-        function parseScheduleCsv(csvText) {
-            const rows = csvText.split(/\r?\n/);
-            const newSchedule = [];
-            
-            for (let i = 1; i < rows.length; i++) {
-                let parts = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                parts = parts.map(p => p.replace(/^"|"$/g, '').trim());
+        async function fetchScheduleData() {
+            try {
+                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_SCHEDULE_CSV_URL + '&t=' + Date.now()));
+                if (!response.ok) throw new Error('Network response was not ok');
+                let csvText = await response.text();
                 
-                if (parts.length < 4) continue;
+                const rows = csvText.split(/\r?\n/);
+                const newSchedule = [];
+                let startIndex = 0;
                 
-                let dateStr = parts[0].replace(/\//g, '-');
-                newSchedule.push({
-                    id: i,
-                    date: dateStr,
-                    time: parts[1],
-                    home: normalizeTeamName(parts[2]),
-                    away: normalizeTeamName(parts[3]),
-                    arena: parts[4] || ""
-                });
-            }
-            if(newSchedule.length > 0) {
-                SEASON_SCHEDULE_DB = newSchedule;
-            }
-        }
-
-        // 輔助函數：強制刷新頁面上的球員下拉選單
-        function refreshPlayerSelects() {
-            const teamSelects = document.querySelectorAll('.team-select');
-            teamSelects.forEach(s => {
-                if(s.value) {
-                    s.dispatchEvent(new Event('change'));
+                // Check header
+                let firstRow = rows[0];
+                if(firstRow) firstRow = firstRow.replace(/^"|"$/g, '');
+                
+                // Simple check if it looks like a date header or not
+                if (!/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(firstRow.split(',')[0].replace(/^"|"$/g, ''))) {
+                    startIndex = 1; 
                 }
-            });
+
+                for (let i = startIndex; i < rows.length; i++) {
+                    let parts = rows[i].split(',');
+                    parts = parts.map(p => p.replace(/^"|"$/g, ''));
+                    
+                    if (parts.length < 4) continue;
+                    
+                    let dateStr = parts[0].trim().replace(/\//g, '-'); 
+                    const dParts = dateStr.split('-');
+                    if(dParts.length === 3) {
+                         if (dParts[0].length === 2 && dParts[2].length === 4) dateStr = `${dParts[2]}-${dParts[0].padStart(2,'0')}-${dParts[1].padStart(2,'0')}`;
+                         else dateStr = `${dParts[0]}-${dParts[1].padStart(2,'0')}-${dParts[2].padStart(2,'0')}`;
+                    }
+                    newSchedule.push({
+                        id: i - startIndex + 1,
+                        date: dateStr,
+                        time: parts[1].trim(),
+                        home: normalizeTeamName(parts[2].trim()),
+                        away: normalizeTeamName(parts[3].trim()),
+                        arena: parts[4] ? parts[4].trim() : ""
+                    });
+                }
+                if(newSchedule.length > 10) SEASON_SCHEDULE_DB = newSchedule;
+            } catch (e) { console.warn("Schedule fetch failed", e); }
         }
+
         // --- UI Builders ---
         const createInput = (id, label, type="text", placeholder="", value="") => `
             <div>
@@ -1373,35 +1366,18 @@
                         </div>
                     `;
                 } else if (mode === 'top5') {
-                    html += `
+                     html += `
                         ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                         ${createTextarea('top5_intro', '引言文案', '', 3)}
-                        <div class="space-y-4 mt-4">
-                            <p class="text-sm font-bold text-gray-500">五大好球排行 (可選兩位球員)</p>
+                        <div class="space-y-3 mt-4">
+                            <p class="text-sm font-bold text-gray-500">五大好球排行</p>
                             ${[1,2,3,4,5].map(i => `
-                                <div class="p-4 border rounded-lg bg-gray-50 shadow-sm">
-                                    <span class="font-bold text-brand-dark block mb-3 border-b pb-1">第 ${i} 名</span>
-                                    <div class="grid grid-cols-12 gap-3">
-                                        <!-- 球隊選擇 -->
-                                        <div class="col-span-12 md:col-span-4">
-                                            ${createTeamSelect(`top${i}_team`, '選擇球隊')}
-                                        </div>
-                                        <!-- 第一位球員 -->
-                                        <div class="col-span-8 md:col-span-5">
-                                            ${createPlayerSelect(`top${i}_name`, '球員 1', `top${i}_team`, `top${i}_num`)}
-                                        </div>
-                                        <div class="col-span-4 md:col-span-3">
-                                            <label class="block text-xs text-gray-400 mb-1">背號</label>
-                                            <input id="top${i}_num" type="text" readonly class="w-full p-2 border rounded-md bg-gray-100 text-sm text-center">
-                                        </div>
-                                        <!-- 第二位球員 (選填) -->
-                                        <div class="col-span-8 md:col-span-5 md:col-start-5">
-                                            ${createPlayerSelect(`top${i}_name_2`, '球員 2 (選填)', `top${i}_team`, `top${i}_num_2`)}
-                                        </div>
-                                        <div class="col-span-4 md:col-span-3">
-                                            <label class="block text-xs text-gray-400 mb-1">背號</label>
-                                            <input id="top${i}_num_2" type="text" readonly class="w-full p-2 border rounded-md bg-gray-100 text-sm text-center">
-                                        </div>
+                                <div class="p-3 border rounded-md bg-gray-50">
+                                    <span class="font-bold text-gray-700 block mb-1">第 ${i} 名</span>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        ${createTeamSelect(`top${i}_team`, '')}
+                                        ${createPlayerSelect(`top${i}_name`, '', `top${i}_team`, `top${i}_num`)}
+                                        <input id="top${i}_num" type="text" readonly placeholder="背號" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100">
                                     </div>
                                 </div>
                             `).join('')}
@@ -2001,7 +1977,7 @@
                     output = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(getValue('week_num'))} 📢\n\n`;
                     output += `${getValue('top5_intro')}\n\n`;
                     
-                    // 格式化函數：加上全形 ＃
+                    // 修正：將 # 替換為全形 ＃，避免被 IG 判定為 Hashtag
                     const formatNum = (n) => {
                         if (!n) return "";
                         let cleanNum = n.toString().replace('#', '').trim();
@@ -2011,29 +1987,18 @@
                     for (let i = 5; i >= 1; i--) {
                         const teamKey = getValue(`top${i}_team`);
                         const team = getTeam(teamKey);
+                        const name = getValue(`top${i}_name`);
+                        const num = getValue(`top${i}_num`);
                         
-                        // 抓取兩位球員的資料
-                        const name1 = getValue(`top${i}_name`);
-                        const num1 = getValue(`top${i}_num`);
-                        const name2 = getValue(`top${i}_name_2`);
-                        const num2 = getValue(`top${i}_num_2`);
-                        
-                        if (name1) { 
+                        if (name) { 
                             const circledNum = ['①', '②', '③', '④', '⑤'][i-1];
-                            
-                            // 組合第一位球員
-                            let playerLine = `${formatNum(num1)} ${name1}`;
-                            
-                            // 如果有選第二位球員，則加上 & 與第二位資訊
-                            if (name2) {
-                                playerLine += ` & ${formatNum(num2)} ${name2}`;
-                            }
-                            
-                            output += `${circledNum} ${team.emoji} ${team.full}｜${playerLine}\n`;
+                            // 文案產出範例：① 🛡️ 臺北台新戰神｜＃3 丁聖儒
+                            output += `${circledNum} ${team.emoji} ${team.full}｜${formatNum(num)} ${name}\n`;
                         }
                     }
 
                     output += `\n\n-\n\n`;
+
                     // 賽程預告部分 (保持原樣)
                     const listContainer = document.getElementById('standings_schedule_list_container');
                     if (listContainer && listContainer.children.length > 0) {
