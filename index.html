@@ -444,50 +444,60 @@
 
         // Roster Data - Fallback (Full DB for Local First)
         let ROSTERS = {
-            "攻城獅": [
-                {name: "梁瀚", num: "25"}, {name: "李家瑞", num: "12"}, {name: "朱雲豪", num: "8"}, {name: "田浩", num: "9"},
-                {name: "李漢昇", num: "0"}, {name: "蕭順議", num: "11"}, {name: "蔡宸綱", num: "17"}, {name: "盧冠軒", num: "42"},
-                {name: "克雷格", num: "3"}, {name: "帕塞獅", num: "18"}, {name: "李啓瑋", num: "75"}, {name: "高國豪", num: "4"},
-                {name: "提傑", num: "22"}, {name: "劉丞勳", num: "10"}, {name: "曾柏喻", num: "7"}, {name: "德魯", num: "2"}
-            ],
-            "夢想家": [
-                {name: "史承平", num: "27"}, {name: "吳家駿", num: "9"}, {name: "簡偉儒", num: "20"}, {name: "陳振傑", num: "0"},
-                {name: "李德威", num: "26"}, {name: "周柏臣", num: "88"}, {name: "湯普金斯", num: "33"}, {name: "盧冠良", num: "28"},
-                {name: "張宗憲", num: "3"}, {name: "高柏鎧", num: "34"}, {name: "林俊吉", num: "11"}, {name: "馬建豪", num: "2"},
-                {name: "恩尼斯", num: "23"}, {name: "忻沃克", num: "24"}, {name: "蔣淯安", num: "41"}, {name: "霍爾曼", num: "35"}
-            ],
-            "雲豹": [
-                {name: "汪哲宇", num: "8"}, {name: "黃鎮", num: "27"}, {name: "劉元凱", num: "82"}, {name: "丁冠皓", num: "10"},
-                {name: "董永全", num: "31"}, {name: "徐宏瑋", num: "6"}, {name: "迪亞洛", num: "33"}, {name: "曹薰襄", num: "57"},
-                {name: "王皓吉", num: "21"}, {name: "麥卡洛", num: "7"}, {name: "莊博元", num: "11"}, {name: "克羅馬", num: "24"},
-                {name: "林信寬", num: "12"}, {name: "米勒", num: "13"}, {name: "高錦瑋", num: "5"}
-            ],
-            "海神": [
-                {name: "廖偉皓", num: "30"}, {name: "魏莨哲", num: "0"}, {name: "呂威霆", num: "21"}, {name: "余純安", num: "28"},
-                {name: "布里茲克", num: "32"}, {name: "勤明慶", num: "85"}, {name: "崔維斯", num: "22"}, {name: "詹姆斯", num: "2"},
-                {name: "吳曉謹", num: "57"}, {name: "陳懷安", num: "66"}, {name: "歐提斯", num: "6"}, {name: "于煥亞", num: "7"},
-                {name: "施晉堯", num: "11"}, {name: "胡瓏貿", num: "10"}, {name: "凱帝", num: "92"}, {name: "蘇文儒", num: "24"}
+            "戰神": [
+                {name: "丁聖儒", num: "3"}, {name: "梅克", num: "4"}, {name: "魏芃禾", num: "5"}, 
+                {name: "江均", num: "6"}, {name: "劉彥廷", num: "7"}, {name: "陳文宏", num: "8"}, 
+                {name: "張兆辰", num: "9"}, {name: "基德", num: "10"}, {name: "黃聰翰", num: "11"}, 
+                {name: "弗利沙", num: "12"}, {name: "謝銘駿", num: "15"}, {name: "孫思堯", num: "20"}, 
+                {name: "威力斯", num: "21"}, {name: "錢肯尼", num: "23"}, {name: "張耕淯", num: "29"}, 
+                {name: "雷蒙恩", num: "33"}, {name: "蘇奕晉", num: "41"}, {name: "陳冠全", num: "62"}
             ],
             "特攻": [
-                {name: "林安龍", num: "3"}, {name: "曾信武", num: "14"}, {name: "余維豪", num: "5"}, {name: "李睿麒", num: "1"},
-                {name: "李沛澄", num: "77"}, {name: "曾文鼎", num: "76"}, {name: "黃泓瀚", num: "22"}, {name: "霸夫", num: "28"},
-                {name: "林任鴻", num: "12"}, {name: "林韋翰", num: "16"}, {name: "簡廷兆", num: "24"}, {name: "魏嘉豪", num: "7"},
-                {name: "馬可", num: "19"}, {name: "內馬", num: "11"}, {name: "阿巴西", num: "0"}, {name: "飛克", num: "18"},
-                {name: "謝亞軒", num: "10"}
+                {name: "阿巴西", num: "0"}, {name: "李睿麒", num: "1"}, {name: "貝奇", num: "2"}, 
+                {name: "林安龍", num: "3"}, {name: "余維豪", num: "5"}, {name: "魏嘉豪", num: "7"}, 
+                {name: "謝亞軒", num: "10"}, {name: "內馬", num: "11"}, {name: "林任鴻", num: "12"}, 
+                {name: "曾信武", num: "14"}, {name: "林韋翰", num: "16"}, {name: "飛克", num: "18"}, 
+                {name: "馬可", num: "19"}, {name: "黃泓瀚", num: "22"}, {name: "簡廷兆", num: "24"}, 
+                {name: "金恩", num: "55"}, {name: "曾文鼎", num: "76"}, {name: "李沛澄", num: "77"}
             ],
             "國王": [
-                {name: "蘇培凱", num: "2"}, {name: "喬納森", num: "26"}, {name: "鍾理翔", num: "8"}, {name: "王柏智", num: "11"},
-                {name: "呂政儒", num: "13"}, {name: "洪志善", num: "24"}, {name: "奧帝", num: "25"}, {name: "林金榜", num: "19"},
-                {name: "熊祥泰", num: "20"}, {name: "蘇士軒", num: "17"}, {name: "沃許本", num: "42"}, {name: "簡祐哲", num: "10"},
-                {name: "尚迪", num: "16"}, {name: "桑尼", num: "31"}, {name: "林書緯", num: "1"}, {name: "林彥廷", num: "12"},
-                {name: "傑登", num: "5"}, {name: "李愷諺", num: "9"}
+                {name: "杰倫", num: "0"}, {name: "林書緯", num: "1"}, {name: "蘇培凱", num: "2"}, 
+                {name: "鍾理翔", num: "8"}, {name: "李愷諺", num: "9"}, {name: "簡祐哲", num: "10"}, 
+                {name: "王柏智", num: "11"}, {name: "林彥廷", num: "12"}, {name: "呂政儒", num: "13"}, 
+                {name: "飛米", num: "15"}, {name: "蘇士軒", num: "17"}, {name: "林金榜", num: "19"}, 
+                {name: "熊祥泰", num: "20"}, {name: "奧帝", num: "25"}, {name: "喬納森", num: "26"}, 
+                {name: "喬丹", num: "33"}, {name: "沃許本", num: "42"}
             ],
-            "戰神": [
-                {name: "劉彥廷", num: "7"}, {name: "孫思堯", num: "20"}, {name: "蘇奕晉", num: "41"}, {name: "江均", num: "6"},
-                {name: "魏芃禾", num: "5"}, {name: "陳冠全", num: "62"}, {name: "陳文宏", num: "8"}, {name: "丁聖儒", num: "3"},
-                {name: "黃聰翰", num: "11"}, {name: "威力斯", num: "21"}, {name: "張兆辰", num: "9"}, {name: "謝銘駿", num: "15"},
-                {name: "基德", num: "10"}, {name: "齊曼加", num: "32"}, {name: "錢肯尼", num: "23"}, {name: "雷蒙恩", num: "33"},
-                {name: "洛夫頓", num: "1"}
+            "雲豹": [
+                {name: "高錦瑋", num: "5"}, {name: "徐宏瑋", num: "6"}, {name: "麥卡洛", num: "7"}, 
+                {name: "汪哲宇", num: "8"}, {name: "丁冠皓", num: "10"}, {name: "莊博元", num: "11"}, 
+                {name: "林信寬", num: "12"}, {name: "米勒", num: "13"}, {name: "王皓吉", num: "21"}, 
+                {name: "克羅馬", num: "24"}, {name: "黃鎮", num: "27"}, {name: "董永全", num: "31"}, 
+                {name: "迪亞洛", num: "33"}, {name: "曹薰襄", num: "57"}, {name: "呂濟而", num: "72"}, 
+                {name: "劉元凱", num: "82"}
+            ],
+            "攻城獅": [
+                {name: "德魯", num: "2"}, {name: "高國豪", num: "4"}, {name: "曾柏喻", num: "7"}, 
+                {name: "朱雲豪", num: "8"}, {name: "田浩", num: "9"}, {name: "劉丞勳", num: "10"}, 
+                {name: "蕭順議", num: "11"}, {name: "李家瑞", num: "12"}, {name: "蔡宸綱", num: "17"}, 
+                {name: "帕塞獅", num: "18"}, {name: "提傑", num: "22"}, {name: "梁瀚", num: "25"}, 
+                {name: "辛巴", num: "35"}, {name: "盧冠軒", num: "42"}, {name: "李啓瑋", num: "75"}
+            ],
+            "夢想家": [
+                {name: "陳振傑", num: "0"}, {name: "馬建豪", num: "2"}, {name: "張宗憲", num: "3"}, 
+                {name: "吳家駿", num: "9"}, {name: "林俊吉", num: "11"}, {name: "簡維儒", num: "20"}, 
+                {name: "忻沃克", num: "24"}, {name: "李德威", num: "26"}, {name: "史承平", num: "27"}, 
+                {name: "盧冠良", num: "28"}, {name: "湯普金斯", num: "33"}, {name: "高柏鎧", num: "34"}, 
+                {name: "霍爾曼", num: "35"}, {name: "蔣淯安", num: "41"}, {name: "布依德", num: "42"}, 
+                {name: "班提爾", num: "50"}, {name: "周柏臣", num: "88"}
+            ],
+            "海神": [
+                {name: "魏莨哲", num: "0"}, {name: "克力斯", num: "5"}, {name: "于煥亞", num: "7"}, 
+                {name: "邱子軒", num: "8"}, {name: "唐維傑", num: "9"}, {name: "胡瓏貿", num: "10"}, 
+                {name: "施晉堯", num: "11"}, {name: "呂威霆", num: "21"}, {name: "吳彥倫", num: "23"}, 
+                {name: "蘇文儒", num: "24"}, {name: "賽克維奇", num: "25"}, {name: "余純安", num: "28"}, 
+                {name: "廖偉皓", num: "30"}, {name: "布里茲克", num: "32"}, {name: "奧迪傑", num: "48"}, 
+                {name: "吳曉謹", num: "57"}, {name: "陳懷安", num: "66"}, {name: "勤明慶", num: "85"}
             ]
         };
 
