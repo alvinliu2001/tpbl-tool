@@ -493,14 +493,13 @@
 
         // Use GVIZ API for faster updates
         // Original: https://docs.google.com/spreadsheets/d/1wcKacc8kQqyiqm9sUdStN4W7fB7FzXcCLL6UpySBE9g/edit
-        const SHEET_ID = "1wcKacc8kQqyiqm9sUdStN4W7fB7FzXcCLL6UpySBE9g";
+         const ROSTER_SHEET_ID = "17wpiorwajKYW3i8rBj-QNq8cF_14XlUS72JGh-GoHCw";
+        // 賽程資料庫 (原本的)
+        const SCHEDULE_SHEET_ID = "1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc";
+        
         const CORS_PROXY = "https://api.allorigins.win/raw?url=";
         
-        // Use GVIZ endpoint (returns CSV)
-        const GOOGLE_ROSTER_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
-        // Schedule is on another sheet or another ID? Assuming same ID for now based on user context, or keeping original logic if it was a different sheet. 
-        // Note: In previous code, schedule URL was different: 1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc
-        const SCHEDULE_SHEET_ID = "1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc";
+        const GOOGLE_ROSTER_CSV_URL = `https://docs.google.com/spreadsheets/d/${ROSTER_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
         const GOOGLE_SCHEDULE_CSV_URL = `https://docs.google.com/spreadsheets/d/${SCHEDULE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
 
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
@@ -724,36 +723,32 @@
 
         async function fetchRosterData() {
             try {
-                // Using GVIZ endpoint
                 const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now()));
                 if (!response.ok) throw new Error('Network response was not ok');
                 let csvText = await response.text();
                 
-                // Parse CSV - assuming standard GVIZ output (comma separated, quoted values)
-                // However, GVIZ CSV output is usually clean. We'll use a simple parser but robust enough for this data.
-                // Standard row.split(',') works if no commas in fields.
-                
                 const rows = csvText.split(/\r?\n/);
                 const newRosters = {};
                 
+                // 跳過標題列，從 i=1 開始
                 for (let i = 1; i < rows.length; i++) {
-                    // Remove quotes if present from GVIZ
                     const rowRaw = rows[i];
                     if(!rowRaw) continue;
                     
-                    // Simple split by comma, ignoring quotes for now as player data is simple
-                    // If GVIZ adds quotes "Team","Name" etc.
                     let parts = rowRaw.split(',');
-                    // Clean quotes
                     parts = parts.map(p => p.replace(/^"|"$/g, ''));
                     
                     if (parts.length < 3) continue;
                     
+                    // 新格式對應：
+                    // parts[0] = 隊伍 (簡稱)
+                    // parts[1] = 背號 (No.)
+                    // parts[2] = 姓名 (Name)
                     const team = normalizeTeamName(parts[0].trim());
-                    const name = parts[1].trim();
-                    const num = parts[2].trim();
+                    const num = parts[1].trim();
+                    const name = parts[2].trim();
 
-                    if (team && name && num) {
+                    if (team && name) {
                         if (!newRosters[team]) newRosters[team] = [];
                         newRosters[team].push({ name, num });
                     }
@@ -1982,7 +1977,6 @@
                     output = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(getValue('week_num'))} 📢\n\n`;
                     output += `${getValue('top5_intro')}\n\n`;
                     
-                    // 修正：內部小工具函數，確保號碼前面有 #
                     const formatNum = (n) => {
                         if (!n) return "";
                         return n.toString().includes('#') ? n : '#' + n;
@@ -1990,10 +1984,9 @@
 
                     // 從第 5 名顯示到第 1 名
                     for (let i = 5; i >= 1; i--) {
+                        // 這裡對應 renderForm 產生的 ID: top5_team, top5_name
                         const teamKey = getValue(`top${i}_team`);
                         const team = getTeam(teamKey);
-                        
-                        // 修正：對應 renderForm 產生的 ID (去掉 _1)
                         const name = getValue(`top${i}_name`);
                         const num = getValue(`top${i}_num`);
                         
@@ -2005,11 +1998,9 @@
 
                     output += `\n\n-\n\n`;
 
-                    // 下週賽程預告部分
+                    // 賽程預告部分 (保持原樣)
                     const listContainer = document.getElementById('standings_schedule_list_container');
-                    const hasChildren = listContainer && listContainer.children.length > 0;
-                    
-                    if (hasChildren) {
+                    if (listContainer && listContainer.children.length > 0) {
                         output += `📌 本週賽事預告：\n`;
                         Array.from(listContainer.children).forEach(div => {
                             const inputs = div.querySelectorAll('input, select');
@@ -2022,16 +2013,13 @@
                                  const day = getDayChi(d);
                                  const aTeam = getTeam(a);
                                  const hTeam = getTeam(h);
-                                 
                                  let arena = hTeam.arena;
                                  const gameInDb = getGameByDateAndTime(d, t);
                                  if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-
                                  output += `▌${mmdd}（${day}）｜${t}｜${aTeam.full}（客） vs. ${hTeam.full}（主）｜${arena}\n`;
                             }
                         });
                     }
-                    
                     output += `\n${COMMON_TAGS}`;
 
                 } else if (currentMode === 'potw') {
