@@ -1381,28 +1381,51 @@
                     html += `
                         ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                         ${createTextarea('top5_intro', '引言文案', '', 3)}
-                        <div class="space-y-4 mt-4">
-                            <p class="text-sm font-bold text-gray-500">五大好球排行</p>
+                        <div class="space-y-6 mt-6">
+                            <p class="text-sm font-bold text-gray-500 uppercase tracking-wider">五大好球排行設定</p>
                             ${[1, 2, 3, 4, 5].map(i => `
-                                <div class="p-3 border rounded-md bg-gray-50 space-y-2">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-gray-700">第 ${i} 名</span>
-                                        <div class="w-2/3">${createTeamSelect(`top${i}_team`, '')}</div>
+                                <div class="p-4 border border-gray-200 rounded-xl bg-white shadow-sm space-y-4">
+                                    <!-- 標題與球隊選擇 -->
+                                    <div class="flex items-center gap-4 pb-3 border-b border-gray-50">
+                                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-brand-dark text-white font-bold shrink-0">
+                                            ${i}
+                                        </span>
+                                        <div class="flex-1">
+                                            ${createTeamSelect(`top${i}_team`, '')}
+                                        </div>
                                     </div>
-                                    <!-- 球員 1 -->
-                                    <div class="grid grid-cols-12 gap-2">
-                                        <div class="col-span-8">${createPlayerSelect(`top${i}_name1`, '球員 1', `top${i}_team`, `top${i}_num1`)}</div>
-                                        <div class="col-span-4"><input id="top${i}_num1" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100"></div>
-                                    </div>
-                                    <!-- 球員 2 (選填) -->
-                                    <div class="grid grid-cols-12 gap-2">
-                                        <div class="col-span-8">${createPlayerSelect(`top${i}_name2`, '球員 2 (選填助攻者)', `top${i}_team`, `top${i}_num2`)}</div>
-                                        <div class="col-span-4"><input id="top${i}_num2" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100"></div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <!-- 球員 1 欄位組 -->
+                                        <div class="space-y-1">
+                                            <label class="text-[11px] font-bold text-gray-400 ml-1">球員 1 (得分者)</label>
+                                            <div class="grid grid-cols-4 gap-2">
+                                                <div class="col-span-3">
+                                                    ${createPlayerSelect(`top${i}_name1`, '', `top${i}_team`, `top${i}_num1`)}
+                                                </div>
+                                                <div class="col-span-1">
+                                                    <input id="top${i}_num1" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-50 text-gray-500 font-medium">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 球員 2 欄位組 -->
+                                        <div class="space-y-1">
+                                            <label class="text-[11px] font-bold text-gray-400 ml-1">球員 2 (選填助攻者)</label>
+                                            <div class="grid grid-cols-4 gap-2">
+                                                <div class="col-span-3">
+                                                    ${createPlayerSelect(`top${i}_name2`, '', `top${i}_team`, `top${i}_num2`)}
+                                                </div>
+                                                <div class="col-span-1">
+                                                    <input id="top${i}_num2" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-50 text-gray-500 font-medium">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             `).join('')}
                         </div>
-                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-6">
                             <p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入下週)</p>
                             <div id="standings_schedule_list_container" class="space-y-3"></div>
                         </div>
