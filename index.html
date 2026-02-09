@@ -1378,18 +1378,26 @@
                         </div>
                     `;
                 } else if (mode === 'top5') {
-                     html += `
+                    html += `
                         ${createInput('week_num', '第幾週 (Week)', 'number', '7')}
                         ${createTextarea('top5_intro', '引言文案', '', 3)}
-                        <div class="space-y-3 mt-4">
+                        <div class="space-y-4 mt-4">
                             <p class="text-sm font-bold text-gray-500">五大好球排行</p>
-                            ${[1,2,3,4,5].map(i => `
-                                <div class="p-3 border rounded-md bg-gray-50">
-                                    <span class="font-bold text-gray-700 block mb-1">第 ${i} 名</span>
-                                    <div class="grid grid-cols-3 gap-2">
-                                        ${createTeamSelect(`top${i}_team`, '')}
-                                        ${createPlayerSelect(`top${i}_name`, '', `top${i}_team`, `top${i}_num`)}
-                                        <input id="top${i}_num" type="text" readonly placeholder="背號" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100">
+                            ${[1, 2, 3, 4, 5].map(i => `
+                                <div class="p-3 border rounded-md bg-gray-50 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-gray-700">第 ${i} 名</span>
+                                        <div class="w-2/3">${createTeamSelect(`top${i}_team`, '')}</div>
+                                    </div>
+                                    <!-- 球員 1 -->
+                                    <div class="grid grid-cols-12 gap-2">
+                                        <div class="col-span-8">${createPlayerSelect(`top${i}_name1`, '球員 1', `top${i}_team`, `top${i}_num1`)}</div>
+                                        <div class="col-span-4"><input id="top${i}_num1" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100"></div>
+                                    </div>
+                                    <!-- 球員 2 (選填) -->
+                                    <div class="grid grid-cols-12 gap-2">
+                                        <div class="col-span-8">${createPlayerSelect(`top${i}_name2`, '球員 2 (選填助攻者)', `top${i}_team`, `top${i}_num2`)}</div>
+                                        <div class="col-span-4"><input id="top${i}_num2" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-sm text-center bg-gray-100"></div>
                                     </div>
                                 </div>
                             `).join('')}
@@ -1989,7 +1997,6 @@
                     output = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(getValue('week_num'))} 📢\n\n`;
                     output += `${getValue('top5_intro')}\n\n`;
                     
-                    // 修正：將 # 替換為全形 ＃，避免被 IG 判定為 Hashtag
                     const formatNum = (n) => {
                         if (!n) return "";
                         let cleanNum = n.toString().replace('#', '').trim();
@@ -1999,13 +2006,21 @@
                     for (let i = 5; i >= 1; i--) {
                         const teamKey = getValue(`top${i}_team`);
                         const team = getTeam(teamKey);
-                        const name = getValue(`top${i}_name`);
-                        const num = getValue(`top${i}_num`);
+                        const name1 = getValue(`top${i}_name1`);
+                        const num1 = getValue(`top${i}_num1`);
+                        const name2 = getValue(`top${i}_name2`);
+                        const num2 = getValue(`top${i}_num2`);
                         
-                        if (name) { 
+                        if (name1) { 
                             const circledNum = ['①', '②', '③', '④', '⑤'][i-1];
-                            // 文案產出範例：① 🛡️ 臺北台新戰神｜＃3 丁聖儒
-                            output += `${circledNum} ${team.emoji} ${team.full}｜${formatNum(num)} ${name}\n`;
+                            let playerString = `${formatNum(num1)} ${name1}`;
+                            
+                            // 如果有填第二位球員，則加上 & 符號
+                            if (name2) {
+                                playerString += ` & ${formatNum(num2)} ${name2}`;
+                            }
+                            
+                            output += `${circledNum} ${team.emoji} ${team.full}｜${playerString}\n`;
                         }
                     }
 
