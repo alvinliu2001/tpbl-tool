@@ -694,12 +694,23 @@
         }
         
         function getDatesForWeek(weekNum) {
-            const week8Start = new Date("2025-12-01");
-            const diffWeeks = weekNum - 8;
+            const week8Start = new Date("2025-12-01"); // 基準點
+            
+            // 邏輯調整：
+            // 因為配合國家隊賽程休賽 2 週（原本的 W19, W20）
+            // 如果輸入的週數 >= 19，實際計算日期時要往後推 2 週 (+2)
+            let calculationWeek = parseInt(weekNum);
+            if (calculationWeek >= 19) {
+                calculationWeek += 2;
+            }
+
+            const diffWeeks = calculationWeek - 8;
             const targetStart = new Date(week8Start);
             targetStart.setDate(week8Start.getDate() + (diffWeeks * 7));
+            
             const targetEnd = new Date(targetStart);
             targetEnd.setDate(targetStart.getDate() + 6);
+            
             return {
                 start: targetStart.toISOString().split('T')[0],
                 end: targetEnd.toISOString().split('T')[0]
