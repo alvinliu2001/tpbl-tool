@@ -1944,19 +1944,17 @@
                     }
                     output += `\n\n${COMMON_TAGS}`;
 
-                } else if (mode === 'potg') {
-                    html += `
-                        <div class="mb-4">
-                             <label class="block text-sm font-medium text-gray-700 mb-1">場次 (GAME)</label>
-                             <input type="number" id="potg_game_num" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" placeholder="33">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            ${createTeamSelect('potg_away', '客隊 (Away)')}
-                            ${createTeamSelect('potg_home', '主隊 (Home)')}
-                        </div>
-                        ${createNextGameBlock("下場賽事資訊 (Next Game)")}
-                        ${createInput('promo_text', '底部活動文案', 'text', '請輸入文案', '🀄️ 拚競技，超帶勁，加入競技麻將2 👉🏻 抽 TPBL 賽事門票')}
-                    `;
+                } else if (currentMode === 'potg') {
+                    const home = getTeam(getValue('potg_home'));
+                    const away = getTeam(getValue('potg_away'));
+                    output = `❤️‍🔥 ${toMathBoldSerif('NOTHING BUT HIM')}\n\n`;
+                    output += `${away.emoji} / ${home.emoji} #${toMathBoldSerif('單場最佳球員')}\n\n`;
+                    
+                    const date = getValue('next_date');
+                    if(date) {
+                        output += getNextGameFormatted();
+                    }
+                    output += `\n\n-\n\n${getValue('promo_text')}\n\n${COMMON_TAGS} #TPBL例行賽`;
 
                 } else if (currentMode === 'local_player_highlight') {
                     const team = getTeam(getValue('lp_team'));
