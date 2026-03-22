@@ -1327,6 +1327,17 @@
                         ${createNextGameBlock("下場賽事資訊 (Next Game)")}
                     `;
                 } else if (mode === 'potg') {
+                    // 強制檢查並初始化預設文案
+                    let savedData = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'potg') || '{}');
+                    
+                    // 如果快取裡文案是空的，我們就直接賦予預設值並回寫快取
+                    if (!savedData.promo_text || savedData.promo_text.trim() === "") {
+                        savedData.promo_text = '🀄️ 拚競技，超帶勁，加入競技麻將2 👉🏻 抽 TPBL 賽事門票';
+                        localStorage.setItem(STORAGE_PREFIX + 'potg', JSON.stringify(savedData));
+                    }
+                    
+                    const currentPromo = savedData.promo_text;
+
                     html += `
                         <div class="mb-4">
                              <label class="block text-sm font-medium text-gray-700 mb-1">場次 (GAME)</label>
@@ -1337,7 +1348,10 @@
                             ${createTeamSelect('potg_home', '主隊 (Home)')}
                         </div>
                         ${createNextGameBlock("下場賽事資訊 (Next Game)")}
-                        ${createInput('promo_text', '底部活動文案', 'text', '請輸入文案', '🀄️ 拚競技，超帶勁，加入競技麻將2 👉🏻 抽 TPBL 賽事門票')}
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">底部活動文案</label>
+                            <input type="text" id="promo_text" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold focus:border-brand-gold" value="${currentPromo}">
+                        </div>
                     `;
                 } else if (mode === 'local_player_highlight') {
                      html += `
