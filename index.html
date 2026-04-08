@@ -1941,8 +1941,7 @@
                     output = `🗣️${toMathBoldSerif(getValue('pc_title'))}\n\n`;
                     output += `💬「${getValue('pc_quote')}」\n\n`;
                     output += `${getValue('pc_content')}\n\n`;
-                    // Note: User didn't specify next game format change for Press Conf, but usually it matches final score. 
-                    // Keeping standard format for now unless requested.
+                    
                     const date = getValue('next_date');
                     if(date) {
                         const mmdd = formatMMDD(date);
@@ -1951,10 +1950,15 @@
                         const home = getTeam(getValue('next_home'));
                         const away = getTeam(getValue('next_away'));
                         const num = getValue('next_game_num');
+                        
+                        // --- 修正處：定義 teamName 變數 ---
+                        const teamName = getValue('pc_team_select') || "比賽"; 
+                        
                         let arena = home.arena || "";
                         const gameInDb = SEASON_SCHEDULE_DB.find(g => g.id == num);
                         if(gameInDb && gameInDb.arena) arena = gameInDb.arena;
-                        output += `-\n\n📌 下場${teamName}：\n▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
+                        
+                        output += `-\n\n📌 下場${teamName}\n▌${mmdd}（${day}）｜${time}｜${away.full}（客） vs. ${home.full}（主）｜${arena}`;
                     }
                     output += `\n\n${COMMON_TAGS}`;
 
