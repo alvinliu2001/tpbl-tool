@@ -191,6 +191,7 @@
                     <button onclick="switchMode('weekly_local_eff')" id="btn-weekly_local_eff" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-line w-6 text-center"></i> 每週本土效率值排行</button>
 
                     <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">專題 / 其他</div>
+                    <button onclick="switchMode('playoff_radar')" id="btn-playoff_radar" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-satellite-dish w-6 text-center"></i> 季後賽雷達戰報</button>
                     <button onclick="switchMode('nb_moments')" id="btn-nb_moments" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-camera w-6 text-center"></i> Nothing But Moments</button>
                     <button onclick="switchMode('100_reasons')" id="btn-100_reasons" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-heart w-6 text-center"></i> 一百種喜歡籃球的原因</button>
                     <button onclick="switchMode('monthly_kicks')" id="btn-monthly_kicks" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-shoe-prints w-6 text-center"></i> 每月精選實戰球鞋</button>
@@ -557,7 +558,6 @@
         const STORAGE_PREFIX = 'tpbl_v3_';
 
         // ... [Utils: toMathBoldSerif, toMathBoldSans, parseDateLocal, getDayName, getDayChi, formatMonthDay, formatMMDD, formatDateFull, normalizeTeamName, getNearestNextGame, getNearestPastGame, getGameByDateAndTime, getGameById, getNextGameAfterId, getNextGameForTeam, getNextGameForTeamByDate, getWeekdayGame, getDatesForWeek, getGamesInDateRange] ...
-        // (Keeping these utility functions as is, compacted for brevity in logic description but full in file)
         
         // --- Utils ---
         const toMathBoldSerif = (text) => {
@@ -566,9 +566,9 @@
                 'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉',
                 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
                 'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
-                'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
-                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
-                'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
+                'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': 'ｇ', 'h': 'ｈ', 'i': 'ｉ', 'j': 'ｊ',
+                'k': 'ｋ', 'l': 'ｌ', 'm': 'ｍ', 'n': 'ｎ', 'o': 'ｏ', 'p': 'ｐ', 'q': 'ｑ', 'r': 'ｒ', 's': 'ｓ', 't': 'ｔ',
+                'u': '𝐮', 'v': '𝐯', 'w': 'ｗ', 'x': '𝐱', 'y': 'ｙ', 'z': '𝐳'
             };
             return String(text).split('').map(char => map[char] || char).join('');
         };
@@ -579,8 +579,8 @@
                 'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 'I': '𝗜', 'J': '𝗝',
                 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧',
                 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭',
-                'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 'i': '𝗶', 'j': '𝗷',
-                'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁',
+                'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': 'ｇ', 'h': 'ｈ', 'i': 'ｉ', 'j': 'ｊ',
+                'k': 'ｋ', 'l': 'ｌ', 'm': 'ｍ', 'n': 'ｎ', 'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': 'ｒ', 's': 'ｓ', 't': 'ｔ',
                 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇'
             };
             return String(text).split('').map(char => map[char] || char).join('');
@@ -1158,7 +1158,7 @@
             'weekday_preview', 'game_preview', 'weekly_schedule', 'matchup_highlight',
             'final_score', 'game_highlight', 'press_conf', 'potg', 'local_player_highlight',
             'career_milestone', 'weekly_standings', 'top5', 'potw', 'weekly_local_eff',
-            'monthly_kicks', 'season_stats', '100_reasons', 'nb_moments'
+            'monthly_kicks', 'season_stats', '100_reasons', 'nb_moments', 'playoff_radar'
         ];
 
         function switchMode(mode) {
@@ -1203,7 +1203,8 @@
                     'monthly_kicks': '每月精選實戰球鞋',
                     'season_stats': '數據累計排行',
                     '100_reasons': '一百種喜歡籃球的原因',
-                    'nb_moments': 'Nothing But Moments'
+                    'nb_moments': 'Nothing But Moments',
+                    'playoff_radar': '季後賽雷達戰報'
                 };
                 
                 const titleEl = document.getElementById('title-text');
@@ -1571,6 +1572,12 @@
                     html += `
                         ${createInput('nb_title', '標題 (｜後面的文字)', 'text', '12月的天氣雖然冷颼颼...')}
                         ${createTextarea('nb_content', '內文', '中華隊賽事結束後...', 8)}
+                    `;
+                } else if (mode === 'playoff_radar') {
+                    html += `
+                        ${createInput('playoff_ep', 'EP. 編號', 'text', '01')}
+                        ${createTextarea('playoff_intro', '引言文案', '本週最新的「魔術數字預測戰報」出爐！', 4)}
+                        ${createTextarea('playoff_content', '本週關鍵戰況', '', 8)}
                     `;
                 }
 
@@ -2245,6 +2252,18 @@
                     output += `${content}\n\n`;
                     output += `鎖定每週賽事，繼續帶給你最熱血、最動人的瞬間 🙌🏽\n\n`;
                     output += `#TPBL #NOTHINGBUTLOVE #NOTHINGBUTMOMENTS #籃球怎能不愛`;
+                } else if (currentMode === 'playoff_radar') {
+                    const ep = getValue('playoff_ep');
+                    const intro = getValue('playoff_intro');
+                    const content = getValue('playoff_content');
+
+                    output = `📡 ${toMathBoldSerif('TPBL PLAYOFFS RADAR')} ｜季後賽卡位戰雷達戰報 EP.${ep}\n\n`;
+                    output += `本週最新的「魔術數字預測戰報」出爐！\n${intro}\n\n`;
+                    output += `-\n\n`;
+                    output += `⚠️ 本週關鍵戰況：\n${content}\n\n`;
+                    output += `-\n\n`;
+                    output += `現在就留言告訴我們 💬 你認為誰能率先拿下季後賽門票？\n持續關注 TPBL 雷達戰報，掌握最即時的季後賽走勢！\n\n`;
+                    output += `${COMMON_TAGS}`;
                 }
 
                 document.getElementById('output-text').value = output;
