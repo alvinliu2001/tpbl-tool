@@ -38,7 +38,7 @@
                     <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-10 md:h-12 w-auto">
                 </div>
                 <h1 class="text-3xl md:text-4xl font-semibold text-white mb-3 tracking-wide text-left">社群文案生成工具</h1>
-                <p class="text-gray-400 text-lg md:text-xl mb-10 font-extralight text-left">一個簡單實用的工具，幫助團隊高效產出文案。</p>
+                <p class="text-gray-400 text-lg md:text-xl mb-10 font-extralight text-left">掌握例行賽最後關頭，高效產出戰報文案。</p>
                 <div class="flex justify-start">
                     <button onclick="enterApp()" class="bg-brand-gold text-brand-dark text-lg font-bold py-3 px-12 rounded-full hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-2">開始使用 <span>→</span></button>
                 </div>
@@ -102,7 +102,6 @@
                 <div class="max-w-2xl mx-auto pb-10 md:pb-0">
                     <h2 id="current-title" class="text-xl md:text-2xl font-bold mb-6 text-gray-800 border-l-4 border-brand-gold pl-4 flex items-center gap-3">
                         <span id="title-text">請選擇功能</span>
-                        <a id="example-link" href="#" target="_blank" class="text-gray-400 hover:text-brand-gold transition hidden">↗︎</a>
                     </h2>
                     <div id="dynamic-form" class="space-y-5"></div>
                     <div class="mt-8 pt-6 border-t border-gray-100">
@@ -141,31 +140,47 @@
         };
         const TEAM_KEYS = Object.keys(TEAMS);
 
+        // 離線球員名單
         let ROSTERS = {
-            "戰神": [{name:"丁聖儒",num:"3"},{name:"梅克",num:"4"},{name:"魏芃禾",num:"5"},{name:"江均",num:"6"},{name:"劉彥廷",num:"7"},{name:"陳文宏",num:"8"},{name:"張兆辰",num:"9"},{name:"基德",num:"10"},{name:"黃聰翰",num:"11"},{name:"弗利沙",num:"12"},{name:"謝銘駿",num:"15"},{name:"孫思堯",num:"20"},{name:"威力斯",num:"21"},{name:"錢肯尼",num:"23"},{name:"張耕淯",num:"29"},{name:"雷蒙恩",num:"33"},{name:"蘇奕晉",num:"41"},{name:"陳冠全",num:"62"},{name:"洛夫頓",num:"1"},{name:"羅賓森",num:"1"},{name:"林宜輝",num:"12"},{name:"奧利佛",num:"15"},{name:"莫爾曼",num:"18"},{name:"王律翔",num:"24"},{name:"齊曼加",num:"32"},{name:"塞瑟夫",num:"32"},{name:"史東",num:"34"}],
-            "特攻": [{name:"阿巴西",num:"0"},{name:"李睿麒",num:"1"},{name:"貝奇",num:"2"},{name:"林安龍",num:"3"},{name:"余維豪",num:"5"},{name:"魏嘉豪",num:"7"},{name:"謝亞軒",num:"10"},{name:"內馬",num:"11"},{name:"林任鴻",num:"12"},{name:"曾信武",num:"14"},{name:"林韋翰",num:"16"},{name:"飛克",num:"18"},{name:"馬可",num:"19"},{name:"黃泓瀚",num:"22"},{name:"簡廷兆",num:"24"},{name:"金恩",num:"55"},{name:"曾文鼎",num:"76"},{name:"李沛澄",num:"77"},{name:"劉人豪",num:"2"},{name:"飛馳",num:"3"},{name:"劉旻諺",num:"4"},{name:"周承睿",num:"11"},{name:"霸夫",num:"28"},{name:"徐宇煇",num:"34"},{name:"林孟學",num:"37"},{name:"艾斯卡",num:"42"},{name:"奈森",num:"55"}],
-            "國王": [{name:"杰倫",num:"0"},{name:"林書緯",num:"1"},{name:"蘇培凱",num:"2"},{name:"鍾理翔",num:"8"},{name:"李愷諺",num:"9"},{name:"簡祐哲",num:"10"},{name:"王柏智",num:"11"},{name:"林彥廷",num:"12"},{name:"呂政儒",num:"13"},{name:"飛米",num:"15"},{name:"蘇士軒",num:"17"},{name:"林金榜",num:"19"},{name:"熊祥泰",num:"20"},{name:"奧帝",num:"25"},{name:"喬納森",num:"26"},{name:"喬丹",num:"33"},{name:"沃許本",num:"42"},{name:"洪志善",num:"總教練"},{name:"陳俊男",num:"3"},{name:"傑登",num:"5"},{name:"強森",num:"5"},{name:"林書豪",num:"7"},{name:"尚迪",num:"16"},{name:"桑尼",num:"31"},{name:"曼尼高",num:"55"},{name:"林力仁",num:"72"}],
-            "雲豹": [{name:"高錦瑋",num:"5"},{name:"徐宏瑋",num:"6"},{name:"麥卡洛",num:"7"},{name:"汪哲宇",num:"8"},{name:"丁冠皓",num:"10"},{name:"莊博元",num:"11"},{name:"林信寬",num:"12"},{name:"米勒",num:"13"},{name:"王皓吉",num:"21"},{name:"克羅馬",num:"24"},{name:"黃鎮",num:"27"},{name:"董永全",num:"31"},{name:"迪亞洛",num:"33"},{name:"曹薰襄",num:"57"},{name:"呂濟而",num:"72"},{name:"劉元凱",num:"82"},{name:"史密斯",num:"0"},{name:"羅斯",num:"3"},{name:"陳俊翰",num:"28"},{name:"威廉斯",num:"41"},{name:"艾吉",num:"55"}],
-            "攻城獅": [{name:"德魯",num:"2"},{name:"高國豪",num:"4"},{name:"曾柏喻",num:"7"},{name:"朱雲豪",num:"8"},{name:"田浩",num:"9"},{name:"劉丞勳",num:"10"},{name:"蕭順議",num:"11"},{name:"李家瑞",num:"12"},{name:"蔡宸綱",num:"17"},{name:"帕塞獅",num:"18"},{name:"提傑",num:"22"},{name:"梁瀚",num:"25"},{name:"辛巴",num:"35"},{name:"盧冠軒",num:"42"},{name:"李啓瑋",num:"75"},{name:"李漢昇",num:"0"},{name:"努利",num:"1"},{name:"姜廣謙",num:"2"},{name:"克雷格",num:"3"},{name:"王子綱",num:"3"},{name:"克拉",num:"6"},{name:"米克獅",num:"10"},{name:"薛斯基",num:"14"},{name:"力契",num:"14"},{name:"周伯勳",num:"20"},{name:"艾夫伯",num:"24"},{name:"力獅",num:"31"},{name:"敢搏",num:"45"},{name:"容毅燊",num:"52"},{name:"霍立飛",num:"55"},{name:"達爾",num:"88"}],
-            "夢想家": [{name:"陳振傑",num:"0"},{name:"馬建豪",num:"2"},{name:"張宗憲",num:"3"},{name:"吳家駿",num:"9"},{name:"林俊吉",num:"11"},{name:"簡偉儒",num:"20"},{name:"忻沃克",num:"24"},{name:"李德威",num:"26"},{name:"史承平",num:"27"},{name:"盧冠良",num:"28"},{name:"高柏鎧",num:"34"},{name:"霍爾曼",num:"35"},{name:"蔣淯安",num:"41"},{name: "布依德", num: "42"}, {name: "班提爾", num: "50"}, {name: "周柏臣", num: "88"}, {name: "帕奇爾", num: "4"}, {name: "貝奇", num: "5"}, {name: "恩尼斯", num: "7"}, {name: "王振原", num: "8"}, {name: "班尼特", num: "17"}, {name: "簡浩", num: "21"}, {name: "恩尼斯", num: "23"}, {name: "湯普金斯", num: "33"}],
+            "戰神": [{name:"丁聖儒",num:"3"},{name:"梅克",num:"4"},{name:"魏芃禾",num:"5"},{name:"江均",num:"6"},{name:"劉彥廷",num:"7"},{name:"陳文宏",num:"8"},{name:"張兆辰",num:"9"},{name:"基德",num:"10"},{name:"黃聰翰",num:"11"},{name:"弗利沙",num:"12"},{name:"謝銘駿",num:"15"},{name:"孫思堯",num:"20"},{name:"威力斯",num:"21"},{name:"錢肯尼",num:"23"},{name:"張耕淯",num:"29"},{name:"雷蒙恩",num:"33"},{name:"蘇奕晉",num:"41"},{name:"陳冠全",num:"62"}],
+            "特攻": [{name:"阿巴西",num:"0"},{name:"李睿麒",num:"1"},{name:"貝奇",num:"2"},{name:"林安龍",num:"3"},{name:"余維豪",num:"5"},{name:"魏嘉豪",num:"7"},{name:"謝亞軒",num:"10"},{name:"內馬",num:"11"},{name:"林任鴻",num:"12"},{name:"曾信武",num:"14"},{name:"林韋翰",num:"16"},{name:"飛克",num:"18"},{name:"馬可",num:"19"},{name:"黃泓瀚",num:"22"},{name:"簡廷兆",num:"24"},{name:"金恩",num:"55"},{name:"曾文鼎",num:"76"},{name:"李沛澄",num:"77"}],
+            "國王": [{name:"杰倫",num:"0"},{name:"林書緯",num:"1"},{name:"蘇培凱",num:"2"},{name:"鍾理翔",num:"8"},{name:"李愷諺",num:"9"},{name:"簡祐哲",num:"10"},{name:"王柏智",num:"11"},{name:"林彥廷",num:"12"},{name:"呂政儒",num:"13"},{name:"飛米",num:"15"},{name:"蘇士軒",num:"17"},{name:"林金榜",num:"19"},{name:"熊祥泰",num:"20"},{name:"奧帝",num:"25"},{name:"喬納森",num:"26"},{name:"喬丹",num:"33"},{name:"沃許本",num:"42"}],
+            "雲豹": [{name:"高錦瑋",num:"5"},{name:"徐宏瑋",num:"6"},{name:"麥卡洛",num:"7"},{name:"汪哲宇",num:"8"},{name:"丁冠皓",num:"10"},{name:"莊博元",num:"11"},{name:"林信寬",num:"12"},{name:"米勒",num:"13"},{name:"王皓吉",num:"21"},{name:"克羅馬",num:"24"},{name:"黃鎮",num:"27"},{name:"董永全",num:"31"},{name:"迪亞洛",num:"33"},{name:"曹薰襄",num:"57"},{name:"呂濟而",num:"72"},{name:"劉元凱",num:"82"}],
+            "攻城獅": [{name:"德魯",num:"2"},{name:"高國豪",num:"4"},{name:"曾柏喻",num:"7"},{name:"朱雲豪",num:"8"},{name:"田浩",num:"9"},{name:"劉丞勳",num:"10"},{name:"蕭順議",num:"11"},{name:"李家瑞",num:"12"},{name:"蔡宸綱",num:"17"},{name:"帕塞獅",num:"18"},{name:"提傑",num:"22"},{name:"梁瀚",num:"25"},{name:"辛巴",num:"35"},{name:"盧冠軒",num:"42"},{name:"李啓瑋",num:"75"}],
+            "夢想家": [{name:"陳振傑",num:"0"},{name:"馬建豪",num:"2"},{name:"張宗憲",num:"3"},{name:"吳家駿",num:"9"},{name:"林俊吉",num:"11"},{name:"簡維儒",num:"20"},{name:"忻沃克",num:"24"},{name:"李德威",num:"26"},{name:"史承平",num:"27"},{name:"盧冠良",num:"28"},{name:"湯普金斯",num:"33"},{name:"高柏鎧",num:"34"},{name:"霍爾曼",num:"35"},{name:"蔣淯安",num:"41"},{name:"布依德",num:"42"},{name:"班提爾",num:"50"},{name:"周柏臣",num:"88"}],
             "海神": [{name:"魏莨哲",num:"0"},{name:"克力斯",num:"5"},{name:"于煥亞",num:"7"},{name:"邱子軒",num:"8"},{name:"唐維傑",num:"9"},{name:"胡瓏貿",num:"10"},{name:"施晉堯",num:"11"},{name:"呂威霆",num:"21"},{name:"吳彥倫",num:"23"},{name:"蘇文儒",num:"24"},{name:"賽克維奇",num:"25"},{name:"余純安",num:"28"},{name:"廖偉皓",num:"30"},{name:"布里茲克",num:"32"},{name:"奧迪傑",num:"48"},{name:"吳曉謹",num:"57"},{name:"陳懷安",num:"66"},{name:"勤明慶",num:"85"}]
         };
 
-        const STORAGE_PREFIX = 'tpbl_tool_v4_';
+        const STORAGE_PREFIX = 'tpbl_tool_v5_';
         let currentMode = '';
-        let SEASON_SCHEDULE_DB = [];
+        
+        // 剩餘賽程庫 G113 - G126 (Week 25 - 27)
+        let SEASON_SCHEDULE_DB = [
+            { id: 113, date: "2026-04-18", time: "14:30", home: "夢想家", away: "戰神", arena: "洲際迷你蛋" },
+            { id: 114, date: "2026-04-18", time: "17:00", home: "特攻", away: "雲豹", arena: "新莊體育館" },
+            { id: 115, date: "2026-04-19", time: "14:30", home: "夢想家", away: "攻城獅", arena: "洲際迷你蛋" },
+            { id: 116, date: "2026-04-19", time: "17:00", home: "特攻", away: "海神", arena: "新莊體育館" },
+            { id: 117, date: "2026-04-24", time: "19:00", home: "國王", away: "夢想家", arena: "新莊體育館" },
+            { id: 118, date: "2026-04-25", time: "14:30", home: "雲豹", away: "海神", arena: "桃園巨蛋" },
+            { id: 119, date: "2026-04-25", time: "17:00", home: "戰神", away: "攻城獅", arena: "和平籃球館" },
+            { id: 120, date: "2026-04-26", time: "14:30", home: "雲豹", away: "夢想家", arena: "桃園巨蛋" },
+            { id: 121, date: "2026-04-26", time: "17:00", home: "戰神", away: "特攻", arena: "和平籃球館" },
+            { id: 122, date: "2026-04-29", time: "19:00", home: "攻城獅", away: "國王", arena: "新竹縣體育館" },
+            { id: 123, date: "2026-05-02", time: "14:30", home: "攻城獅", away: "戰神", arena: "新竹縣體育館" },
+            { id: 124, date: "2026-05-02", time: "17:00", home: "國王", away: "雲豹", arena: "新莊體育館" },
+            { id: 125, date: "2026-05-03", time: "14:30", home: "攻城獅", away: "海神", arena: "新竹縣體育館" },
+            { id: 126, date: "2026-05-03", time: "17:00", home: "國王", away: "特攻", arena: "新莊體育館" }
+        ];
+
         const ROSTER_SHEET_ID = "17wpiorwajKYW3i8rBj-QNq8cF_14XlUS72JGh-GoHCw";
-        const SCHEDULE_SHEET_ID = "1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc";
         const CORS_PROXY = "https://api.allorigins.win/raw?url=";
         const GOOGLE_ROSTER_CSV_URL = `https://docs.google.com/spreadsheets/d/${ROSTER_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
-        const GOOGLE_SCHEDULE_CSV_URL = `https://docs.google.com/spreadsheets/d/${SCHEDULE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
         const COMMON_TAGS = "#TPBL #NothingButLove #籃球怎能不愛";
-        const BROADCAST_FIXED = "｜博斯運動二台｜TPBL 官方 YOUTUBE";
 
         // --- Utils ---
-        const toMathBoldSerif = (t) => { const m = {'0':'𝟎','1':'𝟏','2':'𝟐','3':'𝟑','4':'𝟒','5':'𝟓','6':'𝟔','7':'𝟕','8':'𝟖','9':'𝟗','A':'𝐀','B':'𝐁','C':'𝐂','D':'𝐃','E':'𝐄','F':'𝐅','G':'𝐆','H':'𝐇','I':'𝐈','J':'𝐉','K':'𝐊','L':'𝐋','M':'𝐌','N':'𝐍','O':'𝐎','P':'𝐏','Q':'𝐐','R':'𝐑','S':'𝐒','T':'𝐓','U':'𝐔','V':'𝐕','W':'𝐖','X':'𝐗','Y':'𝐘','Z':'𝐙','a':'𝐚','b':'𝐛','c':'𝐜','d':'𝐝','e':'𝐞','f':'𝐟','g':'𝐠','h':'𝐡','i':'𝐢','j':'𝐣','k':'𝐤','l':'𝐥','m':'𝐦','n':'𝐧','o':'𝐨','p':'𝐩','q':'𝐪','r':'𝐫','s':'𝐬','t':'𝐭','u':'𝐮','v':'𝐯','w':'𝐰','x':'𝐱','y':'𝐲','z':'𝐳'}; return String(t).split('').map(c => m[c] || c).join(''); };
-        const toMathBoldSans = (t) => { const m = {'0':'𝟬','1':'𝟭','2':'𝟮','3':'𝟯','4':'𝟰','5':'𝟱','6':'𝟲','7':'𝟳','8':'𝟴','9':'𝟵','A':'𝗔','B':'𝗕','C':'𝗖','D':'𝗗','E':'𝗘','F':'𝗙','G':'𝗚','H':'𝗛','I':'𝗜','J':'𝗝','K':'𝗞','L':'𝗟','M':'𝗠','N':'𝗡','O':'𝗢','P':'𝗣','Q':'𝗤','R':'𝗥','S':'𝗦','T':'𝗧','U':'𝗨','V':'𝐕','W':'𝗪','X':'𝗫','Y':'𝗬','Z':'𝗭','a':'𝗮','b':'𝗯','c':'𝗰','d':'𝗱','e':'𝗲','f':'𝗳','g':'𝗴','h':'𝗵','i':'𝗶','j':'𝗷','k':'𝗸','l':'𝗹','m':'𝗺','n':'𝗻','o':'𝗼','p':'𝗽','q':'𝗾','r':'𝗿','s':'𝘀','t':'𝘁','u':'𝘂','v':'𝘃','w':'𝘄','x':'𝘅','y':'𝘆','z':'𝘇'}; return String(t).split('').map(c => m[c] || c).join(''); };
+        const toMathBoldSerif = (t) => { const m = {'0':'𝟎','1':'𝟏','2':'𝟐','3':'𝟑','4':'𝟒','5':'𝟓','6':'𝟔','7':'𝟕','8':'𝟖','9':'𝟗','A':'𝐀','B':'𝐁','C':'𝐂','D':'𝐃','E':'𝐄','F':'𝐅','G':'𝐆','H':'𝐇','I':'𝐈','J':'𝐉','K':'𝐊','L':'𝐋','M':'𝐌','N':'𝐍','O':'𝐎','P':'𝐏','Q':'𝐐','R':'𝐑','S':'𝐒','T':'𝐓','U':'𝐔','V':'𝐕','W':'𝐖','X':'𝐗','Y':'𝐘','Z':'𝐙','a':'𝐚','b':'𝐛','c':'ｃ','d':'𝐝','e':'ｅ','f':'ｆ','g':'ｇ','h':'ｈ','i':'ｉ','j':'ｊ','k':'ｋ','l':'ｌ','m':'ｍ','n':'ｎ','o':'ｏ','p':'ｐ','q':'ｑ','r':'ｒ','s':'ｓ','t':'ｔ','u':'ｕ','v':'ｖ','w':'ｗ','x':'ｘ','y':'ｙ','z':'ｚ'}; return String(t).split('').map(c => m[c] || c).join(''); };
+        const toMathBoldSans = (t) => { const m = {'0':'𝟬','1':'𝟭','2':'𝟮','3':'𝟯','4':'𝟰','5':'𝟱','6':'𝟲','7':'𝟳','8':'𝟴','9':'𝟵','A':'𝗔','B':'𝗕','C':'𝗖','D':'𝗗','E':'𝗘','F':'𝗙','G':'𝗚','H':'𝗛','I':'𝗜','J':'𝗝','K':'𝗞','L':'𝗟','M':'𝗠','N':'𝗡','O':'𝗢','P':'𝗣','Q':'𝗤','R':'𝗥','S':'𝗦','T':'𝗧','U':'𝗨','V':'𝗩','W':'𝗪','X':'𝗫','Y':'𝗬','Z':'𝗭','a':'𝗮','b':'ｂ','c':'ｃ','d':'𝗱','e':'ｅ','f':'ｆ','g':'ｇ','h':'ｈ','i':'ｉ','j':'ｊ','k':'ｋ','l':'ｌ','m':'ｍ','n':'ｎ','o':'ｏ','p':'ｐ','q':'𝗾','r':'ｒ','s':'ｓ','t':'ｔ','u':'𝘂','v':'𝘃','w':'𝘄','x':'𝘅','y':'𝘆','z':'𝘇'}; return String(t).split('').map(c => m[c] || c).join(''); };
         const parseDateLocal = (s) => { if(!s) return new Date(); const p = s.replace(/\//g, '-').split('-'); return new Date(p[0], p[1]-1, p[2]); };
         const getDayChi = (s) => { const d = parseDateLocal(s); return ['日','一','二','三','四','五','六'][d.getDay()]; };
         const formatMMDD = (s) => { const d = parseDateLocal(s); return `${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`; };
@@ -174,9 +189,9 @@
         const getTeam = (k) => TEAMS[k] || { full: k || "球隊", emoji: "", arena: "" };
 
         function getDatesForWeek(w) {
-            const start = new Date("2025-12-01");
+            const start = new Date("2025-12-01"); // 基準 Week 8
             let calcW = parseInt(w);
-            if (calcW >= 19) calcW += 2; // 休賽兩週補償
+            if (calcW >= 19) calcW += 2; // 跳過兩週國家隊休賽
             const target = new Date(start);
             target.setDate(start.getDate() + ((calcW - 8) * 7));
             const end = new Date(target); end.setDate(target.getDate() + 6);
@@ -200,21 +215,6 @@
             } catch (e) { console.error("Roster Sync Fail", e); }
         }
 
-        async function fetchScheduleData() {
-            try {
-                const res = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_SCHEDULE_CSV_URL + '&t=' + Date.now()));
-                const txt = await res.text();
-                const rows = txt.split(/\r?\n/);
-                const newDB = [];
-                for (let i = 1; i < rows.length; i++) {
-                    let p = rows[i].split(','); p = p.map(x => x.replace(/^"|"$/g, '').trim());
-                    if (p.length < 4) continue;
-                    newDB.push({ id: i, date: p[0].replace(/\//g,'-'), time: p[1], home: normalizeTeamName(p[2]), away: normalizeTeamName(p[3]), arena: p[4] || "" });
-                }
-                if (newDB.length > 0) SEASON_SCHEDULE_DB = newDB;
-            } catch (e) { console.error("Schedule Sync Fail", e); }
-        }
-
         const createInput = (id, l, t="text", ph="", v="") => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${l}</label><input type="${t}" id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold" placeholder="${ph}" value="${v}"></div>`;
         const createTextarea = (id, l, ph="", r=4) => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${l}</label><textarea id="${id}" rows="${r}" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold" placeholder="${ph}"></textarea></div>`;
         const createTeamSelect = (id, l) => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${l}</label><select id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md bg-white team-select"><option value="" disabled selected>選擇球隊</option>${TEAM_KEYS.map(k => `<option value="${k}">${k}</option>`).join('')}</select></div>`;
@@ -224,10 +224,11 @@
             currentMode = mode;
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`btn-${mode}`)?.classList.add('active');
-            const titles = { 'weekday_preview': '平日賽事預告', 'game_preview': '單場賽程預告', 'weekly_schedule': '每週賽程表', 'matchup_highlight': '賽前對戰亮點', 'final_score': '終場比分', 'game_highlight': '本場賽事精華', 'press_conf': '賽後記者會', 'potg': '單場最佳球員', 'local_player_highlight': '本土球員表現', 'weekly_standings': '每週戰績排行', 'top5': '本週五大好球', 'potw': '單週最佳球員', 'playoff_radar': '季後賽雷達戰報', 'nb_moments': 'Nothing But Moments', 'season_stats': '數據累計排行' };
+            const titles = { 'weekday_preview': '平日賽事預告', 'game_preview': '單場賽程預告', 'weekly_schedule': '每週賽程表', 'matchup_highlight': '賽前對戰亮點', 'final_score': '終場比分', 'game_highlight': '本場賽事精華', 'press_conf': '賽後記者會', 'potg': '單場最佳球員', 'local_player_highlight': '本土球員傑出表現', 'weekly_standings': '每週戰績排行', 'top5': '本週五大好球', 'potw': '單週最佳球員', 'playoff_radar': '季後賽雷達戰報', 'nb_moments': 'Nothing But Moments', 'season_stats': '數據累計排行' };
             document.getElementById('title-text').innerText = titles[mode] || '請選擇功能';
             renderForm(mode);
             attachFormListeners();
+            bindSmartEvents(mode);
             loadFromLocal();
         }
 
@@ -235,7 +236,7 @@
             const container = document.getElementById('dynamic-form');
             let html = '';
             if (mode === 'top5') {
-                html = `${createInput('week_num','第幾週','number','7')}${createTextarea('top5_intro','引言文案','',2)}<div class="space-y-6 mt-6">${[1,2,3,4,5].map(i => `
+                html = `${createInput('week_num','第幾週','number','25')}${createTextarea('top5_intro','引言文案','',2)}<div class="space-y-6 mt-6">${[1,2,3,4,5].map(i => `
                     <div class="p-4 border border-gray-200 rounded-xl bg-white shadow-sm space-y-4">
                         <div class="flex items-center gap-4 pb-3 border-b border-gray-100">
                             <span class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 text-gray-700 font-bold shrink-0 text-xs">${i}</span>
@@ -245,7 +246,8 @@
                             <div class="space-y-1.5"><label class="text-[11px] font-bold text-gray-400 ml-1">球員 1</label><div class="flex items-center gap-2"><select id="top${i}_name1" data-team-select="top${i}_team" data-num-input="top${i}_num1" class="player-select disabled-input flex-1 h-[40px] px-3 border border-gray-300 rounded-md text-sm" disabled><option value="">先選擇球隊</option></select><input id="top${i}_num1" type="text" readonly class="w-14 h-[40px] border border-gray-300 rounded-md text-sm text-center bg-gray-100 font-bold"></div></div>
                             <div class="space-y-1.5"><label class="text-[11px] font-bold text-gray-400 ml-1">球員 2</label><div class="flex items-center gap-2"><select id="top${i}_name2" data-team-select="top${i}_team" data-num-input="top${i}_num2" class="player-select disabled-input flex-1 h-[40px] px-3 border border-gray-300 rounded-md text-sm" disabled><option value="">選填助攻者</option></select><input id="top${i}_num2" type="text" readonly class="w-14 h-[40px] border border-gray-300 rounded-md text-sm text-center bg-gray-100 font-bold"></div></div>
                         </div>
-                    </div>`).join('')}</div>`;
+                    </div>`).join('')}</div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-6"><p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入)</p><div id="standings_schedule_list_container" class="space-y-3"></div></div>`;
             } else if (mode === 'press_conf') {
                 html = `${createTeamSelect('pc_team_select','受訪球隊')}${createInput('pc_title','標題','text','🗣️ FACING THE STORM...')}${createTextarea('pc_quote','語錄')}${createTextarea('pc_content','內容')}${createNextGameBlock('下場賽事資訊')}`;
             } else if (mode === 'potg') {
@@ -256,6 +258,8 @@
                 html = `${createInput('playoff_ep','EP. 編號','text','01')}${createTextarea('playoff_intro','引言文案')}${createTextarea('playoff_content','關鍵戰況')}`;
             } else if (mode === 'final_score') {
                 html = `${createInput('game_num','場次','number')}${createInput('match_title','標題')}${createTextarea('match_recap','回顧文案')}${createNextGameBlock('下場賽事')}`;
+            } else if (mode === 'weekly_schedule') {
+                html = `${createInput('week_num', '第幾週 (Week)', 'number', '25')}${createTextarea('week_intro', '本週賽程引言', '', 4)}<div class="bg-gray-50 p-4 rounded-lg border border-gray-200"><p class="text-sm font-bold mb-2">本週賽程列表 (自動帶入)</p><div id="schedule_list_container" class="space-y-3"></div></div>`;
             } else {
                 html = `<p class="text-gray-500">此模式表單建構中...</p>`;
             }
@@ -283,6 +287,41 @@
             });
         }
 
+        function bindSmartEvents(mode) {
+            const gn = document.getElementById('game_num') || document.getElementById('potg_game_num');
+            if(gn) {
+                gn.addEventListener('input', (e) => {
+                    const game = SEASON_SCHEDULE_DB.find(g => g.id == e.target.value);
+                    if(game) {
+                        const next = SEASON_SCHEDULE_DB.find(g => g.id > game.id);
+                        if(next) {
+                            document.getElementById('next_date').value = next.date;
+                            document.getElementById('next_game_num').value = next.id;
+                            document.getElementById('next_time').value = next.time;
+                            const na = document.getElementById('next_away'); na.value = next.away; na.dispatchEvent(new Event('change'));
+                            const nh = document.getElementById('next_home'); nh.value = next.home; nh.dispatchEvent(new Event('change'));
+                        }
+                        if(mode==='potg') {
+                            const pa = document.getElementById('potg_away'); pa.value = game.away; pa.dispatchEvent(new Event('change'));
+                            const ph = document.getElementById('potg_home'); ph.value = game.home; ph.dispatchEvent(new Event('change'));
+                        }
+                    }
+                });
+            }
+            const wn = document.getElementById('week_num');
+            if(wn) {
+                wn.addEventListener('input', (e) => {
+                    const range = getDatesForWeek(e.target.value);
+                    const games = SEASON_SCHEDULE_DB.filter(g => g.date >= range.start && g.date <= range.end);
+                    const listId = mode === 'top5' ? 'standings_schedule_list_container' : 'schedule_list_container';
+                    const list = document.getElementById(listId);
+                    if(list) {
+                        list.innerHTML = games.map(g => `<div class="text-xs p-2 bg-white border rounded">▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${getTeam(g.away).full} vs. ${getTeam(g.home).full}｜${g.arena}</div>`).join('');
+                    }
+                });
+            }
+        }
+
         const getNextGameFormatted = () => {
             const d = getValue('next_date'); if(!d) return "";
             const dObj = parseDateLocal(d); if(isNaN(dObj.getTime())) return "";
@@ -304,7 +343,12 @@
                         out += `${['①','②','③','④','⑤'][i-1]} ${t.emoji} ${t.full}｜${ps}\n`;
                     }
                 }
-                out += `\n-\n\n${COMMON_TAGS} #TrueTisane`;
+                const range = getDatesForWeek(getValue('week_num'));
+                const games = SEASON_SCHEDULE_DB.filter(g => g.date >= range.start && g.date <= range.end);
+                if(games.length > 0) {
+                    out += `\n-\n\n📌 本週賽事預告：\n` + games.map(g => `▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${getTeam(g.away).full}（客） vs. ${getTeam(g.home).full}（主）｜${g.arena}`).join('\n');
+                }
+                out += `\n\n${COMMON_TAGS} #TrueTisane`;
             } else if (currentMode === 'press_conf') {
                 out = `🗣️${toMathBoldSerif(getValue('pc_title'))}\n\n💬「${getValue('pc_quote')}」\n\n${getValue('pc_content')}\n\n`;
                 if(getValue('next_date')) {
@@ -320,6 +364,12 @@
                 out = `📡 ${toMathBoldSerif('TPBL PLAYOFFS RADAR')} ｜季後賽卡位戰雷達戰報 EP.“${getValue('playoff_ep')}”\n\n本週最新的「魔術數字預測戰報」出爐！\n${getValue('playoff_intro')}\n\n-\n\n⚠️ 本週關鍵戰況：\n${getValue('playoff_content')}\n\n-\n\n現在就留言告訴我們 💬 你認為誰能率先拿下季後賽門票？\n持續關注 TPBL 雷達戰報，掌握最即時的季後賽走勢！\n\n${COMMON_TAGS}`;
             } else if (currentMode === 'final_score') {
                 out = `🔚 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n${getValue('match_recap')}\n\n-\n\n${getNextGameFormatted()}\n\n${COMMON_TAGS} #TPBL例行賽`;
+            } else if (currentMode === 'weekly_schedule') {
+                out = `⏰｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程\n\n${getValue('week_intro')}\n\n-\n\n📌 本週賽事預告：\n`;
+                const range = getDatesForWeek(getValue('week_num'));
+                const games = SEASON_SCHEDULE_DB.filter(g => g.date >= range.start && g.date <= range.end);
+                out += games.map(g => `▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${getTeam(g.away).full}（客） vs. ${getTeam(g.home).full}（主）｜${g.arena}`).join('\n');
+                out += `\n\n${COMMON_TAGS}`;
             }
             document.getElementById('output-text').value = out;
             saveToLocal();
@@ -330,7 +380,7 @@
         function clearCacheAndReset() { localStorage.removeItem(STORAGE_PREFIX + currentMode); switchMode(currentMode); }
         function copyToClipboard() { const el = document.getElementById('output-text'); el.select(); document.execCommand('copy'); const btn = document.getElementById('copy-text'); btn.innerText = "已複製！"; setTimeout(()=>btn.innerText="一鍵複製",2000); }
 
-        window.onload = () => { fetchRosterData(); fetchScheduleData(); switchMode('game_preview'); };
+        window.onload = () => { fetchRosterData(); switchMode('game_preview'); };
     </script>
 </body>
 </html>
