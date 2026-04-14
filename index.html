@@ -195,6 +195,7 @@
                     <button onclick="switchMode('100_reasons')" id="btn-100_reasons" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-heart w-6 text-center"></i> 一百種喜歡籃球的原因</button>
                     <button onclick="switchMode('monthly_kicks')" id="btn-monthly_kicks" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-shoe-prints w-6 text-center"></i> 每月精選實戰球鞋</button>
                     <button onclick="switchMode('season_stats')" id="btn-season_stats" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-simple w-6 text-center"></i> 數據累計排行</button>
+                    <button onclick="switchMode('playoff_radar')" id="btn-playoff_radar" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-satellite-dish w-6 text-center"></i> 季後賽雷達戰報</button>
                 </div>
 
                 <!-- Sync Status -->
@@ -1158,7 +1159,7 @@
             'weekday_preview', 'game_preview', 'weekly_schedule', 'matchup_highlight',
             'final_score', 'game_highlight', 'press_conf', 'potg', 'local_player_highlight',
             'career_milestone', 'weekly_standings', 'top5', 'potw', 'weekly_local_eff',
-            'monthly_kicks', 'season_stats', '100_reasons', 'nb_moments'
+            'monthly_kicks', 'season_stats', '100_reasons', 'nb_moments', 'playoff_radar'
         ];
 
         function switchMode(mode) {
@@ -1203,7 +1204,8 @@
                     'monthly_kicks': '每月精選實戰球鞋',
                     'season_stats': '數據累計排行',
                     '100_reasons': '一百種喜歡籃球的原因',
-                    'nb_moments': 'Nothing But Moments'
+                    'nb_moments': 'Nothing But Moments',
+                    'playoff_radar': '季後賽雷達戰報'
                 };
                 
                 const titleEl = document.getElementById('title-text');
@@ -1490,6 +1492,12 @@
                         
                         ${createTextarea('player_desc', '球員表現描述', '', 6)}
                         ${createNextGameBlock("下場賽事資訊 (Next Game)")}
+                    `;
+                } else if (mode === 'playoff_radar') {
+                    html += `
+                        ${createInput('playoff_ep', 'EP. 編號', 'text', '01')}
+                        ${createTextarea('playoff_intro', '引言文案', '輸入本週最新的引言文案...', 4)}
+                        ${createTextarea('playoff_content', '關鍵戰況', '輸入本週關鍵戰況分析...', 8)}
                     `;
                 } else if (mode === 'weekly_local_eff') {
                     html += `
@@ -2163,6 +2171,20 @@
                     }
                     output += `\n\n${COMMON_TAGS}`;
                     
+                } else if (currentMode === 'playoff_radar') {
+                    const ep = getValue('playoff_ep');
+                    const intro = getValue('playoff_intro');
+                    const content = getValue('playoff_content');
+
+                    output = `📡 ${toMathBoldSerif('TPBL PLAYOFFS RADAR')} ｜季後賽卡位戰雷達戰報 EP.“${ep}”\n\n`;
+                    output += `本週最新的「魔術數字預測戰報」出爐！\n${intro}\n\n`;
+                    output += `-\n\n`;
+                    output += `⚠️ 本週關鍵戰況：\n${content}\n\n`;
+                    output += `-\n\n`;
+                    output += `現在就留言告訴我們 💬 你認為誰能率先拿下季後賽門票？\n持續關注 TPBL 雷達戰報，掌握最即時的季後賽走勢！\n\n`;
+                    output += `${COMMON_TAGS}`;
+                }
+                
                 } else if (currentMode === 'weekly_local_eff') {
                     output = `🔥 ${toMathBoldSerif('POWERFUL LOCALS')}｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行✨\n\n`;
                     output += `${getValue('eff_intro')}\n\n`;
