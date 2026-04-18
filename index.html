@@ -20,128 +20,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        /* Sidebar Styles */
         .sidebar-item.active { background-color: #D8BF98; color: #19191A; font-weight: 700; }
         .sidebar-item:hover { color: #ffffff !important; }
-
-        /* Scrollbar Hiding */
         ::-webkit-scrollbar { display: none; }
         * { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Custom Colors */
         .text-brand-gold { color: #D8BF98; }
         .bg-brand-dark { background-color: #19191A; }
         .bg-brand-gold { background-color: #D8BF98; }
         .border-brand-gold { border-color: #D8BF98; }
         .focus-ring-gold:focus { --tw-ring-color: #D8BF98; }
-
-        /* Disabled Input Style */
         .disabled-input { background-color: #f3f4f6; cursor: not-allowed; color: #9ca3af; }
         input[readonly] { background-color: #f3f4f6; color: #4b5563; }
-
-        /* Custom Select */
         select {
             -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
             background-position: right 0.5rem center;
             background-repeat: no-repeat;
             background-size: 1.5em 1.5em;
             padding-right: 2.5rem !important;
         }
-
-        /* Date Input Fixes */
         input[type="date"] {
             -webkit-appearance: none;
-            appearance: none;
             background-color: white;
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
-            font-family: 'Noto Sans TC', sans-serif;
             display: block;
             text-align: left;
         }
-        /* Mobile-only min-height for touch targets */
-        @media (max-width: 768px) {
-            input[type="date"] {
-                min-height: 2.75rem;
-            }
-        }
-        /* Fix for iOS date alignment */
-        input[type="date"]::-webkit-date-and-time-value { text-align: left; }
-
-        /* Animations */
-        .fade-out {
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-            pointer-events: none;
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Status Indicator */
-        #sync-status {
-            font-size: 0.7rem;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-
-        /* Prevent body scroll when menu is bouncing */
-        #sidebar-nav {
-            overscroll-behavior: contain;
-        }
+        @media (max-width: 768px) { input[type="date"] { min-height: 2.75rem; } }
+        .fade-out { opacity: 0; transition: opacity 0.5s ease-out; pointer-events: none; }
+        .fade-in { animation: fadeIn 0.5s ease-in forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        #sync-status { font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; transition: all 0.3s; }
     </style>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            dark: '#19191A',
-                            gold: '#D8BF98',
-                        }
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { colors: { brand: { dark: '#19191A', gold: '#D8BF98' } } } } }
     </script>
 </head>
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden">
 
     <!-- LANDING PAGE -->
     <div id="landing-page" class="fixed inset-0 z-50 bg-brand-dark flex flex-col md:flex-row overflow-hidden">
-        <!-- Left Side: Content -->
         <div class="w-full md:w-1/2 h-full flex flex-col justify-center px-8 md:px-24 relative z-10 bg-brand-dark overflow-y-auto">
             <div class="flex-1 flex flex-col justify-center min-h-[400px]">
-                <!-- Logo -->
                 <div class="mb-6 flex justify-start">
                     <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-10 md:h-12 w-auto">
                 </div>
-                <!-- Title -->
                 <h1 class="text-3xl md:text-4xl font-semibold text-white mb-3 tracking-wide text-left">社群文案生成工具</h1>
                 <p class="text-gray-400 text-lg md:text-xl mb-10 font-extralight text-left">Social Content Generator</p>
-                <!-- Button -->
                 <div class="flex justify-start">
                     <button onclick="enterApp()" class="bg-brand-gold text-brand-dark text-lg font-bold py-3 px-12 rounded-full hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-2">
                         開始使用 <span>→</span>
                     </button>
                 </div>
             </div>
-            <!-- Footer -->
             <div class="py-6 w-full flex flex-col items-center justify-center text-gray-600 text-xs md:text-sm flex-shrink-0">
                 <p>powered by Alvin LIU</p>
                 <p class="mt-1">© TPBL 2025 All rights reserved.</p>
             </div>
         </div>
-        <!-- Right Side: Image -->
         <div class="hidden md:block w-1/2 h-full relative">
              <img src="https://assets.tpbl.basketball/production/banners/kl3My9saHVdhrTmoezJC3Am9KyBrMzgES3lVQYm2.jpg?20250930145249" alt="TPBL Season Visual" class="w-full h-full object-cover opacity-90">
             <div class="absolute inset-0 bg-black/10"></div>
@@ -150,24 +87,18 @@
 
     <!-- MAIN APP -->
     <div id="app-container" class="hidden w-full h-full flex flex-col md:flex-row overflow-hidden fixed inset-0 z-0">
-        <!-- Sidebar -->
         <aside class="w-full md:w-64 bg-brand-dark text-gray-400 flex flex-col flex-shrink-0 md:h-full z-50 relative shadow-lg md:shadow-none">
-            <!-- Sidebar Header -->
             <div id="sidebar-header" class="p-4 md:p-6 border-b border-gray-800 flex justify-between items-center bg-brand-dark z-50 relative flex-shrink-0">
                 <div class="flex items-center gap-3">
                     <div id="logo-container" onclick="location.reload()" class="cursor-pointer" title="返回首頁">
                         <img src="https://raw.githubusercontent.com/alvinliu2001/tpbl-tool/refs/heads/main/tpbl-logo-white.png" alt="TPBL Logo" class="h-6 md:h-7 w-auto">
                     </div>
                 </div>
-                <!-- Mobile Menu Button -->
                 <button onclick="toggleSidebar()" class="md:hidden bg-white text-black rounded-full w-8 h-8 flex items-center justify-center focus:outline-none hover:bg-gray-100 transition shadow-sm z-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 9h16M4 15h16" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 9h16M4 15h16" /></svg>
                 </button>
             </div>
             
-            <!-- Sidebar Nav -->
             <nav id="sidebar-nav" class="flex flex-col py-4 space-y-1 bg-brand-dark absolute md:static w-full top-full left-0 shadow-xl md:shadow-none transition-all duration-500 ease-in-out z-40 origin-top max-h-0 opacity-0 overflow-hidden md:max-h-full md:opacity-100 md:h-full">
                 <div class="flex-1 overflow-y-auto w-full">
                     <div class="px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wider">賽前預熱</div>
@@ -181,127 +112,55 @@
                     <button onclick="switchMode('game_highlight')" id="btn-game_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-film w-6 text-center"></i> 本場賽事精華</button>
                     <button onclick="switchMode('press_conf')" id="btn-press_conf" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-microphone w-6 text-center"></i> 賽後記者會</button>
                     <button onclick="switchMode('potg')" id="btn-potg" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-bolt w-6 text-center"></i> 單場最佳球員</button>
-                    <button onclick="switchMode('local_player_highlight')" id="btn-local_player_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-star w-6 text-center"></i> 本土球員單場傑出表現</button>
-                    <button onclick="switchMode('career_milestone')" id="btn-career_milestone" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-crown w-6 text-center"></i> 球員生涯紀錄</button>
+                    <button onclick="switchMode('local_player_highlight')" id="btn-local_player_highlight" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-star w-6 text-center"></i> 本土球員傑出表現</button>
 
                     <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">每週總結</div>
                     <button onclick="switchMode('weekly_standings')" id="btn-weekly_standings" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-list-ol w-6 text-center"></i> 每週戰績排行</button>
                     <button onclick="switchMode('top5')" id="btn-top5" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-video w-6 text-center"></i> 本週五大好球</button>
-                    <button onclick="switchMode('potw')" id="btn-potw" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-trophy w-6 text-center"></i> 單週最佳球員</button>
-                    <button onclick="switchMode('weekly_local_eff')" id="btn-weekly_local_eff" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-line w-6 text-center"></i> 每週本土效率值排行</button>
 
                     <div class="px-4 py-2 mt-4 text-xs font-bold text-gray-600 uppercase tracking-wider">專題 / 其他</div>
                     <button onclick="switchMode('playoff_radar')" id="btn-playoff_radar" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-satellite-dish w-6 text-center"></i> 季後賽雷達戰報</button>
                     <button onclick="switchMode('nb_moments')" id="btn-nb_moments" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-camera w-6 text-center"></i> Nothing But Moments</button>
-                    <button onclick="switchMode('100_reasons')" id="btn-100_reasons" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-heart w-6 text-center"></i> 一百種喜歡籃球的原因</button>
-                    <button onclick="switchMode('monthly_kicks')" id="btn-monthly_kicks" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-shoe-prints w-6 text-center"></i> 每月精選實戰球鞋</button>
                     <button onclick="switchMode('season_stats')" id="btn-season_stats" class="sidebar-item w-full text-left px-6 py-3 hover:bg-gray-800 transition flex items-center gap-3"><i class="fa-solid fa-chart-simple w-6 text-center"></i> 數據累計排行</button>
                 </div>
-
-                <!-- Sync Status -->
                 <div class="p-4 mt-auto border-t border-gray-800 md:border-0 flex-shrink-0">
-                    <div id="sync-status" class="bg-gray-800 text-gray-400">
-                        <i class="fa-solid fa-check mr-1"></i> 系統就緒 (本地資料庫)
-                    </div>
+                    <div id="sync-status" class="bg-gray-800 text-gray-400"><i class="fa-solid fa-check mr-1"></i> 系統就緒</div>
                 </div>
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 flex flex-col md:flex-row relative overflow-y-auto md:overflow-hidden w-full h-full">
-            
-            <!-- Input Area -->
             <div class="flex-1 p-4 md:p-8 bg-white md:h-full md:overflow-y-auto" id="input-container">
                 <div class="max-w-2xl mx-auto pb-10 md:pb-0">
                     <h2 id="current-title" class="text-xl md:text-2xl font-bold mb-6 text-gray-800 border-l-4 border-brand-gold pl-4 flex items-center gap-3">
                         <span id="title-text">請選擇功能</span>
-                        <a id="example-link" href="#" target="_blank" class="text-gray-400 hover:text-brand-gold transition hidden" title="查看範例貼文">
-                            ↗︎
-                        </a>
                     </h2>
-                    
-                    <div id="dynamic-form" class="space-y-5">
-                        <p class="text-gray-500">請從左側選單選擇您要生成的貼文類型。</p>
-                    </div>
-
+                    <div id="dynamic-form" class="space-y-5"></div>
                     <div class="mt-8 pt-6 border-t border-gray-100">
                         <div class="flex justify-between items-center mb-2">
-                             <button onclick="clearCacheAndReset()" class="text-xs text-red-400 hover:text-red-600 font-medium transition flex items-center gap-1 focus:outline-none">
-                                <i class="fa-solid fa-rotate-right"></i> 重置/清除暫存
-                             </button>
+                             <button onclick="clearCacheAndReset()" class="text-xs text-red-400 hover:text-red-600 font-medium transition flex items-center gap-1 focus:outline-none"><i class="fa-solid fa-rotate-right"></i> 重置暫存</button>
                              <span id="last-saved-time" class="text-xs text-gray-400 transition-opacity duration-500 opacity-0"></span>
                         </div>
-                        <button onclick="generateCopy()" class="w-full bg-brand-dark hover:bg-brand-gold hover:text-brand-dark text-white font-bold py-4 px-6 rounded-lg transition duration-200 flex justify-center items-center gap-2 shadow-lg">
-                            <span>生成文案</span>
-                        </button>
+                        <button onclick="generateCopy()" class="w-full bg-brand-dark hover:bg-brand-gold hover:text-brand-dark text-white font-bold py-4 px-6 rounded-lg transition shadow-lg">生成文案</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Output Area -->
-            <div class="w-full md:w-1/3 bg-gray-100 p-6 flex flex-col border-t md:border-t-0 md:border-l border-gray-200">
-                <h3 class="text-lg font-bold mb-4 text-gray-700 flex items-center gap-2">
-                    預覽結果
-                </h3>
-                <textarea id="output-text" class="flex-1 w-full p-4 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-brand-gold bg-white leading-relaxed h-64 md:h-auto" placeholder="文案將顯示於此..."></textarea>
-                
-                <button onclick="copyToClipboard()" class="mt-4 w-full bg-white border-2 border-gray-200 hover:border-brand-dark text-gray-800 font-bold py-3 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2">
+            <div class="w-full md:w-1/3 bg-gray-100 p-6 flex flex-col border-t md:border-l border-gray-200">
+                <h3 class="text-lg font-bold mb-4 text-gray-700 flex items-center gap-2">預覽結果</h3>
+                <textarea id="output-text" class="flex-1 w-full p-4 border border-gray-300 rounded-lg text-sm resize-none focus:ring-2 focus:ring-brand-gold bg-white leading-relaxed h-64 md:h-auto" placeholder="文案將顯示於此..."></textarea>
+                <button onclick="copyToClipboard()" class="mt-4 w-full bg-white border-2 border-gray-200 hover:border-brand-dark text-gray-800 font-bold py-3 px-4 rounded-lg transition flex justify-center items-center gap-2">
                     <span id="copy-text">一鍵複製</span>
                 </button>
-
-                <!-- Footer in Main App -->
-                <div class="mt-6 text-center text-gray-400 text-xs">
-                    <p>powered by Alvin LIU</p>
-                    <p class="mt-1">© TPBL 2025 All rights reserved.</p>
-                </div>
+                <div class="mt-6 text-center text-gray-400 text-xs"><p>powered by Alvin LIU</p></div>
             </div>
-
         </main>
     </div>
-    
-    <!-- JavaScript Logic -->
+
     <script>
-        // --- Enter App from Landing Page ---
-        function enterApp() {
-            const landing = document.getElementById('landing-page');
-            const app = document.getElementById('app-container');
-            landing.classList.add('fade-out');
-            setTimeout(() => {
-                landing.style.display = 'none';
-                app.classList.remove('hidden');
-                app.classList.add('fade-in');
-                window.scrollTo(0, 0);
-            }, 500);
-        }
+        function enterApp() { document.getElementById('landing-page').classList.add('fade-out'); setTimeout(() => { document.getElementById('landing-page').style.display = 'none'; document.getElementById('app-container').classList.remove('hidden'); document.getElementById('app-container').classList.add('fade-in'); }, 500); }
+        function toggleSidebar() { const nav = document.getElementById('sidebar-nav'); if (nav.classList.contains('max-h-0')) { nav.classList.remove('max-h-0', 'opacity-0'); nav.style.maxHeight = 'calc(100vh - 64px)'; nav.classList.add('opacity-100'); } else { nav.style.maxHeight = '0px'; nav.classList.add('max-h-0', 'opacity-0'); } }
 
-        // --- Mobile Sidebar Toggle ---
-        function toggleSidebar() {
-            const nav = document.getElementById('sidebar-nav');
-            const header = document.getElementById('sidebar-header');
-            const headerHeight = header.offsetHeight;
-            const availableHeight = window.innerHeight - headerHeight;
-            
-            if (nav.classList.contains('max-h-0')) {
-                nav.classList.remove('max-h-0', 'opacity-0', 'overflow-hidden');
-                nav.style.maxHeight = availableHeight + 'px';
-                nav.classList.add('opacity-100', 'overflow-y-auto');
-            } else {
-                nav.style.maxHeight = '0px'; 
-                nav.classList.add('max-h-0', 'opacity-0', 'overflow-hidden');
-                nav.classList.remove('opacity-100');
-                nav.classList.remove('h-full');
-            }
-        }
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 768) {
-                const nav = document.getElementById('sidebar-nav');
-                nav.style.maxHeight = '';
-                nav.classList.remove('max-h-0', 'opacity-0', 'overflow-hidden'); 
-                nav.classList.add('opacity-100');
-            }
-        });
-
-        // --- Data & Config ---
         const TEAMS = {
             "戰神": { full: "臺北台新戰神", emoji: "🛡️", arena: "和平籃球館" },
             "攻城獅": { full: "新竹御嵿攻城獅", emoji: "🦁", arena: "新竹縣體育館" },
@@ -312,8 +171,7 @@
             "雲豹": { full: "桃園台啤永豐雲豹", emoji: "🐆", arena: "桃園巨蛋" }
         };
         const TEAM_KEYS = Object.keys(TEAMS);
-        
-        // --- BUILT-IN FALLBACK DATA ---
+
         let SEASON_SCHEDULE_DB = [
             { id: 113, date: "2026-04-18", time: "14:30", home: "夢想家", away: "戰神", arena: "臺中洲際迷你蛋" },
             { id: 114, date: "2026-04-18", time: "17:00", home: "特攻", away: "雲豹", arena: "新莊體育館" },
@@ -331,7 +189,6 @@
             { id: 126, date: "2026-05-03", time: "17:00", home: "國王", away: "特攻", arena: "新莊體育館" }
         ];
 
-        // Roster Data - Fallback (Full DB for Local First)
         let ROSTERS = {
             "戰神": [{name: "丁聖儒", num: "3"}, {name: "梅克", num: "4"}, {name: "魏芃禾", num: "5"}, {name: "江均", num: "6"}, {name: "劉彥廷", num: "7"}, {name: "陳文宏", num: "8"}, {name: "張兆辰", num: "9"}, {name: "基德", num: "10"}, {name: "黃聰翰", num: "11"}, {name: "弗利沙", num: "12"}, {name: "謝銘駿", num: "15"}, {name: "孫思堯", num: "20"}, {name: "威力斯", num: "21"}, {name: "錢肯尼", num: "23"}, {name: "張耕淯", num: "29"}, {name: "雷蒙恩", num: "33"}, {name: "蘇奕晉", num: "41"}, {name: "陳冠全", num: "62"}],
             "特攻": [{name: "阿巴西", num: "0"}, {name: "李睿麒", num: "1"}, {name: "貝奇", num: "2"}, {name: "林安龍", num: "3"}, {name: "余維豪", num: "5"}, {name: "魏嘉豪", num: "7"}, {name: "謝亞軒", num: "10"}, {name: "內馬", num: "11"}, {name: "林任鴻", num: "12"}, {name: "曾信武", num: "14"}, {name: "林韋翰", num: "16"}, {name: "飛克", num: "18"}, {name: "馬可", num: "19"}, {name: "黃泓瀚", num: "22"}, {name: "簡廷兆", num: "24"}, {name: "金恩", num: "55"}, {name: "曾文鼎", num: "76"}, {name: "李沛澄", num: "77"}],
@@ -342,187 +199,178 @@
             "海神": [{name: "魏莨哲", num: "0"}, {name: "克力斯", num: "5"}, {name: "于煥亞", num: "7"}, {name: "邱子軒", num: "8"}, {name: "唐維傑", num: "9"}, {name: "胡瓏貿", num: "10"}, {name: "施晉堯", num: "11"}, {name: "呂威霆", num: "21"}, {name: "吳彥倫", num: "23"}, {name: "蘇文儒", num: "24"}, {name: "賽克維奇", num: "25"}, {name: "余純安", num: "28"}, {name: "廖偉皓", num: "30"}, {name: "布里茲克", num: "32"}, {name: "奧迪傑", num: "48"}, {name: "吳曉謹", num: "57"}, {name: "陳懷安", num: "66"}, {name: "勤明慶", num: "85"}]
         };
 
+        const STORAGE_PREFIX = 'tpbl_tool_v6_';
+        let currentMode = '';
         const ROSTER_SHEET_ID = "17wpiorwajKYW3i8rBj-QNq8cF_14XlUS72JGh-GoHCw";
-        const SCHEDULE_SHEET_ID = "1pHeJ98M6WcAlzLnZF3EUQVjZxZYZAGKFlXHcbhynfGc";
         const CORS_PROXY = "https://api.allorigins.win/raw?url=";
         const GOOGLE_ROSTER_CSV_URL = `https://docs.google.com/spreadsheets/d/${ROSTER_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
-        const GOOGLE_SCHEDULE_CSV_URL = `https://docs.google.com/spreadsheets/d/${SCHEDULE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
-
         const GAME_TIMES = ["14:30", "17:00", "19:00"];
-        const MONTHS = ["JAN.", "FEB.", "MAR.", "APR.", "MAY", "JUN.", "JUL.", "AUG.", "SEP.", "OCT.", "NOV.", "DEC."];
-        const FIXED_VOTE_LINK = "https://tpbl.basketball/awards/vote";
-        const STAT_TYPES = [ { label: "得分", val: "pts" }, { label: "籃板", val: "reb" }, { label: "助攻", val: "ast" }, { label: "抄截", val: "stl" }, { label: "阻攻", val: "blk" }, { label: "效率值", val: "eff" }, { label: "三分命中", val: "3pm" }, { label: "投籃命中", val: "fgm" }, { label: "罰球命中", val: "ftm" }, { label: "自訂", val: "custom" } ];
-        const EXAMPLE_LINKS = { 'weekday_preview': 'https://www.instagram.com/p/DRwnLJKE8xe/', 'game_preview': 'https://www.instagram.com/p/DSMDVqFEyt6/', 'weekly_schedule': 'https://www.instagram.com/p/DSRxkjTk9Gv/', 'matchup_highlight': 'https://www.instagram.com/p/DRzE52rE295/', 'final_score': 'https://www.instagram.com/p/DSPOHB-k611/', 'game_highlight': 'https://www.instagram.com/p/DRzWV4qk57E/', 'press_conf': 'https://www.instagram.com/p/DRUOjZNE5sd/', 'potg': 'https://www.instagram.com/p/DRzc17tkwbe/', 'local_player_highlight': 'https://www.instagram.com/p/DRUHtOqk5td/', 'career_milestone': 'https://www.instagram.com/p/DQ1NLvekzh9/', 'weekly_standings': 'https://www.instagram.com/p/DSRp_CFE3px/', 'top5': 'https://www.instagram.com/p/DRgW-5Zk7FE/', 'potw': 'https://www.instagram.com/p/DReOCyEk6JJ/', 'weekly_local_eff': 'https://www.instagram.com/p/DRwY7KAk3yy/', 'monthly_kicks': 'https://www.instagram.com/p/DRoMizOk3t5/', 'season_stats': 'https://www.instagram.com/p/DRjEhUdEz81/', '100_reasons': 'https://www.instagram.com/p/DR1tPClkziM/', 'nb_moments': 'https://www.instagram.com/p/DR_9bRik0bq' };
         const COMMON_TAGS = "#TPBL #NothingButLove #籃球怎能不愛";
-        const BROADCAST_FIXED = "｜博斯運動二台｜TPBL 官方 YOUTUBE"; 
+        const BROADCAST_FIXED = "｜博斯運動二台｜TPBL 官方 YOUTUBE";
 
-        let currentMode = '';
-        const STORAGE_PREFIX = 'tpbl_v3_';
-
+        // --- Utils ---
         const toMathBoldSerif = (text) => {
             const map = {
                 '0': '𝟎', '1': '𝟏', '2': '𝟐', '3': '𝟑', '4': '𝟒', '5': '𝟓', '6': '𝟔', '7': '𝟕', '8': '𝟖', '9': '𝟗',
                 'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉',
                 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
                 'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
-                'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': 'ｊ',
-                'k': '𝐤', 'l': '𝐥', 'm': 'ｍ', 'n': 'ｎ', 'o': 'ｏ', 'p': 'ｐ', 'q': 'ｑ', 'r': '𝐫', 's': 'ｓ', 't': 'ｔ',
-                'u': 'ｕ', 'v': 'ｖ', 'w': 'ｗ', 'x': 'ｘ', 'y': 'ｙ', 'z': 'ｚ'
+                'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': 'ｇ', 'h': 'ｈ', 'i': 'ｉ', 'j': 'ｊ',
+                'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': 'ｒ', 's': 'ｓ', 't': 'ｔ',
+                'u': 'ｕ', 'v': 'ｖ', 'w': 'ｗ', 'x': 'ｘ', 'y': 'ｙ', 'z': '𝐳'
             };
             return String(text).split('').map(char => map[char] || char).join('');
         };
-
         const toMathBoldSans = (text) => {
             const map = {
                 '0': '𝟬', '1': '𝟭', '2': '𝟮', '3': '𝟯', '4': '𝟰', '5': '𝟱', '6': '𝟲', '7': '𝟳', '8': '𝟴', '9': '𝟵',
                 'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 'I': '𝗜', 'J': '𝗝',
                 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧',
                 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭',
-                'a': 'ａ', 'b': 'ｂ', 'c': 'ｃ', 'd': 'ｄ', 'e': 'ｅ', 'f': 'ｆ', 'g': 'ｇ', 'h': 'ｈ', 'i': 'ｉ', 'j': 'ｊ',
-                'k': 'ｋ', 'l': 'ｌ', 'm': 'ｍ', 'n': 'ｎ', 'o': 'ｏ', 'p': 'ｐ', 'q': 'ｑ', 'r': 'ｒ', 's': 'ｓ', 't': 'ｔ',
-                'u': 'ｕ', 'v': 'ｖ', 'w': 'ｗ', 'x': 'ｘ', 'y': 'ｙ', 'z': 'ｚ'
+                'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 'i': '𝗶', 'j': '𝗷',
+                'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁',
+                'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇'
             };
             return String(text).split('').map(char => map[char] || char).join('');
         };
-        
-        const parseDateLocal = (dateStr) => { if (!dateStr) return new Date(); const parts = dateStr.replace(/\//g, '-').split('-'); return new Date(parts[0], parts[1] - 1, parts[2]); };
-        const getDayName = (dateStr) => { const date = parseDateLocal(dateStr); return ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][date.getDay()]; };
-        const getDayChi = (dateStr) => { const date = parseDateLocal(dateStr); return ['日', '一', '二', '三', '四', '五', '六'][date.getDay()]; };
-        const formatMonthDay = (dateStr) => { const date = parseDateLocal(dateStr); const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]; return `${months[date.getMonth()]}.${String(date.getDate()).padStart(2, '0')}`; };
-        const formatMMDD = (dateStr) => { const date = parseDateLocal(dateStr); return `${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')}`; };
-        const formatDateFull = (dateStr) => { const date = parseDateLocal(dateStr); return `${date.getFullYear()}/${String(date.getMonth()+1).padStart(2,'0')}/${String(date.getDate()).padStart(2,'0')}`; }
-        function normalizeTeamName(name) { if(!name) return ""; name = name.trim(); if (TEAMS[name]) return name; for (const [key, data] of Object.entries(TEAMS)) { if (data.full === name || name.includes(key)) return key; } return name; }
-        function getNearestNextGame(fromDateStr) { const fromDate = parseDateLocal(fromDateStr); for (const game of SEASON_SCHEDULE_DB) { if (parseDateLocal(game.date) >= fromDate) return game; } return SEASON_SCHEDULE_DB[SEASON_SCHEDULE_DB.length-1]; }
-        function getNearestPastGame(fromDateStr) { const fromDate = parseDateLocal(fromDateStr); for (let i = SEASON_SCHEDULE_DB.length - 1; i >= 0; i--) { if (parseDateLocal(SEASON_SCHEDULE_DB[i].date) <= fromDate) return SEASON_SCHEDULE_DB[i]; } return SEASON_SCHEDULE_DB[0]; }
-        function getGameByDateAndTime(dateStr, timeStr) { let m = SEASON_SCHEDULE_DB.find(g => g.date === dateStr && g.time === timeStr); return m || SEASON_SCHEDULE_DB.find(g => g.date === dateStr); }
-        function getGameById(id) { return SEASON_SCHEDULE_DB.find(g => g.id == id); }
-        function getNextGameAfterId(id) { return SEASON_SCHEDULE_DB.find(g => g.id > id); }
-        function getNextGameForTeamByDate(team, from) { const fd = parseDateLocal(from); return SEASON_SCHEDULE_DB.find(g => parseDateLocal(g.date) > fd && (g.home === team || g.away === team)); }
-        function getWeekdayGame(fromDateStr) { const fromDate = parseDateLocal(fromDateStr); for (const game of SEASON_SCHEDULE_DB) { const d = parseDateLocal(game.date); if (d >= fromDate && d.getDay() !== 0 && d.getDay() !== 6) return game; } return null; }
-        function getDatesForWeek(weekNum) { const week8Start = new Date("2025-12-01"); let calculationWeek = parseInt(weekNum); if (calculationWeek >= 19) calculationWeek += 2; const targetStart = new Date(week8Start); targetStart.setDate(week8Start.getDate() + ((calculationWeek - 8) * 7)); const targetEnd = new Date(targetStart); targetEnd.setDate(targetStart.getDate() + 6); return { start: targetStart.toISOString().split('T')[0], end: targetEnd.toISOString().split('T')[0] }; }
-        function getGamesInDateRange(start, end) { return SEASON_SCHEDULE_DB.filter(g => g.date >= start && g.date <= end); }
-
-        function fetchAllData() {
-            const statusDiv = document.getElementById('sync-status');
-            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> 檢查更新中...';
-            Promise.all([fetchRosterData(), fetchScheduleData()]).then(() => {
-                statusDiv.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i> 資料庫已同步';
-                document.querySelectorAll('.team-select').forEach(s => { if(s.value) s.dispatchEvent(new Event('change')); });
-            }).catch(() => { statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> 使用離線資料庫'; });
+        const parseDateLocal = (s) => { if(!s) return new Date(); const p = s.replace(/\//g, '-').split('-'); return new Date(p[0], p[1]-1, p[2]); };
+        const getDayChi = (s) => { const d = parseDateLocal(s); return ['日','一','二','三','四','五','六'][d.getDay()]; };
+        const formatMMDD = (s) => { const d = parseDateLocal(s); return `${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`; };
+        function normalizeTeamName(n) { if(!n) return ""; n = n.trim(); if (TEAMS[n]) return n; for (let k in TEAMS) if (TEAMS[k].full === n || n.includes(k)) return k; return n; }
+        const getValue = (id) => document.getElementById(id)?.value || "";
+        const getTeam = (k) => TEAMS[k] || { full: k || "球隊", emoji: "", arena: "" };
+        function getDatesForWeek(w) {
+            const start = new Date("2025-12-01");
+            let calcW = parseInt(w);
+            if (calcW >= 19) calcW += 2;
+            const target = new Date(start);
+            target.setDate(start.getDate() + ((calcW - 8) * 7));
+            const end = new Date(target); end.setDate(target.getDate() + 6);
+            return { start: target.toISOString().split('T')[0], end: end.toISOString().split('T')[0] };
         }
+        function updateVal(id, v) { const el = document.getElementById(id); if(el) el.value = v; }
+        function updateSelect(id, v) { const el = document.getElementById(id); if(el) { el.value = v; el.dispatchEvent(new Event('change')); } }
+        function fillNextGameBlock(g) { updateVal('next_date', g.date); updateVal('next_time', g.time); updateVal('next_game_num', g.id); updateSelect('next_away', g.away); updateSelect('next_home', g.home); }
 
         async function fetchRosterData() {
             try {
-                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now()));
-                const csvText = await response.text();
-                const rows = csvText.split(/\r?\n/);
-                const newRosters = {};
+                const res = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_ROSTER_CSV_URL + '&t=' + Date.now()));
+                const txt = await res.text();
+                const rows = txt.split(/\r?\n/);
+                const newData = {};
                 for (let i = 1; i < rows.length; i++) {
-                    const rowRaw = rows[i];
-                    if (!rowRaw.trim()) continue;
-                    let parts = rowRaw.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
-                    parts = parts.map(p => p.replace(/^"|"$/g, '').trim());
-                    if (parts.length < 3) continue;
-                    const teamKey = normalizeTeamName(parts[0]);
-                    if (teamKey && parts[2]) { if (!newRosters[teamKey]) newRosters[teamKey] = []; newRosters[teamKey].push({ name: parts[2], num: parts[1] }); }
+                    let p = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    p = p.map(x => x.replace(/^"|"$/g, '').trim());
+                    if (p.length < 3) continue;
+                    const tk = normalizeTeamName(p[0]);
+                    if (tk && p[2]) { if(!newData[tk]) newData[tk] = []; newData[tk].push({ name: p[2], num: p[1] }); }
                 }
-                if (Object.keys(newRosters).length > 0) ROSTERS = newRosters;
-            } catch (e) { console.error("Roster sync failed", e); }
+                if (Object.keys(newData).length > 0) ROSTERS = newData;
+            } catch (e) { console.error("Roster Sync Fail", e); }
         }
 
-        async function fetchScheduleData() {
-            try {
-                const response = await fetch(CORS_PROXY + encodeURIComponent(GOOGLE_SCHEDULE_CSV_URL + '&t=' + Date.now()));
-                const csvText = await response.text();
-                const rows = csvText.split(/\r?\n/);
-                const newSchedule = [];
-                for (let i = 1; i < rows.length; i++) {
-                    let parts = rows[i].split(',');
-                    parts = parts.map(p => p.replace(/^"|"$/g, '').trim());
-                    if (parts.length < 4) continue;
-                    newSchedule.push({ id: i, date: parts[0].replace(/\//g, '-'), time: parts[1], home: normalizeTeamName(parts[2]), away: normalizeTeamName(parts[3]), arena: parts[4] || "" });
-                }
-                if (newSchedule.length > 5) SEASON_SCHEDULE_DB = newSchedule;
-            } catch (e) { console.error("Schedule sync failed", e); }
-        }
-
-        const createInput = (id, label, type="text", placeholder="", value="") => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${label}</label><input type="${type}" id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold" placeholder="${placeholder}" value="${value}"></div>`;
-        const createSelect = (id, label, options) => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${label}</label><select id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold">${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}</select></div>`;
-        const createTeamSelect = (id, label) => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${label}</label><select id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md bg-white team-select"><option value="" disabled selected>選擇球隊</option>${TEAM_KEYS.map(k => `<option value="${k}">${k}</option>`).join('')}</select></div>`;
+        // --- UI Builders ---
+        const createInput = (id, l, t="text", ph="", v="") => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${l}</label><input type="${t}" id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold" placeholder="${ph}" value="${v}"></div>`;
+        const createTextarea = (id, l, ph="", r=4) => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${l}</label><textarea id="${id}" rows="${r}" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold" placeholder="${ph}"></textarea></div>`;
+        const createTeamSelect = (id, l) => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${l}</label><select id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md bg-white team-select"><option value="" disabled selected>選擇球隊</option>${TEAM_KEYS.map(k => `<option value="${k}">${k}</option>`).join('')}</select></div>`;
         const createPlayerSelect = (id, label, teamSelectId, numInputId="") => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${label}</label><select id="${id}" data-team-select="${teamSelectId}" ${numInputId ? `data-num-input="${numInputId}"` : ''} class="w-full p-2.5 border border-gray-300 rounded-md bg-white player-select disabled-input" disabled><option value="">先選擇球隊</option></select></div>`;
-        const createTimeSelect = (id, label, defaultValue="19:00") => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${label}</label><select id="${id}" class="w-full p-2.5 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-brand-gold">${GAME_TIMES.map(t => `<option value="${t}" ${t === defaultValue ? 'selected' : ''}>${t}</option>`).join('')}</select></div>`;
-        const createTextarea = (id, label, placeholder="", rows=4) => `<div><label class="block text-sm font-medium text-gray-700 mb-1">${label}</label><textarea id="${id}" rows="${rows}" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-gold" placeholder="${placeholder}"></textarea></div>`;
-        const createNextGameBlock = (title) => `<div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">${title}</p><div class="grid grid-cols-2 gap-4">${createInput('next_date', '日期', 'date')}${createInput('next_game_num', '場次', 'number')}${createTimeSelect('next_time', '時間', '19:00')}<div></div>${createTeamSelect('next_away', '客隊')}${createTeamSelect('next_home', '主隊')}</div></div>`;
-
-        function saveToLocal() { if (!currentMode) return; const data = {}; document.querySelectorAll('#dynamic-form input, #dynamic-form select, #dynamic-form textarea').forEach(input => { if (input.id) data[input.id] = (input.type === 'checkbox') ? input.checked : input.value; }); localStorage.setItem(STORAGE_PREFIX + currentMode, JSON.stringify(data)); localStorage.setItem('tpbl_last_mode', currentMode); }
-        function loadFromLocal() { if (!currentMode) return; const raw = localStorage.getItem(STORAGE_PREFIX + currentMode); if (!raw) { setTimeout(() => initAutoFillLogic(currentMode), 300); return; } try { const data = JSON.parse(raw); Object.keys(data).forEach(id => { const el = document.getElementById(id); if (el) { if (el.type === 'checkbox') el.checked = data[id]; else if (el.classList.contains('team-select')) { el.value = data[id]; el.dispatchEvent(new Event('change')); } } }); Object.keys(data).forEach(id => { const el = document.getElementById(id); if (el && !el.classList.contains('team-select') && el.type !== 'checkbox') el.value = data[id]; }); } catch (e) { console.warn("Load failed", e); } }
-        function clearCacheAndReset() { if(!currentMode) return; localStorage.removeItem(STORAGE_PREFIX + currentMode); renderForm(currentMode); attachFormListeners(); bindSmartEvents(currentMode); initAutoFillLogic(currentMode); }
-
-        function initAutoFillLogic(mode) {
-             const today = new Date().toISOString().split('T')[0];
-             if (mode === 'game_preview' || mode === 'weekday_preview') { const g = mode === 'game_preview' ? getNearestNextGame(today) : getWeekdayGame(today); if (g) fillGameInfo(g, 'match'); }
-             else if (mode === 'potg') { const g = getNearestPastGame(today); if(g) { updateVal('potg_game_num', g.id); updateSelect('potg_away', g.away); updateSelect('potg_home', g.home); const n = getNextGameAfterId(g.id); if(n) fillNextGameBlock(n); } }
-             else if (['final_score', 'matchup_highlight'].includes(mode)) { const g = getNearestNextGame(today); if (g) { if(mode === 'matchup_highlight') fillGameInfo(g, 'next'); else { updateVal('game_num', g.id); const n = getNextGameAfterId(g.id); if(n) fillNextGameBlock(n); } } }
-        }
-        function fillGameInfo(g, p) { updateVal(`${p}_date`, g.date); updateVal(`${p}_time`, g.time); updateVal(`${p}_game_num`, g.id); if(document.getElementById('game_num')) updateVal('game_num', g.id); updateSelect(`${p}_away`, g.away); updateSelect(`${p}_home`, g.home); }
-        function fillNextGameBlock(g) { updateVal('next_date', g.date); updateVal('next_time', g.time); updateVal('next_game_num', g.id); updateSelect('next_away', g.away); updateSelect('next_home', g.home); }
-        function updateVal(id, v) { const el = document.getElementById(id); if(el) el.value = v; }
-        function updateSelect(id, v) { const el = document.getElementById(id); if(el) { el.value = v; el.dispatchEvent(new Event('change')); } }
+        const createNextGameBlock = (title) => `<div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">${title}</p><div class="grid grid-cols-2 gap-4">${createInput('next_date','日期','date')}${createInput('next_game_num','場次','number')}<div><label class="block text-sm font-medium text-gray-700 mb-1">時間</label><select id="next_time" class="w-full p-2.5 border border-gray-300 rounded-md bg-white">${GAME_TIMES.map(t=>`<option value="${t}">${t}</option>`).join('')}</select></div><div></div>${createTeamSelect('next_away','客隊')}${createTeamSelect('next_home','主隊')}</div></div>`;
 
         function switchMode(mode) {
             currentMode = mode;
             document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-            const activeBtn = document.getElementById(`btn-${mode}`);
-            if (activeBtn) activeBtn.classList.add('active');
-            const titles = { 'weekday_preview': '平日賽事預告', 'game_preview': '單場賽程預告', 'weekly_schedule': '每週賽程表', 'matchup_highlight': '賽前對戰亮點', 'final_score': '終場比分', 'game_highlight': '本場賽事精華', 'press_conf': '賽後記者會精華', 'potg': '單場最佳球員', 'local_player_highlight': '本土球員單場傑出表現', 'career_milestone': '球員生涯紀錄', 'weekly_standings': '每週戰績排行', 'top5': '本週五大好球', 'potw': '單週最佳球員', 'weekly_local_eff': '每週本土效率值排行', 'monthly_kicks': '每月精選實戰球鞋', 'season_stats': '數據累計排行', '100_reasons': '一百種喜歡籃球的原因', 'nb_moments': 'Nothing But Moments', 'playoff_radar': '季後賽雷達戰報' };
-            document.getElementById('title-text').innerText = titles[mode] || '生成文案';
-            const lb = document.getElementById('example-link');
-            if (EXAMPLE_LINKS[mode]) { lb.href = EXAMPLE_LINKS[mode]; lb.classList.remove('hidden'); } else lb.classList.add('hidden');
+            document.getElementById(`btn-${mode}`)?.classList.add('active');
+            const titles = { 'weekday_preview': '平日賽事預告', 'game_preview': '單場賽程預告', 'weekly_schedule': '每週賽程表', 'matchup_highlight': '賽前對戰亮點', 'final_score': '終場比分', 'game_highlight': '本場賽事精華', 'press_conf': '賽後記者會', 'potg': '單場最佳球員', 'local_player_highlight': '本土球員傑出表現', 'weekly_standings': '每週戰績排行', 'top5': '本週五大好球', 'playoff_radar': '季後賽雷達戰報', 'nb_moments': 'Nothing But Moments', 'season_stats': '數據累計排行' };
+            document.getElementById('title-text').innerText = titles[mode] || '請選擇功能';
             renderForm(mode);
-            attachFormListeners(); 
-            bindSmartEvents(mode); 
-            loadFromLocal(); 
+            attachFormListeners();
+            bindSmartEvents(mode);
+            loadFromLocal();
             generateCopy();
         }
 
         function renderForm(mode) {
             const container = document.getElementById('dynamic-form');
             let html = ''; const today = new Date().toISOString().split('T')[0];
-            if (mode === 'game_preview') { html = `${createInput('game_num', '場次', 'number', '33')}<div class="grid grid-cols-2 gap-4">${createInput('match_date', '比賽日期', 'date', '', today)}${createTimeSelect('match_time', '比賽時間', '19:00')}${createTeamSelect('match_away', '客隊')}${createTeamSelect('match_home', '主隊')}</div>${createSelect('broadcast_channel', '電視轉播', ['緯來電視網', 'MOMOTV'])}${createTextarea('highlight_text', '觀賽亮點')}${createInput('yt_link', 'YouTube 連結')}`; }
-            else if (mode === 'weekday_preview') { html = `<div class="grid grid-cols-2 gap-4">${createInput('match_date', '比賽日期', 'date', '', today)}${createTimeSelect('match_time', '比賽時間', '19:00')}${createTeamSelect('match_away', '客隊')}${createTeamSelect('match_home', '主隊')}</div>${createInput('promo_title', '預告標題', 'text', 'WEDNESDAY NIGHT, GAME ONNNN')}${createTextarea('promo_text', '預告文案')}${createTextarea('promo_link', '贊助商版位')}`; }
-            else if (mode === 'final_score') { html = `${createInput('game_num', '場次', 'number', '33')}${createInput('match_title', '標題')}${createTextarea('match_recap', '比賽回顧')}${createNextGameBlock("下場賽事資訊")}`; }
-            else if (mode === 'press_conf') { html = `${createTeamSelect('pc_team_select', '受訪球隊')}${createInput('pc_title', '標題', 'text', '🗣️ FACING THE STORM...')}${createTextarea('pc_quote', '語錄')}${createTextarea('pc_content', '內容')}${createNextGameBlock("下場賽事資訊")}`; }
-            else if (mode === 'potg') {
+            if (mode === 'game_preview') {
+                html = `${createInput('game_num','場次','number')}<div class="grid grid-cols-2 gap-4">${createInput('match_date','日期','date','',today)}${createTimeSelect('match_time','時間','19:00')}${createTeamSelect('match_away','客隊')}${createTeamSelect('match_home','主隊')}</div>${createInput('broadcast_channel','電視轉播','text','緯來電視網')}${createTextarea('highlight_text','看點描述')}${createInput('yt_link','YouTube 連結')}`;
+            } else if (mode === 'weekday_preview') {
+                html = `<div class="grid grid-cols-2 gap-4">${createInput('match_date','日期','date','',today)}${createTimeSelect('match_time','時間','19:00')}${createTeamSelect('match_away','客隊')}${createTeamSelect('match_home','主隊')}</div>${createInput('promo_title','標題','text','WEDNESDAY NIGHT, GAME ONNNN')}${createTextarea('promo_text','引言')}${createTextarea('promo_link','贊助連結/店標')}`;
+            } else if (mode === 'potg') {
                 let saved = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'potg') || '{}');
-                if (!saved.promo_text) { saved.promo_text = '🀄️ 拚競技，超帶勁，加入競技麻將2 👉🏻 抽 TPBL 賽事門票'; localStorage.setItem(STORAGE_PREFIX + 'potg', JSON.stringify(saved)); }
-                html = `${createInput('potg_game_num', '場次', 'number')}<div class="grid grid-cols-2 gap-4">${createTeamSelect('potg_away', '客隊')}${createTeamSelect('potg_home', '主隊')}</div>${createNextGameBlock("下場賽事資訊")}${createInput('promo_text', '底部活動文案', 'text', '', saved.promo_text)}`;
-            }
-            else if (mode === 'top5') {
-                html = `${createInput('week_num', '第幾週', 'number', '7')}${createTextarea('top5_intro', '引言文案', '', 3)}<div class="space-y-6 mt-6">${[1, 2, 3, 4, 5].map(i => `
+                const defaultPromo = saved.promo_text || '🀄️ 拚競技，超帶勁，加入競技麻將2 👉🏻 抽 TPBL 賽事門票';
+                html = `${createInput('potg_game_num','場次','number')}<div class="grid grid-cols-2 gap-4">${createTeamSelect('potg_away','客隊')}${createTeamSelect('potg_home','主隊')}</div>${createNextGameBlock('下場賽事資訊')}<div class="mt-4"><label class="block text-sm font-medium text-gray-700 mb-1">底部活動文案</label><input type="text" id="promo_text" class="w-full p-2.5 border border-gray-300 rounded-md" value="${defaultPromo}"></div>`;
+            } else if (mode === 'final_score') {
+                html = `${createInput('game_num','場次','number')}${createInput('match_title','標題')}${createTextarea('match_recap','回顧文案')}${createNextGameBlock('下場賽事')}`;
+            } else if (mode === 'top5') {
+                html = `${createInput('week_num','第幾週','number','25')}${createTextarea('top5_intro','引言','',2)}<div class="space-y-4 mt-6">${[1,2,3,4,5].map(i => `
                     <div class="p-4 border border-gray-200 rounded-xl bg-white shadow-sm space-y-4">
                         <div class="flex items-center gap-4 pb-3 border-b border-gray-100">
                             <span class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 text-gray-700 font-bold shrink-0 text-xs">${i}</span>
-                            <div class="flex-1"><select id="top${i}_team" class="team-select w-full h-[40px] px-3 border border-gray-300 rounded-md text-sm"><option value="" disabled selected>選擇球隊</option>${TEAM_KEYS.map(k => `<option value="${k}">${k}</option>`).join('')}</select></div>
+                            <div class="flex-1"><select id="top${i}_team" class="team-select w-full h-[40px] px-3 border border-gray-300 rounded-md text-sm"><option value="" disabled selected>選擇球隊</option>${TEAM_KEYS.map(k=>`<option value="${k}">${k}</option>`).join('')}</select></div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="space-y-1.5"><label class="text-[11px] font-bold text-gray-400 ml-1">球員 1</label><div class="flex items-center gap-2"><select id="top${i}_name1" data-team-select="top${i}_team" data-num-input="top${i}_num1" class="player-select disabled-input flex-1 h-[40px] px-3 border border-gray-300 rounded-md text-sm" disabled><option value="">先選擇球隊</option></select><input id="top${i}_num1" type="text" readonly class="w-14 h-[40px] border border-gray-300 rounded-md text-sm text-center bg-gray-100 text-gray-600 font-bold"></div></div>
-                            <div class="space-y-1.5"><label class="text-[11px] font-bold text-gray-400 ml-1">球員 2</label><div class="flex items-center gap-2"><select id="top${i}_name2" data-team-select="top${i}_team" data-num-input="top${i}_num2" class="player-select disabled-input flex-1 h-[40px] px-3 border border-gray-300 rounded-md text-sm" disabled><option value="">先選擇球隊</option></select><input id="top${i}_num2" type="text" readonly class="w-14 h-[40px] border border-gray-300 rounded-md text-sm text-center bg-gray-100 text-gray-600 font-bold"></div></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex gap-2"><select id="top${i}_name1" data-team-select="top${i}_team" data-num-input="top${i}_num1" class="player-select flex-1 h-[40px] px-3 border border-gray-300 rounded-md text-sm" disabled><option>先選球隊</option></select><input id="top${i}_num1" readonly class="w-12 h-[40px] bg-gray-100 text-center rounded border"></div>
+                            <div class="flex gap-2"><select id="top${i}_name2" data-team-select="top${i}_team" data-num-input="top${i}_num2" class="player-select flex-1 h-[40px] px-3 border border-gray-300 rounded-md text-sm" disabled><option>選填助攻</option></select><input id="top${i}_num2" readonly class="w-12 h-[40px] bg-gray-100 text-center rounded border"></div>
                         </div>
-                    </div>`).join('')}</div><div id="standings_schedule_list_container" class="mt-4 space-y-3"></div>`;
+                    </div>`).join('')}</div><div id="standings_schedule_list_container" class="mt-4"></div>`;
+            } else if (mode === 'playoff_radar') {
+                html = `${createInput('playoff_ep', 'EP. 編號', 'text', '01')}${createTextarea('playoff_intro', '引言文案', '本週最新的「魔術數字預測戰報」出爐！')}${createTextarea('playoff_content', '本週關鍵戰況')}`;
+            } else if (mode === 'press_conf') {
+                html = `${createTeamSelect('pc_team_select','受訪球隊')}${createInput('pc_title','標題','text','🗣️ FACING THE STORM...')}${createTextarea('pc_quote','語錄')}${createTextarea('pc_content','內容')}${createNextGameBlock('下場賽事資訊')}`;
+            } else if (mode === 'matchup_highlight') {
+                html = `${createNextGameBlock("今日比賽資訊")}<div class="p-3 border rounded-md bg-gray-50 mb-3 mt-4"><p class="text-sm font-bold text-gray-700 mb-2">對戰組合</p><div class="grid grid-cols-12 gap-2 items-center"><div class="col-span-4">${createTeamSelect('mu_home_team', '主隊')}</div><div class="col-span-8">${createPlayerSelect('mu_home_player', '主隊球員', 'mu_home_team')}</div><div class="col-span-12 text-center text-gray-400 text-xs font-bold my-1">VS</div><div class="col-span-4">${createTeamSelect('mu_away_team', '客隊')}</div><div class="col-span-8">${createPlayerSelect('mu_away_player', '客隊球員', 'mu_away_team')}</div></div></div>${createTextarea('matchup_content', '對戰分析文案')}`;
+            } else if (mode === 'local_player_highlight') {
+                html = `<div class="grid grid-cols-2 gap-4">${createTeamSelect('lp_team', '球隊')}${createPlayerSelect('lp_name', '球員', 'lp_team', 'lp_num')}</div><input type="hidden" id="lp_num">${createInput('lp_title', '標題風格')}${createTextarea('lp_content', '表現描述')}${createNextGameBlock("下場賽事資訊")}`;
+            } else if (mode === 'weekly_schedule') {
+                html = `${createInput('week_num', '第幾週', 'number', '25')}${createTextarea('week_intro', '引言')}<div id="schedule_list_container" class="space-y-3"></div>`;
+            } else if (mode === 'weekly_standings') {
+                html = `${createInput('week_num', '第幾週', 'number', '25')}${createTextarea('standings_content', '內容')}<div id="standings_schedule_list_container" class="space-y-3"></div>`;
+            } else if (mode === 'nb_moments') {
+                html = `${createInput('nb_title', '標題')}${createTextarea('nb_content', '內容')}`;
+            } else if (mode === 'season_stats') {
+                html = `${createInput('stats_title_suffix','標題後綴','text','TEAM')}${createTextarea('stats_content', '數據分析文案')}<div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">統計區間</p><div class="mb-3">${createInput('stats_cutoff_date', '統計截止日', 'date', '', today)}</div><label class="block text-sm font-medium text-gray-700 mb-1">包含賽季</label><div class="flex gap-4 items-center"><label class="flex items-center gap-2"><input type="checkbox" id="season_2425" checked class="w-4 h-4 text-brand-gold rounded"> 24-25賽季</label><label class="flex items-center gap-2"><input type="checkbox" id="season_2526" class="w-4 h-4 text-brand-gold rounded"> 25-26賽季</label></div></div><div class="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">投票資訊</p>${createInput('stats_vote_month', '投票月份/區間')}</div>`;
             }
-            else if (mode === 'playoff_radar') { html = `${createInput('playoff_ep', 'EP. 編號', 'text', '01')}${createTextarea('playoff_intro', '引言文案', '本週最新的「魔術數字預測戰報」出爐！')}${createTextarea('playoff_content', '本週關鍵戰況')}`; }
-            else if (mode === 'nb_moments') { html = `${createInput('nb_title', '標題')}${createTextarea('nb_content', '內容')}`; }
-            else if (mode === '100_reasons') { html = `${createInput('reasons_vol', 'Vol. 編號')}<div class="grid grid-cols-2 gap-4">${createTeamSelect('reasons_team', '球隊')}${createPlayerSelect('reasons_name', '球員', 'reasons_team', 'reasons_num')}</div><input type="hidden" id="reasons_num">${createTextarea('reasons_quote', '金句')}${createTextarea('reasons_content', '專題內文')}${createInput('reasons_link', '官網連結')}`; }
-            else if (mode === 'local_player_highlight') { html = `<div class="grid grid-cols-2 gap-4">${createTeamSelect('lp_team', '球隊')}${createPlayerSelect('lp_name', '球員', 'lp_team', 'lp_num')}</div><input type="hidden" id="lp_num">${createInput('lp_title', '標題風格')}${createTextarea('lp_content', '表現描述')}${createNextGameBlock("下場賽事資訊")}`; }
-            else if (mode === 'weekly_schedule') { html = `${createInput('week_num', '第幾週', 'number', '8')}${createTextarea('week_intro', '引言')}<div id="schedule_list_container" class="space-y-3"></div>`; }
-            else if (mode === 'weekly_standings') { html = `${createInput('week_num', '第幾週', 'number', '7')}${createTextarea('standings_content', '內容')}<div id="standings_schedule_list_container" class="space-y-3"></div>`; }
-            else if (mode === 'matchup_highlight') { html = `${createNextGameBlock("今日比賽資訊")}<div class="p-3 border rounded-md bg-gray-50 mb-3 mt-4"><p class="text-sm font-bold text-gray-700 mb-2">對戰組合</p><div class="grid grid-cols-12 gap-2 items-center"><div class="col-span-4">${createTeamSelect('mu_home_team', '主隊')}</div><div class="col-span-8">${createPlayerSelect('mu_home_player', '主隊球員', 'mu_home_team')}</div><div class="col-span-12 text-center text-gray-400 text-xs font-bold my-1">VS</div><div class="col-span-4">${createTeamSelect('mu_away_team', '客隊')}</div><div class="col-span-8">${createPlayerSelect('mu_away_player', '客隊球員', 'mu_away_team')}</div></div></div>${createTextarea('matchup_content', '對戰分析文案')}`; }
-            else if (mode === 'career_milestone') { html = `${createInput('ms_title', '紀錄標題')}<div class="p-3 bg-gray-50 border rounded-md mb-4"><p class="text-sm font-bold text-gray-700 mb-2">達成球員</p><div class="grid grid-cols-12 gap-2"><div class="col-span-4">${createTeamSelect('ms_team', '球隊')}</div><div class="col-span-5">${createPlayerSelect('ms_name', '球員', 'ms_team', 'ms_num')}</div><div class="col-span-3"><label class="block text-sm font-medium text-gray-700 mb-1">背號</label><input type="text" id="ms_num" readonly class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100"></div></div><div class="mt-2">${createInput('ms_eng_name', '英文名 (選填)')}</div></div>${createInput('ms_achievement', '達成成就')}${createTextarea('ms_content', '內容描述')}`; }
-            else if (mode === 'weekly_local_eff') { html = `${createInput('week_num', '第幾週', 'number', '7')}${createTextarea('eff_intro', '引言文案')}<div class="space-y-3 mt-4">${[1,2,3,4,5].map(i => `<div class="p-3 border rounded-md bg-gray-50"><div class="grid grid-cols-12 gap-2 mb-2 items-center"><div class="col-span-1 flex items-center justify-center font-bold text-gray-500">#${i}</div><div class="col-span-4">${createTeamSelect(`eff${i}_team`, '')}</div><div class="col-span-2"><input id="eff${i}_num" type="text" readonly placeholder="#" class="w-full p-2.5 border border-gray-300 rounded-md text-center bg-gray-100"></div><div class="col-span-3">${createPlayerSelect(`eff${i}_name`, '', `eff${i}_team`, `eff${i}_num`)}</div><div class="col-span-2"><input id="eff${i}_val" type="text" placeholder="EFF" class="w-full p-2.5 border border-gray-300 rounded-md text-sm"></div></div><textarea id="eff${i}_desc" rows="2" class="w-full p-2.5 border border-gray-300 rounded-md text-sm" placeholder="球員表現描述..."></textarea></div>`).join('')}</div>`; }
-            else if (mode === 'monthly_kicks') { html = `${createSelect('kicks_month', '月份', MONTHS)}${createTextarea('kicks_intro', '引言文案')}`; }
-            else if (mode === 'season_stats') { html = `<div><label class="block text-sm font-medium text-gray-700 mb-1">標題後綴</label><select id="stats_title_suffix" class="w-full p-2.5 border border-gray-300 rounded-md bg-white"><option value="TEAM">TEAM</option><option value="PLAYER">PLAYER</option></select></div>${createTextarea('stats_content', '數據分析文案')}<div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">統計區間</p><div class="mb-3">${createInput('stats_cutoff_date', '統計截止日', 'date', '', today)}</div><label class="block text-sm font-medium text-gray-700 mb-1">包含賽季</label><div class="flex gap-4 items-center"><label class="flex items-center gap-2"><input type="checkbox" id="season_2425" checked class="w-4 h-4 text-brand-gold rounded"> 24-25賽季</label><label class="flex items-center gap-2"><input type="checkbox" id="season_2526" class="w-4 h-4 text-brand-gold rounded"> 25-26賽季</label></div></div><div class="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200"><p class="text-xs font-bold text-gray-500 mb-2 uppercase">投票資訊</p>${createInput('stats_vote_month', '投票月份/區間')}</div>`; }
-            else { html = `<p class="text-gray-500">此功能模組開發中。</p>`; }
             container.innerHTML = html;
+        }
+
+        function bindSmartEvents(mode) {
+            const form = document.getElementById('dynamic-form');
+            // 【修正 1】 即時預覽監聽
+            form.addEventListener('input', () => { generateCopy(); saveToLocal(); });
+            form.addEventListener('change', () => { generateCopy(); saveToLocal(); });
+
+            // 【修正 2】 場次聯動邏輯
+            const gn = document.getElementById('game_num') || document.getElementById('potg_game_num');
+            if(gn) {
+                gn.addEventListener('input', (e) => {
+                    const game = SEASON_SCHEDULE_DB.find(g => g.id == e.target.value);
+                    if(game) {
+                        if (mode === 'game_preview') {
+                            updateVal('match_date', game.date);
+                            updateSelect('match_away', game.away);
+                            updateSelect('match_home', game.home);
+                        }
+                        if (mode === 'potg') {
+                            updateSelect('potg_away', game.away);
+                            updateSelect('potg_home', game.home);
+                        }
+                        const next = SEASON_SCHEDULE_DB.find(g => g.id > game.id);
+                        if (next && document.getElementById('next_date')) fillNextGameBlock(next);
+                        generateCopy();
+                    }
+                });
+            }
+            const wn = document.getElementById('week_num');
+            if(wn) {
+                wn.addEventListener('input', (e) => {
+                    const range = getDatesForWeek(e.target.value);
+                    const games = SEASON_SCHEDULE_DB.filter(g => g.date >= range.start && g.date <= range.end);
+                    const list = document.getElementById('schedule_list_container') || document.getElementById('standings_schedule_list_container');
+                    if(list) list.innerHTML = games.map(g => `<div class="text-xs p-2 bg-white border rounded">▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${TEAMS[g.away].full} vs ${TEAMS[g.home].full}｜${g.arena}</div>`).join('');
+                    generateCopy();
+                });
+            }
         }
 
         function attachFormListeners() {
@@ -543,101 +391,58 @@
             });
         }
 
-        function bindSmartEvents(mode) {
-            const gn = document.getElementById('game_num') || document.getElementById('potg_game_num');
-            if(gn) gn.addEventListener('input', (e) => { const g = getGameById(e.target.value); if(g) { if(mode==='potg'){updateSelect('potg_away', g.away); updateSelect('potg_home', g.home);} const n = getNextGameAfterId(g.id); if(n) fillNextGameBlock(n); } });
-            const wn = document.getElementById('week_num');
-            if(wn) wn.addEventListener('input', (e) => { const r = getDatesForWeek(e.target.value); const gs = getGamesInDateRange(r.start, r.end); const c = document.getElementById('schedule_list_container') || document.getElementById('standings_schedule_list_container'); if(c) c.innerHTML = gs.map(g => `<div class="p-2 border rounded bg-gray-50 text-xs">▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${TEAMS[g.away].full} vs ${TEAMS[g.home].full}｜${g.arena}</div>`).join(''); });
-        }
-
         const getNextGameFormatted = () => {
-            const d = document.getElementById('next_date')?.value; if(!d) return "";
+            const d = getValue('next_date'); if(!d) return "";
             const dObj = parseDateLocal(d); if(isNaN(dObj.getTime())) return "";
-            const mStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][dObj.getMonth()];
-            return `📺 ${toMathBoldSans('NEXT GAME')}\n${toMathBoldSerif(mStr)}. ${toMathBoldSerif(dObj.getDate())}｜ ${toMathBoldSerif('Game')}${toMathBoldSerif(document.getElementById('next_game_num').value)}｜${toMathBoldSerif(document.getElementById('next_time').value)} ${TEAMS[document.getElementById('next_away').value].full}（客） vs.${TEAMS[document.getElementById('next_home').value].full}（主）`;
+            const mStr = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][dObj.getMonth()];
+            return `📺 ${toMathBoldSans('NEXT GAME')}\n${toMathBoldSerif(mStr)}. ${toMathBoldSerif(dObj.getDate())}｜ ${toMathBoldSerif('Game')}${toMathBoldSerif(getValue('next_game_num'))}｜${toMathBoldSerif(getValue('next_time'))} ${getTeam(getValue('next_away')).full}（客） vs.${getTeam(getValue('next_home')).full}（主）`;
         };
 
         function generateCopy() {
-            const getValue = (id) => document.getElementById(id)?.value || "";
-            const getTeam = (key) => TEAMS[key] || { full: key || "球隊", emoji: "", arena: "" };
-            let out = "";
-
+            let out = ""; const v = getValue;
             if (currentMode === 'game_preview') {
-                const h = getTeam(getValue('match_home')); const a = getTeam(getValue('match_away'));
-                out = `🏀 ${toMathBoldSerif('GAMEDAY')} & ${toMathBoldSerif('ROSTER')}｜${toMathBoldSerif(formatMonthDay(getValue('match_date')))}（${toMathBoldSerif(getDayName(getValue('match_date')))}）\n\n例行賽 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ✦ ${toMathBoldSerif(getValue('match_time'))} ${a.emoji} ${getValue('match_away')} vs ${getValue('match_home')} ${h.emoji} ✦\n\n${getValue('highlight_text')}\n\n-\n\n👉🏻 賽事地點 📍 ${h.arena}\n👉🏻 轉播平台 📺 ${getValue('broadcast_channel')}${BROADCAST_FIXED}\n👉🏻 YT轉播連結｜${getValue('yt_link')}\n\n${COMMON_TAGS} #TPBL例行賽`;
+                const h = getTeam(v('match_home')); const a = getTeam(v('match_away'));
+                out = `🏀 ${toMathBoldSerif('GAMEDAY')} & ${toMathBoldSerif('ROSTER')}｜${toMathBoldSerif(formatMMDD(v('match_date')))}（${toMathBoldSerif(getDayChi(v('match_date')))}）\n\n例行賽 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(v('game_num'))} ✦ ${toMathBoldSerif(v('match_time'))} ${a.emoji} ${v('match_away')} vs ${v('match_home')} ${h.emoji} ✦\n\n${v('highlight_text')}\n\n-\n\n👉🏻 賽事地點 📍 ${h.arena}\n👉🏻 轉播平台 📺 ${v('broadcast_channel')}${BROADCAST_FIXED}\n👉🏻 YT轉播連結｜${v('yt_link')}\n\n${COMMON_TAGS} #TPBL例行賽`;
             } else if (currentMode === 'final_score') {
-                out = `🔚 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(getValue('game_num'))} ${toMathBoldSerif('FINAL')}｜${getValue('match_title')}\n\n${getValue('match_recap')}\n\n-\n\n${getNextGameFormatted()}\n\n${COMMON_TAGS} #TPBL例行賽`;
+                out = `🔚 ${toMathBoldSerif('GAME')} ${toMathBoldSerif(v('game_num'))} ${toMathBoldSerif('FINAL')}｜${v('match_title')}\n\n${v('match_recap')}\n\n-\n\n${getNextGameFormatted()}\n\n${COMMON_TAGS} #TPBL例行賽`;
             } else if (currentMode === 'top5') {
-                out = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(getValue('week_num'))} 📢\n\n${getValue('top5_intro')}\n\n`;
+                out = `💣｜${toMathBoldSerif('TOP')}𝟓 ✦ ${toMathBoldSerif('Week')} ${toMathBoldSerif(v('week_num'))} 📢\n\n${v('top5_intro')}\n\n`;
                 for (let i = 5; i >= 1; i--) {
-                    const n1 = getValue(`top${i}_name1`); if (n1) {
-                        const t = getTeam(getValue(`top${i}_team`)); let ps = `＃${getValue(`top${i}_num1`)} ${n1}`;
-                        if (getValue(`top${i}_name2`)) ps += ` & ＃${getValue(`top${i}_num2`)} ${getValue(`top${i}_name2`)}`;
+                    const n1 = v(`top${i}_name1`); if (n1) {
+                        const t = getTeam(v(`top${i}_team`)); let ps = `＃${v(`top${i}_num1`)} ${n1}`;
+                        if (v(`top${i}_name2`)) ps += ` & ＃${v(`top${i}_num2`)} ${v(`top${i}_name2`)}`;
                         out += `${['①','②','③','④','⑤'][i-1]} ${t.emoji} ${t.full}｜${ps}\n`;
                     }
                 }
-                const r = getDatesForWeek(getValue('week_num')); const gs = getGamesInDateRange(r.start, r.end);
+                const r = getDatesForWeek(v('week_num')); const gs = getGamesInDateRange(r.start, r.end);
                 if(gs.length > 0) out += `\n-\n\n📌 本週賽事預告：\n` + gs.map(g => `▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${TEAMS[g.away].full}（客） vs. ${TEAMS[g.home].full}（主）｜${g.arena}`).join('\n');
                 out += `\n\n${COMMON_TAGS} #TrueTisane`;
             } else if (currentMode === 'playoff_radar') {
-                out = `📡 ${toMathBoldSerif('TPBL PLAYOFFS RADAR')} ｜季後賽卡位戰雷達戰報 EP.${getValue('playoff_ep')}\n\n${getValue('playoff_intro')}\n\n-\n\n⚠️ 本週關鍵戰況：\n${getValue('playoff_content')}\n\n-\n\n現在就留言告訴我們 💬 你認為誰能率先拿下季後賽門票？\n持續關注 TPBL 雷達戰報，掌握最即時的季後賽走勢！\n\n${COMMON_TAGS}`;
+                out = `📡 ${toMathBoldSerif('TPBL PLAYOFFS RADAR')} ｜季後賽卡位戰雷達戰報 EP.${v('playoff_ep')}\n\n${v('playoff_intro')}\n\n-\n\n⚠️ 本週關鍵戰況：\n${v('playoff_content')}\n\n-\n\n現在就留言告訴我們 💬 你認為誰能率先拿下季後賽門票？\n持續關注 TPBL 雷達戰報，掌握最即時的季後賽走勢！\n\n${COMMON_TAGS}`;
             } else if (currentMode === 'potg') {
-                const h = getTeam(getValue('potg_home')); const a = getTeam(getValue('potg_away'));
-                out = `❤️‍🔥 ${toMathBoldSerif('NOTHING BUT HIM')}\n\n${a.emoji} / ${h.emoji} #${toMathBoldSerif('單場最佳球員')}\n\n${getNextGameFormatted()}\n\n-\n\n${getValue('promo_text')}\n\n${COMMON_TAGS} #TPBL例行賽`;
+                const h = getTeam(v('potg_home')); const a = getTeam(v('potg_away'));
+                out = `❤️‍🔥 ${toMathBoldSerif('NOTHING BUT HIM')}\n\n${a.emoji} / ${h.emoji} #${toMathBoldSerif('單場最佳球員')}\n\n${getNextGameFormatted()}\n\n-\n\n${v('promo_text')}\n\n${COMMON_TAGS} #TPBL例行賽`;
             } else if (currentMode === 'press_conf') {
-                const tn = getValue('pc_team_select') || "比賽";
-                out = `🗣️${toMathBoldSerif(getValue('pc_title'))}\n\n💬「${getValue('pc_quote')}」\n\n${getValue('pc_content')}\n\n-\n\n📌 下場${tn}\n▌${formatMMDD(getValue('next_date'))}（${getDayChi(getValue('next_date'))}）｜${getValue('next_time')}｜${TEAMS[getValue('next_away')].full}（客） vs. ${TEAMS[getValue('next_home')].full}（主）｜${TEAMS[getValue('next_home')].arena}\n\n${COMMON_TAGS}`;
+                const tn = v('pc_team_select') || "比賽";
+                out = `🗣️${toMathBoldSerif(v('pc_title'))}\n\n💬「${v('pc_quote')}」\n\n${v('pc_content')}\n\n-\n\n📌 下場${tn}\n▌${formatMMDD(v('next_date'))}（${getDayChi(v('next_date'))}）｜${v('next_time')}｜${TEAMS[v('next_away')].full}（客） vs. ${TEAMS[v('next_home')].full}（主）｜${TEAMS[v('next_home')].arena}\n\n${COMMON_TAGS}`;
             } else if (currentMode === 'nb_moments') {
-                out = `👀📸 ${toMathBoldSerif('Nothing But Moments')}｜${getValue('nb_title')}\n\n${getValue('nb_content')}\n\n鎖定每週賽事，繼續帶給你最熱血、最動人的瞬間 🙌🏽\n\n#TPBL #NOTHINGBUTLOVE #NOTHINGBUTMOMENTS #籃球怎能不愛`;
+                out = `👀📸 ${toMathBoldSerif('Nothing But Moments')}｜${v('nb_title')}\n\n${v('nb_content')}\n\n鎖定每週賽事，繼續帶給你最熱血、最動人的瞬間 🙌🏽\n\n#TPBL #NOTHINGBUTLOVE #NOTHINGBUTMOMENTS #籃球怎能不愛`;
             } else if (currentMode === 'local_player_highlight') {
-                const t = getTeam(getValue('lp_team'));
-                out = `${t.emoji} ${getValue('lp_name')}${getValue('lp_title')}\n\n${getValue('lp_content')}\n\n-\n\n${getLocalPlayerNextGame()}\n\n${COMMON_TAGS}`;
-            } else if (currentMode === 'career_milestone') {
-                const msNum = getValue('ms_num'); const msName = getValue('ms_name'); const msEng = getValue('ms_eng_name');
-                let playerInfo = msName ? `#${msNum} ${msName}${msEng ? ' ' + msEng : ''}` : '';
-                out = `${getValue('ms_title')}\n\n${playerInfo}\n${getValue('ms_achievement')}\n${getValue('ms_content')}\n\n${COMMON_TAGS}`;
-            } else if (currentMode === 'potw') {
-                const t = getTeam(getValue('player_team')); const n = getValue('player_name_select');
-                out = `🥇 ${toMathBoldSerif('PLAYER OF THE WEEK')}｜#單週表現最佳球員\n\n🫶🏻 ${toMathBoldSerif('NOTHING BUT')} ${t.emoji} ${n}\n\n${getValue('player_desc')}\n\n-\n\n📌 休息一下回來看發威 👀\n▌${formatMMDD(getValue('next_date'))}（${getDayChi(getValue('next_date'))}）｜${getValue('next_time')}｜${TEAMS[getValue('next_away')].full}（客） vs. ${TEAMS[getValue('next_home')].full}（主）｜${TEAMS[getValue('next_home')].arena}\n\n${COMMON_TAGS}`;
-            } else if (currentMode === 'weekly_local_eff') {
-                out = `🔥 ${toMathBoldSerif('POWERFUL LOCALS')}｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('EFF RANKING')} 本土效率值排行✨\n\n${getValue('eff_intro')}\n\n`;
-                for (let i = 1; i <= 5; i++) {
-                    const n = getValue(`eff${i}_name`); if(n) { const t = getTeam(getValue(`eff${i}_team`)); out += `${t.emoji} ＃${getValue(`eff${i}_num`)} ${n} | EFF ${getValue(`eff${i}_val`)}\n${getValue(`eff${i}_desc`)}\n\n`; }
-                }
-                out += `${COMMON_TAGS}`;
-            } else if (currentMode === 'monthly_kicks') {
-                const mVal = getValue('kicks_month'); const mNum = MONTHS.indexOf(mVal) + 1;
-                out = `👟${toMathBoldSerif('KICKS OF THE MONTH')}｜${toMathBoldSerif(mVal)}\n\n${getValue('kicks_intro')}\n\n${mNum} 月精選實戰球鞋一次看 👀👟\n\nPresented by @momentum.tw\n\n${COMMON_TAGS} #momentum`;
-            } else if (currentMode === 'season_stats') {
-                out = `📊 ${toMathBoldSerif('TPBL ALL-TIME REGULAR SEASON STATS')}｜${toMathBoldSerif(getValue('stats_title_suffix'))}\n\n${getValue('stats_content')}\n\n*數據統計至 ${formatDateFull(getValue('stats_cutoff_date'))}，包含 24-25 賽季\n\n-\n\n📌 ${getValue('stats_vote_month')}月MVP投票進行中 :\n🔗 投票連結｜${FIXED_VOTE_LINK}\n\n${COMMON_TAGS}`;
-            } else if (currentMode === '100_reasons') {
-                const t = getTeam(getValue('reasons_team')); const n = getValue('reasons_name');
-                out = `【💭 一百種喜歡籃球的原因 Vol.${getValue('reasons_vol')}】\n\n${toMathBoldSerif('Q')}：你喜歡籃球嗎？\n${toMathBoldSerif('A')}：${getValue('reasons_quote')}${n ? ' — ' + t.emoji + ' ' + t.full + ' ' + n : ''}\n\n${getValue('reasons_content')}\n\n📝 完整故事請至 TPBL 官方網站\n${getValue('reasons_link')}\n\n#籃球怎能不愛 #NothingButLove #BasketballStory #HoopDreams`;
+                const t = getTeam(v('lp_team'));
+                out = `${t.emoji} ${v('lp_name')}${v('lp_title')}\n\n${v('lp_content')}\n\n-\n\n📌 下場${v('lp_name')}：\n▌${formatMMDD(v('next_date'))}（${getDayChi(v('next_date'))}）｜${v('next_time')}｜${TEAMS[v('next_away')].full}（客） vs. ${TEAMS[v('next_home')].full}（主）｜${TEAMS[v('next_home')].arena}\n\n${COMMON_TAGS}`;
+            } else if (currentMode === 'weekly_schedule' || currentMode === 'weekly_standings') {
+                const title = currentMode === 'weekly_schedule' ? `⏰｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(v('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程` : `📊｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(v('week_num'))} #球隊戰績排行`;
+                const range = getDatesForWeek(v('week_num')); const gs = getGamesInDateRange(range.start, range.end);
+                out = `${title}\n\n${currentMode === 'weekly_schedule' ? v('week_intro') : v('standings_content')}\n\n-\n\n📌 本週賽事預告：\n` + gs.map(g => `▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${TEAMS[g.away].full}（客） vs. ${TEAMS[g.home].full}（主）｜${g.arena}`).join('\n') + `\n\n${COMMON_TAGS}`;
             } else if (currentMode === 'weekday_preview') {
-                const h = getTeam(getValue('match_home')); const a = getTeam(getValue('match_away'));
-                out = `🏀 ${toMathBoldSerif(getValue('promo_title'))}\n\n${getValue('promo_text')}\n\n-\n\n📌 小週末就看籃球：\n▌${formatMMDD(getValue('match_date'))}（${getDayChi(getValue('match_date'))}）｜${getValue('match_time')}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n\n-\n\n${getValue('promo_link')}\n\n${COMMON_TAGS}`;
-            } else if (currentMode === 'matchup_highlight') {
-                const h = getTeam(getValue('mu_home_team')); const a = getTeam(getValue('mu_away_team'));
-                out = `⚔️ ${toMathBoldSerif('MATCH UP')}｜${getValue('mu_away_player')} ${a.emoji} vs. ${getValue('mu_home_player')} ${h.emoji}\n\n${getValue('matchup_content')}\n\n-\n\n📌 今天晚上看頂尖對決：\n▌${formatMMDD(getValue('next_date'))}（${getDayChi(getValue('next_date'))}）｜${getValue('next_time')}｜${TEAMS[getValue('next_away')].full}（客） vs. ${TEAMS[getValue('next_home')].full}（主）｜${TEAMS[getValue('next_home')].arena}\n\n${COMMON_TAGS}`;
-            } else if (currentMode === 'weekly_schedule') {
-                out = `⏰｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(getValue('week_num'))} ${toMathBoldSerif('SCHEDULE')} #每週賽程\n\n${getValue('week_intro')}\n\n-\n\n📌 本週賽事預告：\n`;
-                const r = getDatesForWeek(getValue('week_num')); const gs = getGamesInDateRange(r.start, r.end);
-                out += gs.map(g => `▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${TEAMS[g.away].full}（客） vs. ${TEAMS[g.home].full}（主）｜${g.arena}`).join('\n');
-                out += `\n\n${COMMON_TAGS}`;
-            } else if (currentMode === 'weekly_standings') {
-                out = `📊｜${toMathBoldSerif('WEEK')} ${toMathBoldSerif(getValue('week_num'))} #球隊戰績排行\n\n${getValue('standings_content')}\n\n-\n\n📌 本週賽事預告：\n`;
-                const r = getDatesForWeek(getValue('week_num')); const gs = getGamesInDateRange(r.start, r.end);
-                out += gs.map(g => `▌${formatMMDD(g.date)}（${getDayChi(g.date)}）｜${g.time}｜${TEAMS[g.away].full}（客） vs. ${TEAMS[g.home].full}（主）｜${g.arena}`).join('\n');
-                out += `\n\n${COMMON_TAGS}`;
+                const h = getTeam(v('match_home')); const a = getTeam(v('match_away'));
+                out = `🏀 ${toMathBoldSerif(v('promo_title'))}\n\n${v('promo_text')}\n\n-\n\n📌 小週末就看籃球：\n▌${formatMMDD(v('match_date'))}（${getDayChi(v('match_date'))}）｜${v('match_time')}｜${a.full}（客） vs. ${h.full}（主）｜${h.arena}\n\n-\n\n${v('promo_link')}\n\n${COMMON_TAGS}`;
             }
-
             document.getElementById('output-text').value = out;
-            saveToLocal();
         }
 
         function copyToClipboard() { const el = document.getElementById("output-text"); el.select(); document.execCommand("copy"); const btn = document.getElementById("copy-text"); btn.innerText = "已複製！"; setTimeout(() => btn.innerText = "一鍵複製", 2000); }
-        setInterval(saveToLocal, 5000);
-        window.onload = () => { fetchAllData(); const last = localStorage.getItem('tpbl_last_mode') || 'game_preview'; switchMode(last); };
+        window.onload = () => { fetchRosterData(); const last = localStorage.getItem('tpbl_last_mode') || 'game_preview'; switchMode(last); };
     </script>
 </body>
 </html>
